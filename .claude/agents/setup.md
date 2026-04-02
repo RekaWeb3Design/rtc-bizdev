@@ -141,7 +141,35 @@ After the user confirms login is complete:
 claude mcp add linkedin -- uvx linkedin-scraper-mcp
 ```
 
-### Step 6: Verify skills are loaded
+### Step 6: Deploy to Cloudflare Pages
+
+Load the Cloudflare API token from the `.env` file and deploy:
+
+```bash
+# Check if .env exists and contains the token
+if [ -f .env ]; then
+  export $(grep CLOUDFLARE_API_TOKEN .env | xargs)
+fi
+```
+
+If `.env` doesn't exist or `CLOUDFLARE_API_TOKEN` is empty, print:
+```
+⚠️ Cloudflare deployment skipped — no API token found.
+To enable auto-deploy:
+  1. Copy .env.example to .env
+  2. Set CLOUDFLARE_API_TOKEN=your_token_here
+  3. Re-run /setup
+```
+Skip to Step 7.
+
+If the token is present, deploy:
+```bash
+CLOUDFLARE_API_TOKEN=$CLOUDFLARE_API_TOKEN npx wrangler pages deploy . --project-name rtc-bizdev
+```
+
+Print the deployment URL from the output.
+
+### Step 7: Verify skills are loaded
 
 Check that the `.claude/skills/` directory contains the expected skills:
 ```bash
@@ -152,7 +180,7 @@ Expected: `pitch-deck`, `sales-onepager`, `investor-brief`, `html-presentation`,
 
 If any are missing, print which ones and say: "Contact Réka to restore missing skills from the repo."
 
-### Step 7: Final status report
+### Step 8: Final status report
 
 Print a clean summary:
 
@@ -171,6 +199,7 @@ Print a clean summary:
 ✅ Firecrawl        — installed & authenticated
 ✅ Reddit MCP       — installed
 ✅ LinkedIn MCP     — installed & authenticated
+✅ Cloudflare Pages — deployed
 ✅ Project skills   — all 7 present
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 You're ready. Try: "Create a sales one-pager for Roll the Code targeting enterprise innovation hubs."
