@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RTC BizDev Toolkit — Setup Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080810;
+    --bg2: #0f0f1a;
+    --bg3: #16162a;
+    --border: #1e1e35;
+    --border2: #2a2a45;
+    --accent: #6366f1;
+    --accent2: #818cf8;
+    --accent3: #4f46e5;
+    --text: #f0f0ff;
+    --text2: #9494bb;
+    --text3: #5a5a80;
+    --green: #34d399;
+    --amber: #fbbf24;
+    --red: #f87171;
+    --blue: #60a5fa;
+    --card: #0d0d1e;
+    --shadow: 0 4px 24px rgba(99,102,241,0.08);
+    --radius: 12px;
+    --radius-sm: 8px;
+    --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* Noise overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* ─── LAYOUT ─── */
+  .layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    min-height: 100vh;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ─── SIDEBAR ─── */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 260px;
+    height: 100vh;
+    background: var(--bg);
+    border-right: 1px solid var(--border);
+    padding: 32px 0;
+    overflow-y: auto;
+    z-index: 10;
+  }
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-track { background: transparent; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+  .sidebar-logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 17px;
+    letter-spacing: -0.02em;
+    padding: 0 24px 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text);
+  }
+  .sidebar-logo span { color: var(--accent2); }
+  .sidebar-logo .dot {
+    width: 7px; height: 7px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2.5s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  .sidebar-subtitle {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text3);
+    padding: 0 24px 24px;
+  }
+
+  .sidebar-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 0 24px 16px;
+  }
+
+  .sidebar-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text3);
+    padding: 0 24px 8px;
+  }
+
+  .sidebar nav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 0 12px;
+  }
+
+  .sidebar nav a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    color: var(--text2);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 400;
+    transition: all var(--transition);
+  }
+  .sidebar nav a:hover {
+    color: var(--text);
+    background: var(--bg3);
+  }
+  .sidebar nav a.active {
+    color: var(--accent2);
+    background: rgba(99,102,241,0.08);
+  }
+  .sidebar nav a .nav-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text3);
+    min-width: 20px;
+  }
+
+  /* ─── MAIN CONTENT ─── */
+  .main {
+    grid-column: 2;
+    padding: 48px 64px 120px;
+    max-width: 840px;
+  }
+
+  /* Hero */
+  .hero {
+    margin-bottom: 56px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent2);
+    background: rgba(99,102,241,0.08);
+    border: 1px solid rgba(99,102,241,0.15);
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 42px;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .hero h1 span { color: var(--accent2); }
+  .hero p {
+    color: var(--text2);
+    font-size: 16px;
+    max-width: 560px;
+  }
+  .hero-meta {
+    display: flex;
+    gap: 24px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+  .hero-meta span {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--text3);
+  }
+  .hero-meta span strong {
+    color: var(--text2);
+    font-weight: 500;
+  }
+
+  /* Sections */
+  section {
+    margin-bottom: 56px;
+    scroll-margin-top: 32px;
+  }
+
+  section h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 26px;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  section h2 .section-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    color: var(--accent);
+    background: rgba(99,102,241,0.08);
+    border: 1px solid rgba(99,102,241,0.15);
+    padding: 3px 10px;
+    border-radius: 6px;
+  }
+
+  section h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    color: var(--text);
+    margin: 28px 0 12px;
+  }
+
+  p { margin-bottom: 14px; color: var(--text2); }
+  p strong { color: var(--text); font-weight: 500; }
+
+  /* Ordered lists */
+  ol {
+    counter-reset: step;
+    list-style: none;
+    padding: 0;
+    margin: 12px 0 20px;
+  }
+  ol li {
+    counter-increment: step;
+    position: relative;
+    padding: 8px 0 8px 40px;
+    color: var(--text2);
+  }
+  ol li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--accent2);
+    background: rgba(99,102,241,0.08);
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    border: 1px solid rgba(99,102,241,0.15);
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 12px 0 20px;
+  }
+  ul li {
+    position: relative;
+    padding: 6px 0 6px 24px;
+    color: var(--text2);
+  }
+  ul li::before {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 14px;
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    background: var(--accent);
+    opacity: 0.5;
+  }
+  ul li strong { color: var(--text); }
+
+  /* Code blocks */
+  pre {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px 20px;
+    overflow-x: auto;
+    margin: 12px 0 20px;
+    position: relative;
+  }
+  pre code {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--accent2);
+  }
+
+  code {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    background: rgba(99,102,241,0.08);
+    border: 1px solid rgba(99,102,241,0.12);
+    padding: 2px 7px;
+    border-radius: 4px;
+    color: var(--accent2);
+  }
+  pre code {
+    background: none;
+    border: none;
+    padding: 0;
+  }
+
+  /* Warning boxes */
+  .warning {
+    background: rgba(251,191,36,0.05);
+    border: 1px solid rgba(251,191,36,0.15);
+    border-left: 3px solid var(--amber);
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    margin: 12px 0 20px;
+    font-size: 13px;
+    color: var(--text2);
+  }
+  .warning strong {
+    color: var(--amber);
+    font-weight: 600;
+  }
+
+  /* Info boxes */
+  .info {
+    background: rgba(99,102,241,0.04);
+    border: 1px solid rgba(99,102,241,0.12);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    margin: 12px 0 20px;
+    font-size: 13px;
+    color: var(--text2);
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0 24px;
+    font-size: 13px;
+  }
+  th {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text3);
+    text-align: left;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg2);
+  }
+  th:first-child { border-radius: var(--radius-sm) 0 0 0; }
+  th:last-child { border-radius: 0 var(--radius-sm) 0 0; }
+  td {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text2);
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(99,102,241,0.03); }
+
+  /* Cards (for overview section) */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 16px 0 24px;
+  }
+  .feature-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    transition: all var(--transition);
+  }
+  .feature-card:hover {
+    border-color: var(--accent);
+    box-shadow: 0 0 20px rgba(99,102,241,0.08);
+  }
+  .feature-card h4 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .feature-card p {
+    font-size: 12px;
+    color: var(--text3);
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  /* Footer */
+  .footer {
+    margin-top: 80px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+  }
+  .footer p {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--text3);
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar {
+      position: relative;
+      width: 100%;
+      height: auto;
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+      padding: 24px 0;
+    }
+    .main { padding: 32px 24px 80px; }
+    .hero h1 { font-size: 30px; }
+    .feature-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="dot"></div>
+      ROLL THE <span>CODE</span>
+    </div>
+    <div class="sidebar-subtitle">BizDev Toolkit Setup</div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-label">Guide</div>
+    <nav>
+      <a href="#overview"><span class="nav-num">01</span> What You'll Have</a>
+      <a href="#prerequisites"><span class="nav-num">02</span> Prerequisites</a>
+      <a href="#clone"><span class="nav-num">03</span> Clone the Repo</a>
+      <a href="#install-claude"><span class="nav-num">04</span> Install Claude Code</a>
+      <a href="#launch"><span class="nav-num">05</span> Launch Claude Code</a>
+      <a href="#setup"><span class="nav-num">06</span> Run /setup</a>
+      <a href="#manual-steps"><span class="nav-num">07</span> Manual Steps</a>
+      <a href="#troubleshooting"><span class="nav-num">08</span> Troubleshooting</a>
+      <a href="#test"><span class="nav-num">09</span> First Test</a>
+      <a href="#daily"><span class="nav-num">10</span> Daily Usage</a>
+    </nav>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-badge">Onboarding Guide</div>
+      <h1>Setup the <span>BizDev Toolkit</span></h1>
+      <p>Your complete guide to getting the Roll the Code AI-powered business development system running on Windows. From zero to generating pitch decks in 30 minutes.</p>
+      <div class="hero-meta">
+        <span><strong>For:</strong> Anti (Antal Karolyi)</span>
+        <span><strong>Platform:</strong> Windows 11</span>
+        <span><strong>Time:</strong> ~30 minutes</span>
+        <span><strong>Updated:</strong> April 2026</span>
+      </div>
+    </div>
+
+    <!-- SECTION 1: OVERVIEW -->
+    <section id="overview">
+      <h2><span class="section-num">01</span> What You'll Have When Done</h2>
+      <p>After following this guide, you'll have a fully operational AI-powered business development toolkit running inside Cursor. From a single terminal prompt, you can generate any of these:</p>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <h4>Pitch Decks</h4>
+          <p>Structured outlines and full slide content for clients, investors, or partners</p>
+        </div>
+        <div class="feature-card">
+          <h4>Sales One-Pagers</h4>
+          <p>Branded, PDF-ready documents tailored to any industry or company</p>
+        </div>
+        <div class="feature-card">
+          <h4>HTML Presentations</h4>
+          <p>Dark-themed, animated web presentations you can share via link</p>
+        </div>
+        <div class="feature-card">
+          <h4>Investor Briefs</h4>
+          <p>Executive summaries with financials, market sizing, and team profiles</p>
+        </div>
+        <div class="feature-card">
+          <h4>Market Research</h4>
+          <p>Live web search, competitor analysis, TAM/SAM/SOM estimates</p>
+        </div>
+        <div class="feature-card">
+          <h4>Cold Emails</h4>
+          <p>Sequenced outreach with follow-ups, tailored to specific targets</p>
+        </div>
+        <div class="feature-card">
+          <h4>PDF Reports</h4>
+          <p>Multi-page branded documents with auto-generated covers</p>
+        </div>
+        <div class="feature-card">
+          <h4>Partner Decks</h4>
+          <p>Collaborator and white-label proposals for agency partnerships</p>
+        </div>
+      </div>
+      <p>Everything is branded Roll the Code, follows your tone of voice, and saves to the correct folder automatically. You type what you need in plain English — Claude builds it.</p>
+    </section>
+
+    <!-- SECTION 2: PREREQUISITES -->
+    <section id="prerequisites">
+      <h2><span class="section-num">02</span> Prerequisites</h2>
+      <p>You need three things before you start. Get these set up first.</p>
+
+      <h3>Cursor (Code Editor)</h3>
+      <p>Cursor is an AI-native code editor built on VS Code. It's where you'll work.</p>
+      <ol>
+        <li>Go to <strong>cursor.com</strong></li>
+        <li>Click <strong>Download for Windows</strong></li>
+        <li>Run the installer — accept all defaults</li>
+        <li>Open Cursor once to confirm it launches</li>
+      </ol>
+
+      <h3>GitHub Account</h3>
+      <p>You need a GitHub account to access the project repository.</p>
+      <ol>
+        <li>If you don't have one: go to <strong>github.com</strong> and sign up (free)</li>
+        <li>If you already have one: make sure you're logged in</li>
+      </ol>
+
+      <h3>Claude Pro Subscription</h3>
+      <p>Claude Code requires a paid Anthropic subscription.</p>
+      <ol>
+        <li>Go to <strong>claude.ai</strong></li>
+        <li>Subscribe to <strong>Claude Pro</strong> — <strong>$20/month</strong></li>
+        <li>This gives you access to Claude Code with Opus-level models</li>
+      </ol>
+      <div class="info">
+        The $20/month Pro plan is sufficient. If you hit usage limits on heavy days, the $100/month Max plan removes them. Start with Pro — upgrade only if needed.
+      </div>
+    </section>
+
+    <!-- SECTION 3: CLONE -->
+    <section id="clone">
+      <h2><span class="section-num">03</span> Clone the Repo in Cursor</h2>
+      <p>This downloads the entire toolkit to your machine.</p>
+      <ol>
+        <li>Open <strong>Cursor</strong></li>
+        <li>Press <code>Ctrl + Shift + P</code> to open the Command Palette</li>
+        <li>Type <strong>Git: Clone</strong> and press Enter</li>
+        <li>Paste the repository URL (get this from Reka or the GitHub page)</li>
+        <li>Choose a local folder — for example: <code>C:\Users\Anti\Documents\RTC</code></li>
+        <li>When it asks <strong>"Open cloned repository?"</strong> — click <strong>Yes</strong></li>
+      </ol>
+      <p>You should now see the project files in the left sidebar: <code>CLAUDE.md</code>, <code>brand/</code>, <code>.claude/</code>, <code>outputs/</code>, etc.</p>
+      <div class="warning">
+        <strong>If Cursor asks you to install Git</strong> — do it first, restart Cursor, then try cloning again.
+      </div>
+    </section>
+
+    <!-- SECTION 4: INSTALL CLAUDE CODE -->
+    <section id="install-claude">
+      <h2><span class="section-num">04</span> Install Claude Code</h2>
+      <p>Open a terminal inside Cursor and install Claude Code globally.</p>
+      <ol>
+        <li>In Cursor, press <code>Ctrl + `</code> (backtick) to open the integrated terminal</li>
+        <li>Make sure it's set to <strong>PowerShell</strong> (check dropdown in top-right of terminal panel)</li>
+        <li>Run this command:</li>
+      </ol>
+      <pre><code>npm install -g @anthropic-ai/claude-code</code></pre>
+      <p>Wait for it to finish, then verify:</p>
+      <pre><code>claude --version</code></pre>
+      <p>You should see a version number like <code>1.x.x</code>.</p>
+      <div class="warning">
+        <strong>If <code>npm</code> is not recognized:</strong> You need Node.js first. Go to <strong>nodejs.org</strong>, download the <strong>LTS</strong> version, install it, then <strong>close and reopen Cursor entirely</strong> before trying again.
+      </div>
+      <div class="warning">
+        <strong>If <code>claude</code> is not recognized after install:</strong> Close and reopen PowerShell. If still not working, run:
+        <pre><code>$env:PATH += ";$env:APPDATA\npm"</code></pre>
+      </div>
+    </section>
+
+    <!-- SECTION 5: LAUNCH -->
+    <section id="launch">
+      <h2><span class="section-num">05</span> Launch Claude Code</h2>
+      <ol>
+        <li>In the Cursor terminal, navigate to the project folder:</li>
+      </ol>
+      <pre><code>cd "C:\Users\Anti\Documents\RTC\rtc-bizdev"</code></pre>
+      <p>(Adjust the path to wherever you cloned the repo.)</p>
+      <ol start="2">
+        <li>Start Claude Code:</li>
+      </ol>
+      <pre><code>claude</code></pre>
+      <ol start="3">
+        <li>On first launch, it will ask you to authenticate with your Anthropic account. Follow the prompts — it opens a browser window for login.</li>
+      </ol>
+      <p>Once authenticated, you'll see a prompt where you can type natural language commands. This is your main workspace.</p>
+    </section>
+
+    <!-- SECTION 6: SETUP -->
+    <section id="setup">
+      <h2><span class="section-num">06</span> Run /setup</h2>
+      <p>Inside Claude Code, type:</p>
+      <pre><code>/setup</code></pre>
+      <p>This runs the automated setup agent that installs everything else. Here's what it does:</p>
+      <table>
+        <thead>
+          <tr><th>Step</th><th>What happens</th><th>Your action</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Verify Claude Code</td><td>Checks version is installed</td><td>Nothing — automatic</td></tr>
+          <tr><td>Install plugins</td><td>Prints 8 plugin commands</td><td>Copy-paste each one</td></tr>
+          <tr><td>Check Node.js</td><td>Verifies Node is available</td><td>Nothing if installed</td></tr>
+          <tr><td>Install Puppeteer</td><td>PDF generation tool</td><td>Nothing — automatic</td></tr>
+          <tr><td>Install uv</td><td>Python package runner</td><td>May reopen terminal</td></tr>
+          <tr><td>Install Firecrawl</td><td>Web research tool</td><td>Paste API key</td></tr>
+          <tr><td>Reddit MCP</td><td>Reddit research</td><td>Nothing — automatic</td></tr>
+          <tr><td>LinkedIn MCP</td><td>LinkedIn research</td><td>Login via browser</td></tr>
+          <tr><td>Cloudflare deploy</td><td>Publishes the portal</td><td>Needs .env token</td></tr>
+          <tr><td>Verify skills</td><td>Checks all 7 skills</td><td>Nothing — automatic</td></tr>
+        </tbody>
+      </table>
+      <p>The setup takes about <strong>15-20 minutes</strong>. Most of it is automated.</p>
+    </section>
+
+    <!-- SECTION 7: MANUAL STEPS -->
+    <section id="manual-steps">
+      <h2><span class="section-num">07</span> Manual Steps After /setup</h2>
+      <p>These steps require your input during or after the setup process.</p>
+
+      <h3>Firecrawl API Key</h3>
+      <p>Firecrawl powers web search and page scraping for market research.</p>
+      <ol>
+        <li>Go to <strong>firecrawl.dev</strong></li>
+        <li>Sign up for a free account</li>
+        <li>Go to your dashboard and copy your <strong>API key</strong></li>
+        <li>When the setup agent asks for it, paste it in</li>
+      </ol>
+      <div class="info">The free tier gives you 500 scrapes/month — plenty for normal use.</div>
+
+      <h3>LinkedIn MCP — Login</h3>
+      <p>This step <strong>must run outside Claude Code</strong>. It opens an interactive browser login.</p>
+      <ol>
+        <li>Open a <strong>separate PowerShell window</strong> — press <code>Win + X</code>, then click <strong>Terminal</strong></li>
+        <li>Run:</li>
+      </ol>
+      <pre><code>uvx linkedin-scraper-mcp --login</code></pre>
+      <ol start="3">
+        <li>A browser window opens — log into your LinkedIn account</li>
+        <li>Once done, go back to Claude Code and tell the setup agent you're finished</li>
+      </ol>
+      <div class="warning">
+        <strong>If <code>uvx</code> is not recognized:</strong> Close and reopen PowerShell. If still not working, run:
+        <pre><code>$env:PATH += ";C:\Users\$env:USERNAME\.local\bin"</code></pre>
+      </div>
+
+      <h3>LinkedIn MCP — Register</h3>
+      <p>After login, the setup agent runs this automatically. If you need to do it manually:</p>
+      <pre><code>claude mcp add linkedin -- uvx linkedin-scraper-mcp</code></pre>
+
+      <h3>Cloudflare Deployment (Optional)</h3>
+      <p>To deploy the BizDev portal to the web:</p>
+      <ol>
+        <li>Copy <code>.env.example</code> to <code>.env</code> in the repo root</li>
+        <li>Replace <code>your_token_here</code> with your real Cloudflare API token</li>
+        <li>The setup agent deploys automatically, or run manually:</li>
+      </ol>
+      <pre><code>npx wrangler pages deploy . --project-name rtc-bizdev</code></pre>
+    </section>
+
+    <!-- SECTION 8: TROUBLESHOOTING -->
+    <section id="troubleshooting">
+      <h2><span class="section-num">08</span> Windows Troubleshooting</h2>
+      <p>Every issue below has the same root cause: <strong>Windows doesn't update PATH automatically after installing new tools.</strong></p>
+
+      <h3>"Command not recognized" after installing something</h3>
+      <p><strong>First try:</strong> Close and reopen PowerShell (or restart Cursor entirely).</p>
+      <p><strong>If that doesn't work</strong>, use the manual PATH fix:</p>
+      <table>
+        <thead>
+          <tr><th>Tool</th><th>Manual PATH fix</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>node</code> / <code>npm</code></td><td><code>$env:PATH += ";C:\Program Files\nodejs"</code></td></tr>
+          <tr><td><code>claude</code></td><td><code>$env:PATH += ";$env:APPDATA\npm"</code></td></tr>
+          <tr><td><code>puppeteer</code></td><td><code>$env:PATH += ";$env:APPDATA\npm"</code></td></tr>
+          <tr><td><code>firecrawl</code></td><td><code>$env:PATH += ";$env:APPDATA\npm"</code></td></tr>
+          <tr><td><code>uv</code> / <code>uvx</code></td><td><code>$env:PATH += ";C:\Users\$env:USERNAME\.local\bin"</code></td></tr>
+        </tbody>
+      </table>
+
+      <h3>uv Not Installed</h3>
+      <p>If <code>/setup</code> can't find <code>uv</code>, install it manually:</p>
+      <pre><code>irm https://astral.sh/uv/install.ps1 | iex</code></pre>
+      <p>Then close and reopen PowerShell before continuing.</p>
+
+      <h3>wkhtmltopdf Mentioned Somewhere</h3>
+      <p><strong>Ignore it.</strong> We use <strong>Puppeteer</strong> for PDF generation, not wkhtmltopdf. If any old documentation mentions it, it's outdated.</p>
+
+      <h3>LinkedIn Login Doesn't Work Inside Claude Code</h3>
+      <p><strong>This is expected.</strong> The LinkedIn login opens an interactive browser — it must run in a standalone PowerShell window. See the Manual Steps section above.</p>
+
+      <h3>Plugin Commands Fail</h3>
+      <p>Make sure you're running them <strong>inside Claude Code</strong> (after typing <code>claude</code>), not in a regular PowerShell prompt. Commands like <code>/plugin marketplace add ...</code> are Claude Code commands, not shell commands.</p>
+
+      <div class="warning">
+        <strong>General rule:</strong> After installing <em>anything</em> on Windows, close and reopen your terminal. This fixes 90% of "not recognized" errors.
+      </div>
+    </section>
+
+    <!-- SECTION 9: TEST -->
+    <section id="test">
+      <h2><span class="section-num">09</span> First Test</h2>
+      <p>After <code>/setup</code> completes with all green checkmarks, run this test prompt inside Claude Code:</p>
+      <pre><code>Create a sales one-pager for Roll the Code targeting enterprise innovation hubs in the UK.</code></pre>
+      <p>If everything is working, Claude Code will:</p>
+      <ol>
+        <li>Read the brand guide and CLAUDE.md automatically</li>
+        <li>Generate a professional one-pager in Roll the Code branding</li>
+        <li>Save it to <code>outputs/sales/one-pagers/</code></li>
+        <li>Update <code>outputs/files-index.json</code></li>
+        <li>Offer to create an HTML or PDF version</li>
+      </ol>
+      <p><strong>If you see output in the <code>outputs/</code> folder — you're good to go.</strong></p>
+      <p>Try a few more:</p>
+      <pre><code>Create an HTML presentation about Roll the Code for a CTO audience.</code></pre>
+      <pre><code>Research the UK enterprise IT services market — TAM/SAM/SOM.</code></pre>
+      <pre><code>Assemble a complete pitch package for a mid-size UK fintech company.</code></pre>
+    </section>
+
+    <!-- SECTION 10: DAILY USAGE -->
+    <section id="daily">
+      <h2><span class="section-num">10</span> Daily Usage</h2>
+
+      <h3>Generating Materials</h3>
+      <table>
+        <thead>
+          <tr><th>What you want</th><th>What to type</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Sales one-pager</td><td><code>Create a one-pager for [client/industry]</code></td></tr>
+          <tr><td>Pitch deck</td><td><code>Create a pitch deck for [audience]</code></td></tr>
+          <tr><td>Investor brief</td><td><code>Create an investor brief for [context]</code></td></tr>
+          <tr><td>HTML presentation</td><td><code>Create an HTML presentation for [topic]</code></td></tr>
+          <tr><td>PDF report</td><td><code>Generate a PDF report on [topic]</code></td></tr>
+          <tr><td>Collaborator deck</td><td><code>Create a collaborator deck for [partner]</code></td></tr>
+          <tr><td>Full pitch package</td><td><code>Assemble a complete pitch package for [client]</code></td></tr>
+        </tbody>
+      </table>
+
+      <h3>Research & Strategy</h3>
+      <table>
+        <thead>
+          <tr><th>What you want</th><th>What to type</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Market research</td><td><code>Research the market for [industry/segment]</code></td></tr>
+          <tr><td>Competitor analysis</td><td><code>Find competitors in [space] and compare</code></td></tr>
+          <tr><td>Company research</td><td><code>Research [company name] — what do they do?</code></td></tr>
+          <tr><td>Cold email sequence</td><td><code>Write a cold email sequence for [target]</code></td></tr>
+          <tr><td>GTM strategy</td><td><code>Create a GTM plan for [market/segment]</code></td></tr>
+          <tr><td>Pricing strategy</td><td><code>Help me think through pricing for [offering]</code></td></tr>
+        </tbody>
+      </table>
+
+      <h3>System Commands</h3>
+      <table>
+        <thead>
+          <tr><th>What you want</th><th>What to type</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Re-run setup</td><td><code>/setup</code></td></tr>
+          <tr><td>See available skills</td><td><code>What skills do you have?</code></td></tr>
+          <tr><td>Create a new skill</td><td><code>/skill-creator</code></td></tr>
+          <tr><td>Deploy to Cloudflare</td><td><code>Deploy the portal to Cloudflare</code></td></tr>
+        </tbody>
+      </table>
+
+      <h3>Tips</h3>
+      <ul>
+        <li><strong>Be specific.</strong> "Create a one-pager for Barclays innovation team" works better than "make a one-pager."</li>
+        <li><strong>Mention the audience.</strong> Claude adjusts tone for CTOs vs. investors vs. partners.</li>
+        <li><strong>Ask for iterations.</strong> "Make it shorter," "add pricing," "make the CTA stronger" — it remembers context.</li>
+        <li><strong>Brand updates propagate.</strong> If you edit <code>brand/brand.md</code>, all future outputs pick it up automatically.</li>
+      </ul>
+    </section>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <p>Roll the Code &middot; BizDev Toolkit &middot; Setup Guide &middot; April 2026</p>
+    </div>
+
+  </main>
+</div>
+
+<!-- Sidebar active state tracking -->
+<script>
+  const sections = document.querySelectorAll('section');
+  const navLinks = document.querySelectorAll('.sidebar nav a');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(link => link.classList.remove('active'));
+        const activeLink = document.querySelector(`.sidebar nav a[href="#${entry.target.id}"]`);
+        if (activeLink) activeLink.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+
+  sections.forEach(section => observer.observe(section));
+
+  // Set first link active by default
+  if (navLinks.length) navLinks[0].classList.add('active');
+</script>
+
+</body>
+</html>
