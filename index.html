@@ -751,6 +751,81 @@
     border: none;
   }
 
+  /* MD POPUP */
+  .md-popup-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+  .md-popup-overlay.visible { display: flex; }
+  .md-popup {
+    background: var(--card);
+    border: 1px solid var(--border2);
+    border-radius: 16px;
+    padding: 36px 32px;
+    max-width: 380px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    animation: popupIn 0.2s ease;
+  }
+  @keyframes popupIn {
+    from { opacity: 0; transform: scale(0.95) translateY(8px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  .md-popup-icon {
+    margin-bottom: 16px;
+    opacity: 0.3;
+  }
+  .md-popup-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .md-popup-filename {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text3);
+    margin-bottom: 20px;
+    word-break: break-all;
+  }
+  .md-popup-download {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 22px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.15s;
+    margin-bottom: 12px;
+  }
+  .md-popup-download:hover { background: var(--accent3); }
+  .md-popup-close {
+    display: block;
+    background: none;
+    border: none;
+    color: var(--text3);
+    font-size: 12px;
+    cursor: pointer;
+    padding: 4px;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .md-popup-close:hover { color: var(--text); }
+
   /* LOADING SPINNER */
   .loading {
     display: flex;
@@ -926,6 +1001,21 @@
     </div>
   </main>
 
+  <div class="md-popup-overlay" id="md-popup" onclick="if(event.target===this)closeMdPopup()">
+    <div class="md-popup">
+      <div class="md-popup-icon">
+        <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      </div>
+      <div class="md-popup-title">Preview is coming soon</div>
+      <div class="md-popup-filename" id="md-popup-filename"></div>
+      <a class="md-popup-download" id="md-popup-download" href="#" download>
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download
+      </a>
+      <button class="md-popup-close" onclick="closeMdPopup()">Close</button>
+    </div>
+  </div>
+
   <div class="resizer" id="resizer"></div>
 
   <div class="preview-panel" id="preview-panel">
@@ -1028,8 +1118,12 @@ function fileIcon(type) {
   return icons[type] || '\u{1F4CE}';
 }
 
-// ─── PREVIEW PANEL ─────────────────────────────────────────────────
+// ─── PREVIEW PANEL (PDF only) ─────────────────────────────────────
 function openPreview(file) {
+  if (file.type === 'md') {
+    showMdPopup(file);
+    return;
+  }
   previewFile = file;
   const layout = document.getElementById('layout');
   const header = document.getElementById('preview-header');
@@ -1046,24 +1140,7 @@ function openPreview(file) {
     </button>
   `;
 
-  if (file.type === 'md') {
-    body.style.display = 'flex';
-    body.style.alignItems = 'center';
-    body.style.justifyContent = 'center';
-    body.innerHTML = `
-      <div style="display:flex;flex-direction:column;align-items:center;gap:20px;color:var(--text3);text-align:center;padding:60px 24px;">
-        <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="opacity:0.3"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-        <div>
-          <p style="font-size:15px;font-weight:500;color:var(--text);margin-bottom:6px;">Preview coming soon</p>
-          <p style="font-size:12px;color:var(--text3);line-height:1.5;">Download to view the full document</p>
-        </div>
-        <a href="${file.path}" download style="display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:white;border:none;border-radius:8px;padding:10px 20px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;text-decoration:none;cursor:pointer;">
-          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Download
-        </a>
-      </div>`;
-    layout.classList.add('preview-open');
-  } else if (file.type === 'pdf') {
+  if (file.type === 'pdf') {
     body.innerHTML = `<iframe src="${file.path}" title="${file.name}"></iframe>`;
     layout.classList.add('preview-open');
   }
@@ -1072,15 +1149,21 @@ function openPreview(file) {
 function closePreview() {
   previewFile = null;
   document.getElementById('layout').classList.remove('preview-open');
-  const body = document.getElementById('preview-body');
-  body.innerHTML = '';
-  body.style.display = '';
-  body.style.alignItems = '';
-  body.style.justifyContent = '';
+  document.getElementById('preview-body').innerHTML = '';
   document.getElementById('preview-header').innerHTML = '';
 }
 
-// ─── FILE CLICK HANDLER (kept for reference, cards now call openPreview directly) ──
+// ─── MD POPUP ─────────────────────────────────────────────────────
+function showMdPopup(file) {
+  const popup = document.getElementById('md-popup');
+  document.getElementById('md-popup-filename').textContent = file.name;
+  document.getElementById('md-popup-download').href = file.path;
+  popup.classList.add('visible');
+}
+
+function closeMdPopup() {
+  document.getElementById('md-popup').classList.remove('visible');
+}
 
 // ─── RENDER ────────────────────────────────────────────────────────
 function render() {
@@ -1292,7 +1375,9 @@ document.addEventListener('keydown', e => {
     document.getElementById('search').focus();
   }
   if (e.key === 'Escape') {
-    if (previewFile) {
+    if (document.getElementById('md-popup').classList.contains('visible')) {
+      closeMdPopup();
+    } else if (previewFile) {
       closePreview();
     } else {
       document.getElementById('search').value = '';
