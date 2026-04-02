@@ -124,3 +124,29 @@ Founded March 2020. Social enterprise employing Deaf and hard-of-hearing profess
 - Competitor landscape with data — 2x2 positioning matrix needed
 - Traction / proof points — anonymized client stories
 - Primary wedge decision — which offering leads the pitch in each context?
+
+## Available Skills & When to Use Them
+
+### Project Skills (auto-trigger from `.claude/skills/`)
+| Skill | Trigger automatically when... |
+|---|---|
+| `pitch-deck` | user asks for a presentation, deck, slides, pitch |
+| `sales-onepager` | user asks for a one-pager, send-out doc, email attachment |
+| `investor-brief` | user mentions investors, funding, raise, executive summary |
+| `html-presentation` | user asks for a web link, HTML version, browser-based deck |
+| `collaborator-deck` | user asks for partner pitch, white-label, co-delivery proposal |
+| `business-planning` | user asks for GTM, pricing, financial projections, market analysis |
+
+### Installed Plugins (auto-trigger)
+| Plugin | Use for... |
+|---|---|
+| `ui-ux-pro-max` | Any visual/HTML output — always apply design intelligence |
+| `marketing-skills` | Copywriting, cold email, sales enablement, CRO |
+| `c-level-skills` | Strategic planning, board decks, competitive intel, investor prep |
+| `business-growth-skills` | Customer success, revenue ops, growth strategy |
+
+### Sub-Agents
+| Agent | Invoke when... |
+|---|---|
+| `market-researcher` | user asks for market data, TAM/SAM/SOM, competitor analysis, industry trends |
+| `pitch-assembler` | user wants a complete end-to-end pitch package across multiple formats |
