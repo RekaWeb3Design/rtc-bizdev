@@ -102,6 +102,12 @@ Founded March 2020. Social enterprise employing Deaf and hard-of-hearing profess
 - **Credibility through specificity** — avoid vague claims; use numbers, timelines, real scenarios
 - Language: **English by default**, Hungarian on request
 
+## Brand Guide
+Always read `brand/brand.md` before generating any visual output (HTML presentations, one-pagers, decks).
+It contains the current colors, typography, tone rules, and logo status.
+When brand assets are updated in `brand/brand.md`, apply them automatically — no need to re-prompt.
+Logo and visual assets are in `brand/assets/` (logo/, photos/, fonts/).
+
 ## Audience Guide by Document Type
 
 | Format | Primary Reader | What They Need to Feel |
