@@ -142,6 +142,7 @@ Logo and visual assets are in `brand/assets/` (logo/, photos/, fonts/).
 | `html-presentation` | user asks for a web link, HTML version, browser-based deck |
 | `collaborator-deck` | user asks for partner pitch, white-label, co-delivery proposal |
 | `business-planning` | user asks for GTM, pricing, financial projections, market analysis |
+| `pdf-report` | user asks for a PDF, detailed report, printable version, document to attach |
 
 ### Installed Plugins (auto-trigger)
 | Plugin | Use for... |
@@ -156,3 +157,6 @@ Logo and visual assets are in `brand/assets/` (logo/, photos/, fonts/).
 |---|---|
 | `market-researcher` | user asks for market data, TAM/SAM/SOM, competitor analysis, industry trends |
 | `pitch-assembler` | user wants a complete end-to-end pitch package across multiple formats |
+
+## Creating New Skills
+When asked to create a new skill, always use /skill-creator first. Never write a skill from scratch without using skill-creator.
