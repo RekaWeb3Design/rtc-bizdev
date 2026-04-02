@@ -47,45 +47,84 @@ After each document is generated, run these steps automatically:
 Every package always includes an HTML presentation. This is produced via the `html-presentation` skill, not converted from another format.
 
 **4b. PDF generation via pdf-report skill**
-Use the `pdf-report` skill to generate a standalone branded PDF with more detailed content than the HTML version. Do NOT convert HTML to PDF — the PDF is its own deliverable with deeper analysis, full context, and print-optimized layout. Save as `outputs/[client-slug]-report-[date].md` and convert to `outputs/[client-slug]-report-[date].pdf` using the puppeteer script defined in the pdf-report skill.
+Use the `pdf-report` skill to generate a standalone branded PDF with more detailed content than the HTML version. Do NOT convert HTML to PDF — the PDF is its own deliverable with deeper analysis, full context, and print-optimized layout.
+- Save markdown source to `outputs/reports/pdf/[client-slug]-report-[date].md`
+- Convert to `outputs/reports/pdf/[client-slug]-report-[date].pdf` using the puppeteer script defined in the pdf-report skill.
 
 **4c. Cloudflare deployment (placeholder)**
 ```bash
 # TODO: uncomment when RTC Cloudflare account is configured
-# npx wrangler pages deploy outputs/[client-slug]-presentation-[date].html --project-name rtc-pitches --branch [client-slug]
+# npx wrangler pages deploy outputs/reports/html/[client-slug]-presentation-[date].html --project-name rtc-pitches --branch [client-slug]
 ```
 
 ### Step 5: Save all files
-Save to `/outputs/` with consistent naming:
+Route each file to the correct subfolder based on audience segment. File naming: `[client-slug]-[type]-[date].[ext]`
+
+**For enterprise / corporation / scaleup targets:**
 ```
-outputs/
-  [client-slug]-onepager-[date].md
+outputs/pitches/clients/[client-slug]/
   [client-slug]-pitchdeck-[date].md
+outputs/sales/one-pagers/
+  [client-slug]-onepager-[date].md
+outputs/sales/emails/
+  [client-slug]-followup-email-[date].md
+outputs/reports/html/
   [client-slug]-presentation-[date].html
+outputs/reports/pdf/
   [client-slug]-report-[date].md
   [client-slug]-report-[date].pdf
-  [client-slug]-followup-email-[date].md
 ```
 
-### Step 6: Summary
-Print a package summary:
+**For investor targets:**
 ```
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+outputs/pitches/investors/
+  [client-slug]-pitchdeck-[date].md
+  [client-slug]-onepager-[date].md
+outputs/sales/emails/
+  [client-slug]-followup-email-[date].md
+outputs/reports/html/
+  [client-slug]-presentation-[date].html
+outputs/reports/pdf/
+  [client-slug]-report-[date].md
+  [client-slug]-report-[date].pdf
+```
+
+**For partner / agency targets:**
+```
+outputs/pitches/partners/
+  [client-slug]-pitchdeck-[date].md
+  [client-slug]-onepager-[date].md
+outputs/sales/emails/
+  [client-slug]-followup-email-[date].md
+outputs/reports/html/
+  [client-slug]-presentation-[date].html
+outputs/reports/pdf/
+  [client-slug]-report-[date].md
+  [client-slug]-report-[date].pdf
+```
+
+Create client-specific subfolders automatically when needed (e.g., `outputs/pitches/clients/barclays/`).
+
+### Step 6: Summary
+Print a package summary with full paths:
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Pitch Package: [Client]
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-✅ One-pager (MD)        → outputs/[file].md
-✅ Pitch deck (MD)       → outputs/[file].md
-✅ HTML presentation     → outputs/[file].html
-✅ PDF report            → outputs/[file].pdf
+Segment: [enterprise / investor / partner / scaleup]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ One-pager (MD)        → outputs/[full-path]/[file].md
+✅ Pitch deck (MD)       → outputs/[full-path]/[file].md
+✅ HTML presentation     → outputs/reports/html/[file].html
+✅ PDF report            → outputs/reports/pdf/[file].pdf
 ⏳ Cloudflare URL        → pending (account not yet configured)
-✅ Follow-up email       → outputs/[file].md
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ Follow-up email       → outputs/sales/emails/[file].md
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Recommended send sequence:
 1. Send one-pager with intro email
 2. Present deck in meeting
 3. Send HTML link + PDF + follow-up email after
 4. (Future) Share Cloudflare-hosted URL for live access
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
 ## Tone reminder

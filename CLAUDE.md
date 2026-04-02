@@ -108,6 +108,59 @@ It contains the current colors, typography, tone rules, and logo status.
 When brand assets are updated in `brand/brand.md`, apply them automatically — no need to re-prompt.
 Logo and visual assets are in `brand/assets/` (logo/, photos/, fonts/).
 
+## Output Folder Structure
+
+Every generated file goes into the correct subfolder automatically. Never save to the `outputs/` root.
+
+```
+outputs/
+  pitches/
+    investors/        ← investor briefs, executive summaries, fundraising decks
+    clients/          ← client-specific pitch decks and proposals
+    partners/         ← collaborator and white-label decks
+  sales/
+    one-pagers/       ← sales one-pagers by industry or client
+    proposals/        ← detailed proposals and scoping documents
+    emails/           ← follow-up and cold email sequences
+  research/
+    market/           ← market sizing, TAM/SAM/SOM reports
+    competitors/      ← competitor analysis
+    leads/            ← potential client research
+  reports/
+    pdf/              ← all generated PDF files
+    html/             ← all HTML presentations
+  brand/              ← brand-related outputs (not the source brand/ folder)
+```
+
+### Routing rules
+| Document type | Output folder |
+|---|---|
+| Investor brief, exec summary, fundraising deck | `outputs/pitches/investors/` |
+| Client pitch deck, client proposal | `outputs/pitches/clients/` |
+| Collaborator deck, partner pitch | `outputs/pitches/partners/` |
+| Sales one-pager | `outputs/sales/one-pagers/` |
+| Detailed proposal, scoping doc | `outputs/sales/proposals/` |
+| Follow-up email, cold email sequence | `outputs/sales/emails/` |
+| Market research, TAM/SAM/SOM | `outputs/research/market/` |
+| Competitor analysis | `outputs/research/competitors/` |
+| Lead/prospect research | `outputs/research/leads/` |
+| PDF report (any type) | `outputs/reports/pdf/` |
+| HTML presentation (any type) | `outputs/reports/html/` |
+| Brand-related output | `outputs/brand/` |
+
+### File naming convention
+All files follow: `[client-slug]-[type]-[date].[ext]`
+
+Examples:
+- `barclays-onepager-2026-04-03.md`
+- `barclays-pitchdeck-2026-04-03.md`
+- `barclays-presentation-2026-04-03.html`
+- `barclays-report-2026-04-03.pdf`
+- `uk-enterprise-it-market-research-2026-04-03.md`
+
+### Auto-create client folders
+When generating materials for a specific client, create a subfolder inside `pitches/clients/` or `research/leads/` if one doesn't exist yet. Example: `outputs/pitches/clients/barclays/` or `outputs/research/leads/barclays/`.
+
 ## Audience Guide by Document Type
 
 | Format | Primary Reader | What They Need to Feel |

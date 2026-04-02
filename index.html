@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RTC BizDev Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080810;
+    --bg2: #0f0f1a;
+    --bg3: #16162a;
+    --border: #1e1e35;
+    --border2: #2a2a45;
+    --accent: #6366f1;
+    --accent2: #818cf8;
+    --accent3: #4f46e5;
+    --text: #f0f0ff;
+    --text2: #9494bb;
+    --text3: #5a5a80;
+    --green: #34d399;
+    --amber: #fbbf24;
+    --red: #f87171;
+    --blue: #60a5fa;
+    --card: #0d0d1e;
+    --shadow: 0 4px 24px rgba(99,102,241,0.08);
+    --shadow-hover: 0 8px 40px rgba(99,102,241,0.18);
+    --radius: 12px;
+    --radius-sm: 8px;
+    --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
+  }
+  [data-theme="light"] {
+    --bg: #f5f5ff;
+    --bg2: #ededfd;
+    --bg3: #e4e4f8;
+    --border: #d0d0ee;
+    --border2: #bcbce0;
+    --accent: #4f46e5;
+    --accent2: #6366f1;
+    --accent3: #4338ca;
+    --text: #0f0f2a;
+    --text2: #4a4a70;
+    --text3: #8888aa;
+    --card: #ffffff;
+    --shadow: 0 4px 24px rgba(99,102,241,0.10);
+    --shadow-hover: 0 8px 40px rgba(99,102,241,0.20);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    min-height: 100vh;
+    transition: background var(--transition), color var(--transition);
+  }
+
+  /* NOISE TEXTURE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* HEADER */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(8,8,16,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background var(--transition);
+  }
+  [data-theme="light"] header {
+    background: rgba(245,245,255,0.85);
+  }
+
+  .logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 17px;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .logo span { color: var(--accent2); }
+  .logo-dot {
+    width: 7px; height: 7px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2.5s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .search-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .search-wrap svg {
+    position: absolute;
+    left: 12px;
+    color: var(--text3);
+    pointer-events: none;
+  }
+  #search {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 7px 12px 7px 36px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    width: 240px;
+    outline: none;
+    transition: all var(--transition);
+  }
+  #search::placeholder { color: var(--text3); }
+  #search:focus {
+    border-color: var(--accent);
+    background: var(--bg2);
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.12);
+    width: 300px;
+  }
+
+  .theme-btn {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    color: var(--text2);
+    transition: all var(--transition);
+  }
+  .theme-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent2);
+    background: var(--bg2);
+  }
+
+  /* LAYOUT */
+  .layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    min-height: calc(100vh - 60px);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* SIDEBAR */
+  aside {
+    border-right: 1px solid var(--border);
+    padding: 24px 0;
+    position: sticky;
+    top: 60px;
+    height: calc(100vh - 60px);
+    overflow-y: auto;
+    background: var(--bg);
+    transition: background var(--transition);
+  }
+  aside::-webkit-scrollbar { width: 4px; }
+  aside::-webkit-scrollbar-track { background: transparent; }
+  aside::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+  .sidebar-section { margin-bottom: 4px; }
+
+  .sidebar-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text3);
+    padding: 4px 20px 8px;
+    display: block;
+  }
+
+  .sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 20px;
+    cursor: pointer;
+    border-radius: 0;
+    transition: all var(--transition);
+    color: var(--text2);
+    font-size: 13.5px;
+    font-weight: 400;
+    border-left: 2px solid transparent;
+    position: relative;
+  }
+  .sidebar-item:hover {
+    background: var(--bg2);
+    color: var(--text);
+    border-left-color: var(--border2);
+  }
+  .sidebar-item.active {
+    background: linear-gradient(90deg, rgba(99,102,241,0.12), transparent);
+    color: var(--accent2);
+    border-left-color: var(--accent);
+    font-weight: 500;
+  }
+  .sidebar-item svg { flex-shrink: 0; opacity: 0.7; }
+  .sidebar-item.active svg { opacity: 1; }
+
+  .badge {
+    margin-left: auto;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--text3);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 20px;
+    min-width: 20px;
+    text-align: center;
+  }
+  .sidebar-item.active .badge {
+    background: rgba(99,102,241,0.15);
+    border-color: rgba(99,102,241,0.3);
+    color: var(--accent2);
+  }
+
+  .sidebar-sub {
+    padding-left: 16px;
+  }
+  .sidebar-sub .sidebar-item {
+    font-size: 13px;
+    padding: 6px 20px 6px 16px;
+  }
+
+  /* MAIN */
+  main {
+    padding: 32px;
+    min-width: 0;
+  }
+
+  .page-header {
+    margin-bottom: 28px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .page-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--text);
+  }
+  .page-subtitle {
+    font-size: 13px;
+    color: var(--text3);
+    margin-top: 4px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .view-toggle {
+    display: flex;
+    gap: 4px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 3px;
+  }
+  .view-btn {
+    background: none;
+    border: none;
+    border-radius: 6px;
+    width: 30px; height: 30px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    color: var(--text3);
+    transition: all var(--transition);
+  }
+  .view-btn.active {
+    background: var(--bg);
+    color: var(--accent2);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  }
+
+  /* STATS BAR */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    transition: all var(--transition);
+  }
+  .stat-card:hover {
+    border-color: var(--border2);
+    transform: translateY(-1px);
+  }
+  .stat-num {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--accent2);
+    letter-spacing: -0.04em;
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* FILE GRID */
+  .file-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+  }
+  .file-list { display: flex; flex-direction: column; gap: 6px; }
+
+  .file-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    cursor: pointer;
+    transition: all var(--transition);
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    overflow: hidden;
+  }
+  .file-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity var(--transition);
+  }
+  .file-card:hover {
+    border-color: var(--border2);
+    background: var(--bg2);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+  }
+  .file-card:hover::before { opacity: 1; }
+
+  .file-icon {
+    width: 38px; height: 38px;
+    border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 16px;
+  }
+  .file-icon.html { background: rgba(96,165,250,0.12); color: var(--blue); }
+  .file-icon.pdf { background: rgba(248,113,113,0.12); color: var(--red); }
+  .file-icon.md { background: rgba(52,211,153,0.12); color: var(--green); }
+  .file-icon.folder { background: rgba(251,191,36,0.12); color: var(--amber); }
+
+  .file-info { flex: 1; min-width: 0; }
+  .file-name {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 4px;
+  }
+  .file-meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text3);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .file-type-badge {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .file-type-badge.html { color: var(--blue); border-color: rgba(96,165,250,0.2); background: rgba(96,165,250,0.06); }
+  .file-type-badge.pdf { color: var(--red); border-color: rgba(248,113,113,0.2); background: rgba(248,113,113,0.06); }
+  .file-type-badge.md { color: var(--green); border-color: rgba(52,211,153,0.2); background: rgba(52,211,153,0.06); }
+
+  .file-actions {
+    display: flex;
+    gap: 6px;
+    opacity: 0;
+    transition: opacity var(--transition);
+    flex-shrink: 0;
+  }
+  .file-card:hover .file-actions { opacity: 1; }
+  .action-btn {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    color: var(--text2);
+    transition: all var(--transition);
+    text-decoration: none;
+  }
+  .action-btn:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+
+  /* LIST VIEW */
+  .file-list .file-card {
+    padding: 12px 18px;
+    border-radius: var(--radius-sm);
+  }
+  .file-list .file-icon {
+    width: 32px; height: 32px;
+    font-size: 14px;
+  }
+
+  /* BREADCRUMB */
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    color: var(--text3);
+    font-family: 'DM Mono', monospace;
+  }
+  .breadcrumb a {
+    color: var(--text3);
+    text-decoration: none;
+    transition: color var(--transition);
+    cursor: pointer;
+  }
+  .breadcrumb a:hover { color: var(--accent2); }
+  .breadcrumb .sep { opacity: 0.4; }
+  .breadcrumb .current { color: var(--text2); }
+
+  /* EMPTY STATE */
+  .empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 32px;
+    color: var(--text3);
+    text-align: center;
+    gap: 12px;
+  }
+  .empty-icon {
+    font-size: 40px;
+    opacity: 0.3;
+    margin-bottom: 8px;
+  }
+  .empty h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text2);
+  }
+  .empty p {
+    font-size: 13px;
+    max-width: 320px;
+    line-height: 1.6;
+  }
+
+  /* SECTION HEADER */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    margin-top: 28px;
+  }
+  .section-header:first-child { margin-top: 0; }
+  .section-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text3);
+  }
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* SEARCH HIGHLIGHT */
+  .highlight { 
+    background: rgba(99,102,241,0.25); 
+    color: var(--accent2);
+    border-radius: 2px;
+    padding: 0 1px;
+  }
+
+  /* NO RESULTS */
+  .no-results {
+    grid-column: 1/-1;
+  }
+
+  /* DIVIDER */
+  .sidebar-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 12px 20px;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .layout { grid-template-columns: 1fr; }
+    aside { display: none; }
+    .stats-bar { grid-template-columns: repeat(2,1fr); }
+    main { padding: 20px; }
+    #search { width: 180px; }
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .file-card {
+    animation: fadeIn 0.3s ease both;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="logo" href="#" onclick="navigate('all')">
+    <div class="logo-dot"></div>
+    ROLL THE <span>CODE</span>
+    <span style="font-size:11px;font-family:'DM Mono',monospace;font-weight:400;color:var(--text3);margin-left:6px;">/ bizdev</span>
+  </a>
+  <div class="header-right">
+    <div class="search-wrap">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="search" placeholder="Search files..." autocomplete="off" oninput="handleSearch(this.value)">
+    </div>
+    <button class="theme-btn" onclick="toggleTheme()" title="Toggle theme">
+      <svg id="theme-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<div class="layout">
+  <aside>
+    <div class="sidebar-section">
+      <span class="sidebar-label">Overview</span>
+      <div class="sidebar-item active" onclick="navigate('all')">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        All Files
+        <span class="badge" id="badge-all">0</span>
+      </div>
+      <div class="sidebar-item" onclick="navigate('recent')">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Recent
+      </div>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <div class="sidebar-section">
+      <span class="sidebar-label">Pitches</span>
+      <div class="sidebar-item" onclick="navigate('pitches/clients')">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.09 12 19.79 19.79 0 0 1 1.07 3.29 2 2 0 0 1 3 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21 16z"/></svg>
+        Clients
+        <span class="badge" id="badge-clients">0</span>
+      </div>
+      <div class="sidebar-item" onclick="navigate('pitches/investors')">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        Investors
+        <span class="badge" id="badge-investors">0</span>
+      </div>
+      <div class="sidebar-item" onclick="navigate('pitches/partners')">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Partners
+        <span class="badge" id="badge-partners">0</span>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <span class="sidebar-label">Sales</span>
+      <div class="sidebar-item" onclick="navigate('sales/one-pagers')">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        One-Pagers
+        <span class="badge" id="badge-onepagers">0</span>
+      </div>
+      <div class="sidebar-item" onclick="navigate('sales/proposals')">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Proposals
+        <span class="badge" id="badge-proposals">0</span>
+      </div>
+      <div class="sidebar-item" onclick="navigate('sales/emails')">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Emails
+        <span class="badge" id="badge-emails">0</span>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <span class="sidebar-label">Research</span>
+      <div class="sidebar-item" onclick="navigate('research/market')">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Market
+        <span class="badge" id="badge-market">0</span>
+      </div>
+      <div class="sidebar-item" onclick="navigate('research/competitors')">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        Competitors
+        <span class="badge" id="badge-competitors">0</span>
+      </div>
+      <div class="sidebar-item" onclick="navigate('research/leads')">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Leads
+        <span class="badge" id="badge-leads">0</span>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <span class="sidebar-label">Reports</span>
+      <div class="sidebar-item" onclick="navigate('reports/html')">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        HTML Presentations
+        <span class="badge" id="badge-html">0</span>
+      </div>
+      <div class="sidebar-item" onclick="navigate('reports/pdf')">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        PDF Reports
+        <span class="badge" id="badge-pdf">0</span>
+      </div>
+    </div>
+  </aside>
+
+  <main id="main-content">
+    <!-- Dynamically rendered -->
+  </main>
+</div>
+
+<script>
+// ─── DATA STRUCTURE ────────────────────────────────────────────────
+// In production on Cloudflare Pages, this would be fetched from the API
+// For local use, files are listed here and auto-discovered
+
+const REPO_ROOT = './outputs/';
+
+// File registry - Claude Code updates this when generating files
+// Format: { path, name, type, folder, date, size, description }
+let FILES = [
+  // Example entries - Claude Code populates these automatically
+  {
+    path: 'outputs/sales/one-pagers/onepager-enterprise-innovation-hubs-2026-04-02.md',
+    name: 'onepager-enterprise-innovation-hubs-2026-04-02.md',
+    type: 'md',
+    folder: 'sales/one-pagers',
+    date: '2026-04-02',
+    description: 'Sales one-pager for Enterprise Innovation Hubs'
+  },
+  {
+    path: 'outputs/reports/html/presentation-enterprise-innovation-hubs-2026-04-02.html',
+    name: 'presentation-enterprise-innovation-hubs-2026-04-02.html',
+    type: 'html',
+    folder: 'reports/html',
+    date: '2026-04-02',
+    description: 'HTML presentation for Enterprise Innovation Hubs'
+  }
+];
+
+// ─── STATE ─────────────────────────────────────────────────────────
+let currentView = 'grid';
+let currentPath = 'all';
+let searchQuery = '';
+
+// ─── THEME ─────────────────────────────────────────────────────────
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('theme-icon').innerHTML = isDark
+    ? '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>'
+    : '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+  localStorage.setItem('rtc-theme', isDark ? 'light' : 'dark');
+}
+
+// ─── NAVIGATION ────────────────────────────────────────────────────
+function navigate(path) {
+  currentPath = path;
+  searchQuery = '';
+  document.getElementById('search').value = '';
+  document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+  event?.currentTarget?.classList?.add('active');
+  render();
+}
+
+function handleSearch(q) {
+  searchQuery = q.toLowerCase();
+  currentPath = 'all';
+  render();
+}
+
+// ─── FILTER ────────────────────────────────────────────────────────
+function getFilteredFiles() {
+  let files = FILES;
+  if (searchQuery) {
+    files = files.filter(f =>
+      f.name.toLowerCase().includes(searchQuery) ||
+      (f.description || '').toLowerCase().includes(searchQuery) ||
+      f.folder.toLowerCase().includes(searchQuery)
+    );
+  } else if (currentPath !== 'all' && currentPath !== 'recent') {
+    files = files.filter(f => f.folder.startsWith(currentPath));
+  } else if (currentPath === 'recent') {
+    files = [...files].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 12);
+  }
+  return files;
+}
+
+// ─── BADGES ────────────────────────────────────────────────────────
+function updateBadges() {
+  const counts = {
+    all: FILES.length,
+    clients: FILES.filter(f => f.folder.startsWith('pitches/clients')).length,
+    investors: FILES.filter(f => f.folder.startsWith('pitches/investors')).length,
+    partners: FILES.filter(f => f.folder.startsWith('pitches/partners')).length,
+    onepagers: FILES.filter(f => f.folder.startsWith('sales/one-pagers')).length,
+    proposals: FILES.filter(f => f.folder.startsWith('sales/proposals')).length,
+    emails: FILES.filter(f => f.folder.startsWith('sales/emails')).length,
+    market: FILES.filter(f => f.folder.startsWith('research/market')).length,
+    competitors: FILES.filter(f => f.folder.startsWith('research/competitors')).length,
+    leads: FILES.filter(f => f.folder.startsWith('research/leads')).length,
+    html: FILES.filter(f => f.folder.startsWith('reports/html')).length,
+    pdf: FILES.filter(f => f.folder.startsWith('reports/pdf')).length,
+  };
+  Object.entries(counts).forEach(([key, val]) => {
+    const el = document.getElementById('badge-' + key);
+    if (el) el.textContent = val;
+  });
+}
+
+// ─── FILE ICON ─────────────────────────────────────────────────────
+function fileIcon(type) {
+  const icons = {
+    html: '🌐',
+    pdf: '📄',
+    md: '📝',
+    folder: '📁'
+  };
+  return icons[type] || '📎';
+}
+
+// ─── RENDER ────────────────────────────────────────────────────────
+function render() {
+  const main = document.getElementById('main-content');
+  const files = getFilteredFiles();
+  updateBadges();
+
+  // Page title
+  const titles = {
+    all: ['All Files', 'Complete output archive'],
+    recent: ['Recent', 'Latest generated documents'],
+    'pitches/clients': ['Client Pitches', 'Pitch decks and proposals for clients'],
+    'pitches/investors': ['Investor Materials', 'Fundraising and investor briefs'],
+    'pitches/partners': ['Partner Decks', 'Collaboration and white-label pitches'],
+    'sales/one-pagers': ['One-Pagers', 'Sales documents for outreach'],
+    'sales/proposals': ['Proposals', 'Detailed scoping documents'],
+    'sales/emails': ['Email Sequences', 'Follow-up and cold email drafts'],
+    'research/market': ['Market Research', 'TAM/SAM/SOM and industry analysis'],
+    'research/competitors': ['Competitor Analysis', 'Competitive landscape reports'],
+    'research/leads': ['Lead Research', 'Prospect and company profiles'],
+    'reports/html': ['HTML Presentations', 'Web presentations for sharing'],
+    'reports/pdf': ['PDF Reports', 'Print-ready detailed documents'],
+  };
+
+  const [title, subtitle] = titles[currentPath] || ['Search Results', `${files.length} file${files.length !== 1 ? 's' : ''} found`];
+
+  // Stats
+  const htmlCount = FILES.filter(f => f.type === 'html').length;
+  const pdfCount = FILES.filter(f => f.type === 'pdf').length;
+  const mdCount = FILES.filter(f => f.type === 'md').length;
+
+  // Breadcrumb
+  const breadcrumb = currentPath === 'all' ? '' : `
+    <div class="breadcrumb">
+      <a onclick="navigate('all')">outputs</a>
+      ${currentPath.split('/').map((seg, i, arr) => `
+        <span class="sep">/</span>
+        ${i === arr.length - 1
+          ? `<span class="current">${seg}</span>`
+          : `<a onclick="navigate('${arr.slice(0,i+1).join('/')}')">${seg}</a>`
+        }
+      `).join('')}
+    </div>
+  `;
+
+  // Files HTML
+  let filesHtml = '';
+  if (files.length === 0) {
+    filesHtml = `
+      <div class="no-results">
+        <div class="empty">
+          <div class="empty-icon">${searchQuery ? '🔍' : '📂'}</div>
+          <h3>${searchQuery ? 'No files found' : 'This folder is empty'}</h3>
+          <p>${searchQuery
+            ? `No files match "${searchQuery}". Try a different search term.`
+            : 'Generate documents with Claude Code and they will appear here automatically.'
+          }</p>
+        </div>
+      </div>
+    `;
+  } else {
+    // Group by folder if viewing all
+    if (currentPath === 'all' && !searchQuery) {
+      const groups = {};
+      files.forEach(f => {
+        if (!groups[f.folder]) groups[f.folder] = [];
+        groups[f.folder].push(f);
+      });
+      filesHtml = Object.entries(groups).map(([folder, groupFiles]) => `
+        <div class="section-header">
+          <span class="section-title">${folder}</span>
+          <div class="section-line"></div>
+        </div>
+        <div class="${currentView === 'grid' ? 'file-grid' : 'file-list'}" style="margin-bottom: 8px;">
+          ${groupFiles.map(f => fileCardHtml(f)).join('')}
+        </div>
+      `).join('');
+    } else {
+      filesHtml = `
+        <div class="${currentView === 'grid' ? 'file-grid' : 'file-list'}">
+          ${files.map(f => fileCardHtml(f, searchQuery)).join('')}
+        </div>
+      `;
+    }
+  }
+
+  main.innerHTML = `
+    <div class="page-header">
+      <div>
+        <div class="page-title">${searchQuery ? `"${searchQuery}"` : title}</div>
+        <div class="page-subtitle">${searchQuery ? `${files.length} result${files.length !== 1 ? 's' : ''}` : subtitle}</div>
+      </div>
+      <div class="view-toggle">
+        <button class="view-btn ${currentView === 'grid' ? 'active' : ''}" onclick="setView('grid')" title="Grid view">
+          <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zm8 0A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm-8 8A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm8 0A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3z"/></svg>
+        </button>
+        <button class="view-btn ${currentView === 'list' ? 'active' : ''}" onclick="setView('list')" title="List view">
+          <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/></svg>
+        </button>
+      </div>
+    </div>
+
+    ${currentPath === 'all' && !searchQuery ? `
+    <div class="stats-bar">
+      <div class="stat-card">
+        <div class="stat-num">${FILES.length}</div>
+        <div class="stat-label">Total Files</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">${htmlCount}</div>
+        <div class="stat-label">Presentations</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">${pdfCount}</div>
+        <div class="stat-label">PDF Reports</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">${mdCount}</div>
+        <div class="stat-label">Documents</div>
+      </div>
+    </div>
+    ` : ''}
+
+    ${breadcrumb}
+    ${filesHtml}
+  `;
+}
+
+function fileCardHtml(file, query = '') {
+  const displayName = query
+    ? file.name.replace(new RegExp(`(${query})`, 'gi'), '<span class="highlight">$1</span>')
+    : file.name.replace(/\.[^.]+$/, '');
+  const desc = query && file.description
+    ? file.description.replace(new RegExp(`(${query})`, 'gi'), '<span class="highlight">$1</span>')
+    : (file.description || file.folder);
+
+  const openAction = file.type === 'html' || file.type === 'pdf'
+    ? `href="${file.path}" target="_blank"`
+    : `href="${file.path}" download`;
+
+  return `
+    <a class="file-card" ${openAction}>
+      <div class="file-icon ${file.type}">${fileIcon(file.type)}</div>
+      <div class="file-info">
+        <div class="file-name">${displayName}</div>
+        <div class="file-meta">
+          <span class="file-type-badge ${file.type}">${file.type.toUpperCase()}</span>
+          <span>${file.date}</span>
+        </div>
+        <div style="font-size:11px;color:var(--text3);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${desc}</div>
+      </div>
+      <div class="file-actions">
+        <a class="action-btn" href="${file.path}" target="_blank" title="Open" onclick="event.stopPropagation()">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </a>
+        <a class="action-btn" href="${file.path}" download title="Download" onclick="event.stopPropagation()">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        </a>
+      </div>
+    </a>
+  `;
+}
+
+function setView(v) {
+  currentView = v;
+  render();
+}
+
+// ─── KEYBOARD SHORTCUT ─────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+    e.preventDefault();
+    document.getElementById('search').focus();
+  }
+  if (e.key === 'Escape') {
+    document.getElementById('search').value = '';
+    handleSearch('');
+    document.getElementById('search').blur();
+  }
+});
+
+// ─── INIT ──────────────────────────────────────────────────────────
+const savedTheme = localStorage.getItem('rtc-theme');
+if (savedTheme) {
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  if (savedTheme === 'light') {
+    document.getElementById('theme-icon').innerHTML = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+  }
+}
+
+render();
+</script>
+</body>
+</html>
