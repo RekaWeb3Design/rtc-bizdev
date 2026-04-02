@@ -746,14 +746,29 @@
       <p>After login, the setup agent runs this automatically. If you need to do it manually:</p>
       <pre><code>claude mcp add linkedin -- uvx linkedin-scraper-mcp</code></pre>
 
-      <h3>Cloudflare Deployment (Optional)</h3>
-      <p>To deploy the BizDev portal to the web:</p>
+      <h3>Cloudflare Deployment</h3>
+      <p>The BizDev portal is deployed to Cloudflare Pages under the Roll the Code account. Here's how to get your API token:</p>
       <ol>
-        <li>Copy <code>.env.example</code> to <code>.env</code> in the repo root</li>
-        <li>Replace <code>your_token_here</code> with your real Cloudflare API token</li>
-        <li>The setup agent deploys automatically, or run manually:</li>
+        <li>Go to <a href="https://dash.cloudflare.com" target="_blank" style="color:var(--accent2)">dash.cloudflare.com</a></li>
+        <li>Log in with your <strong>@rollthecode.com</strong> email (ask Reka for access to the Roll the Code Cloudflare account)</li>
+        <li>Once logged in, go to <strong>My Profile &rarr; API Tokens</strong></li>
+        <li>Get your token — either:
+          <ul>
+            <li><strong>Option A:</strong> Use the existing <strong>"RTC BizDev"</strong> API token — ask Reka to share it securely</li>
+            <li><strong>Option B:</strong> Create your own — click <strong>"+ Create Token"</strong> &rarr; <strong>"Edit Cloudflare Workers"</strong> template &rarr; Zone: <strong>rollthecode.com</strong> &rarr; Create</li>
+          </ul>
+        </li>
+        <li>Copy the token (you only see it once!)</li>
+        <li>In the repo root, open <code>.env</code> (copy from <code>.env.example</code> if missing)</li>
+        <li>Replace <code>your_token_here</code> with your token</li>
+        <li>Save — this file stays on your machine only, never pushed to GitHub</li>
       </ol>
+      <div class="warning">
+        <strong>Never share your <code>.env</code> file or paste your API token in chat, email, or Claude Code prompts.</strong> The token grants write access to the Cloudflare deployment. Treat it like a password.
+      </div>
+      <p>Once your <code>.env</code> is set, the <code>/setup</code> agent deploys automatically. To deploy manually at any time:</p>
       <pre><code>npx wrangler pages deploy . --project-name rtc-bizdev</code></pre>
+      <div class="info">The <strong>rollthecode.com</strong> Cloudflare account is managed by Reka. Contact her for access if needed.</div>
     </section>
 
     <!-- SECTION 8: TROUBLESHOOTING -->

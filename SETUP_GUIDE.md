@@ -201,17 +201,30 @@ After login is confirmed, the setup agent runs this automatically. If you need t
 claude mcp add linkedin -- uvx linkedin-scraper-mcp
 ```
 
-### 7d. Cloudflare Deployment (Optional)
+### 7d. Cloudflare Deployment
 
-If you want to deploy the BizDev portal to the web:
+The BizDev portal is deployed to Cloudflare Pages under the Roll the Code account. Here's how to get your API token:
 
-1. Copy `.env.example` to `.env` in the repo root
-2. Replace `your_token_here` with your real Cloudflare API token
-3. The setup agent will deploy automatically, or run manually:
+1. Go to **https://dash.cloudflare.com**
+2. Log in with your **@rollthecode.com** email (ask Reka for access to the Roll the Code Cloudflare account)
+3. Once logged in, go to **My Profile -> API Tokens**
+4. Get your token — either:
+   - **Option A:** Use the existing **"RTC BizDev"** API token — ask Reka to share it securely
+   - **Option B:** Create your own — click **"+ Create Token"** -> **"Edit Cloudflare Workers"** template -> Zone: **rollthecode.com** -> Create
+5. Copy the token (you only see it once!)
+6. In the repo root, open `.env` (copy from `.env.example` if missing)
+7. Replace `your_token_here` with your token
+8. Save — this file stays on your machine only, never pushed to GitHub
+
+> **⚠️ Never share your `.env` file or paste your API token in chat, email, or Claude Code prompts.** The token grants write access to the Cloudflare deployment. Treat it like a password.
+
+Once your `.env` is set, the `/setup` agent deploys automatically. To deploy manually at any time:
 
 ```powershell
 npx wrangler pages deploy . --project-name rtc-bizdev
 ```
+
+> The **rollthecode.com** Cloudflare account is managed by Reka. Contact her for access if needed.
 
 ---
 
