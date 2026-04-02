@@ -1210,18 +1210,18 @@ function fileCardHtml(file, query = '') {
     ? file.description.replace(new RegExp(`(${query})`, 'gi'), '<span class="highlight">$1</span>')
     : (file.description || file.folder);
 
-  // HTML/PDF: open in new tab | MD: open preview panel
+  // All cards use <div> so nested <a> download button works properly
+  // HTML/PDF: card click opens new tab | MD: card click opens preview panel
   const fileIdx = FILES.indexOf(file);
-  let cardTag;
+  let clickAction;
   if (file.type === 'html' || file.type === 'pdf') {
-    cardTag = `<a class="file-card" href="${file.path}" target="_blank">`;
+    clickAction = `onclick="window.open('${file.path}', '_blank')"`;
   } else {
-    cardTag = `<div class="file-card" onclick="openPreview(FILES[${fileIdx}])">`;
+    clickAction = `onclick="openPreview(FILES[${fileIdx}])"`;
   }
-  const cardClose = (file.type === 'html' || file.type === 'pdf') ? '</a>' : '</div>';
 
   return `
-    ${cardTag}
+    <div class="file-card" ${clickAction}>
       <div class="file-icon ${file.type}">${fileIcon(file.type)}</div>
       <div class="file-info">
         <div class="file-name">${displayName}</div>
@@ -1235,7 +1235,7 @@ function fileCardHtml(file, query = '') {
         <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         Download
       </a>
-    ${cardClose}
+    </div>
   `;
 }
 
