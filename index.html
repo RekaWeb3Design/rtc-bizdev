@@ -430,7 +430,7 @@
   .file-type-badge.pdf { color: var(--red); border-color: rgba(248,113,113,0.2); background: rgba(248,113,113,0.06); }
   .file-type-badge.md { color: var(--green); border-color: rgba(52,211,153,0.2); background: rgba(52,211,153,0.06); }
 
-  /* File actions — download always visible, open on hover */
+  /* File actions — download always visible */
   .file-actions {
     display: flex;
     gap: 6px;
@@ -453,17 +453,6 @@
     border-color: var(--accent);
     color: white;
   }
-  .action-btn.download-btn {
-    opacity: 0.7;
-  }
-  .action-btn.download-btn:hover {
-    opacity: 1;
-  }
-  .action-btn.open-btn {
-    opacity: 0;
-    transition: all var(--transition);
-  }
-  .file-card:hover .action-btn.open-btn { opacity: 1; }
 
   /* LIST VIEW */
   .file-list .file-card {
@@ -739,6 +728,28 @@
     border: none;
   }
 
+  /* LOADING SPINNER */
+  .loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 120px 32px;
+    gap: 16px;
+    color: var(--text3);
+    font-size: 13px;
+  }
+  .loading-spinner {
+    width: 28px; height: 28px;
+    border: 3px solid var(--border2);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
   /* RESPONSIVE */
   @media (max-width: 768px) {
     .layout { grid-template-columns: 1fr; }
@@ -886,7 +897,10 @@
   </aside>
 
   <main id="main-content">
-    <!-- Dynamically rendered -->
+    <div class="loading" id="loading">
+      <div class="loading-spinner"></div>
+      <p>Loading files...</p>
+    </div>
   </main>
 
   <div class="resizer" id="resizer"></div>
@@ -903,32 +917,10 @@
 
 <script>
 // ─── DATA STRUCTURE ────────────────────────────────────────────────
-// In production on Cloudflare Pages, this would be fetched from the API
-// For local use, files are listed here and auto-discovered
+// Loaded from outputs/files-index.json on page load, cached in memory.
+// Claude Code updates files-index.json when generating new documents.
 
-const REPO_ROOT = './outputs/';
-
-// File registry - Claude Code updates this when generating files
-// Format: { path, name, type, folder, date, size, description }
-let FILES = [
-  // Example entries - Claude Code populates these automatically
-  {
-    path: 'outputs/sales/one-pagers/onepager-enterprise-innovation-hubs-2026-04-02.md',
-    name: 'onepager-enterprise-innovation-hubs-2026-04-02.md',
-    type: 'md',
-    folder: 'sales/one-pagers',
-    date: '2026-04-02',
-    description: 'Sales one-pager for Enterprise Innovation Hubs'
-  },
-  {
-    path: 'outputs/reports/html/presentation-enterprise-innovation-hubs-2026-04-02.html',
-    name: 'presentation-enterprise-innovation-hubs-2026-04-02.html',
-    type: 'html',
-    folder: 'reports/html',
-    date: '2026-04-02',
-    description: 'HTML presentation for Enterprise Innovation Hubs'
-  }
-];
+let FILES = [];
 
 // ─── STATE ─────────────────────────────────────────────────────────
 let currentView = 'grid';
@@ -1032,16 +1024,12 @@ function openPreview(file) {
   `;
 
   if (file.type === 'md') {
-    body.innerHTML = '<div class="md-content">Loading...</div>';
+    if (file.content) {
+      body.innerHTML = '<div class="md-content">' + marked.parse(file.content) + '</div>';
+    } else {
+      body.innerHTML = '<div class="md-content"><p style="color:var(--text3)">No content available for preview.</p></div>';
+    }
     layout.classList.add('preview-open');
-    fetch(file.path)
-      .then(r => r.text())
-      .then(text => {
-        body.querySelector('.md-content').innerHTML = marked.parse(text);
-      })
-      .catch(() => {
-        body.querySelector('.md-content').innerHTML = '<p style="color:var(--red)">Failed to load file.</p>';
-      });
   } else if (file.type === 'pdf') {
     body.innerHTML = `<iframe src="${file.path}" title="${file.name}"></iframe>`;
     layout.classList.add('preview-open');
@@ -1222,10 +1210,7 @@ function fileCardHtml(file, query = '') {
         <div style="font-size:11px;color:var(--text3);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${desc}</div>
       </div>
       <div class="file-actions">
-        <a class="action-btn open-btn" href="${file.path}" target="_blank" title="Open in new tab" onclick="event.stopPropagation()">
-          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        </a>
-        <a class="action-btn download-btn" href="${file.path}" download title="Download" onclick="event.stopPropagation()">
+        <a class="action-btn" href="${file.path}" download title="Download" onclick="event.stopPropagation()">
           <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         </a>
       </div>
@@ -1298,7 +1283,18 @@ if (savedTheme) {
   }
 }
 
-render();
+// Fetch file index, cache in memory, then render
+fetch('./outputs/files-index.json')
+  .then(r => r.json())
+  .then(data => {
+    FILES = data;
+    render();
+  })
+  .catch(err => {
+    console.error('Failed to load files-index.json:', err);
+    FILES = [];
+    render();
+  });
 </script>
 </body>
 </html>

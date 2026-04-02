@@ -161,6 +161,16 @@ Examples:
 ### Auto-create client folders
 When generating materials for a specific client, create a subfolder inside `pitches/clients/` or `research/leads/` if one doesn't exist yet. Example: `outputs/pitches/clients/barclays/` or `outputs/research/leads/barclays/`.
 
+### File index — MANDATORY
+Every time you generate a new document, you **must** update `outputs/files-index.json`:
+1. Read the current `outputs/files-index.json`
+2. Add a new entry with: `path`, `name`, `type`, `folder`, `date`, `description`
+3. For **MD files**: also include a `content` field with the full markdown string (this is how the portal previews markdown — there is no per-file fetch)
+4. For **HTML/PDF files**: no `content` field needed (HTML opens in new tab, PDF uses iframe)
+5. Write the updated JSON back
+
+The portal (`index.html`) fetches this file once on load and caches it in memory. If you skip this step, new files won't appear in the portal.
+
 ## Audience Guide by Document Type
 
 | Format | Primary Reader | What They Need to Feel |
