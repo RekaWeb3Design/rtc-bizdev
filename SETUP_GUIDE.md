@@ -59,12 +59,24 @@ Claude Code requires a paid Anthropic subscription.
 
 This downloads the entire toolkit to your machine.
 
+**Option A — Clone via Cursor UI:**
+
 1. Open **Cursor**
 2. Press **Ctrl + Shift + P** to open the Command Palette
 3. Type **Git: Clone** and press Enter
-4. Paste the repository URL (get this from Reka or the GitHub page)
+4. Paste the repository URL: `https://github.com/RekaWeb3Design/rtc-bizdev.git`
 5. Choose a local folder — for example: `C:\Users\Anti\Documents\RTC`
 6. When it asks **"Open cloned repository?"** — click **Yes**
+
+**Option B — Clone via terminal:**
+
+Open PowerShell and run:
+
+```powershell
+git clone https://github.com/RekaWeb3Design/rtc-bizdev.git
+```
+
+Then open the cloned folder in Cursor: **File → Open Folder →** select the `rtc-bizdev` folder.
 
 You should now see the project files in the left sidebar: `CLAUDE.md`, `brand/`, `.claude/`, `outputs/`, etc.
 
@@ -81,7 +93,7 @@ Open a terminal inside Cursor and install Claude Code globally via npm.
 3. Run this command:
 
 ```powershell
-npm install -g @anthropic-ai/claude-code
+irm https://claude.ai/install.ps1 | iex
 ```
 
 4. Wait for it to finish, then verify:
@@ -92,13 +104,10 @@ claude --version
 
 You should see a version number like `1.x.x`.
 
-> **⚠️ If `npm` is not recognized:**  
-> You need Node.js first. Go to **https://nodejs.org**, download the **LTS** version, install it, then **close and reopen Cursor entirely** before trying again.
-
 > **⚠️ If `claude` is not recognized after install:**  
-> Close and reopen PowerShell. If still not working, run:
+> Close and reopen PowerShell (or restart Cursor entirely). If still not working, run:
 > ```powershell
-> $env:PATH += ";$env:APPDATA\npm"
+> $env:PATH += ";C:\Users\$env:USERNAME\.local\bin"
 > ```
 > Then try `claude --version` again.
 

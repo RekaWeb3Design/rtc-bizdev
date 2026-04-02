@@ -343,6 +343,11 @@
     padding: 0;
   }
 
+  a { color: var(--accent2); text-decoration: none; border-bottom: 1px solid rgba(129,140,248,0.3); transition: border-color var(--transition); }
+  a:hover { border-color: var(--accent2); }
+  .sidebar nav a { border-bottom: none; }
+  .sidebar nav a:hover { border-bottom: none; }
+
   /* Warning boxes */
   .warning {
     background: rgba(251,191,36,0.05);
@@ -557,7 +562,7 @@
       <h3>Cursor (Code Editor)</h3>
       <p>Cursor is an AI-native code editor built on VS Code. It's where you'll work.</p>
       <ol>
-        <li>Go to <strong>cursor.com</strong></li>
+        <li>Go to <a href="https://cursor.com" target="_blank" style="color:var(--accent2)">cursor.com</a></li>
         <li>Click <strong>Download for Windows</strong></li>
         <li>Run the installer — accept all defaults</li>
         <li>Open Cursor once to confirm it launches</li>
@@ -566,14 +571,14 @@
       <h3>GitHub Account</h3>
       <p>You need a GitHub account to access the project repository.</p>
       <ol>
-        <li>If you don't have one: go to <strong>github.com</strong> and sign up (free)</li>
+        <li>If you don't have one: go to <a href="https://github.com" target="_blank" style="color:var(--accent2)">github.com</a> and sign up (free)</li>
         <li>If you already have one: make sure you're logged in</li>
       </ol>
 
       <h3>Claude Pro Subscription</h3>
       <p>Claude Code requires a paid Anthropic subscription.</p>
       <ol>
-        <li>Go to <strong>claude.ai</strong></li>
+        <li>Go to <a href="https://claude.ai" target="_blank" style="color:var(--accent2)">claude.ai</a></li>
         <li>Subscribe to <strong>Claude Pro</strong> — <strong>$20/month</strong></li>
         <li>This gives you access to Claude Code with Opus-level models</li>
       </ol>
@@ -586,14 +591,19 @@
     <section id="clone">
       <h2><span class="section-num">03</span> Clone the Repo in Cursor</h2>
       <p>This downloads the entire toolkit to your machine.</p>
+      <p><strong>Option A — Clone via Cursor UI:</strong></p>
       <ol>
         <li>Open <strong>Cursor</strong></li>
         <li>Press <code>Ctrl + Shift + P</code> to open the Command Palette</li>
         <li>Type <strong>Git: Clone</strong> and press Enter</li>
-        <li>Paste the repository URL (get this from Reka or the GitHub page)</li>
+        <li>Paste the repository URL: <a href="https://github.com/RekaWeb3Design/rtc-bizdev.git" target="_blank" style="color:var(--accent2)">https://github.com/RekaWeb3Design/rtc-bizdev.git</a></li>
         <li>Choose a local folder — for example: <code>C:\Users\Anti\Documents\RTC</code></li>
         <li>When it asks <strong>"Open cloned repository?"</strong> — click <strong>Yes</strong></li>
       </ol>
+      <p><strong>Option B — Clone via terminal:</strong></p>
+      <p>Open PowerShell and run:</p>
+      <pre><code>git clone https://github.com/RekaWeb3Design/rtc-bizdev.git</code></pre>
+      <p>Then open the cloned folder in Cursor: <strong>File &rarr; Open Folder &rarr;</strong> select the <code>rtc-bizdev</code> folder.</p>
       <p>You should now see the project files in the left sidebar: <code>CLAUDE.md</code>, <code>brand/</code>, <code>.claude/</code>, <code>outputs/</code>, etc.</p>
       <div class="warning">
         <strong>If Cursor asks you to install Git</strong> — do it first, restart Cursor, then try cloning again.
@@ -609,16 +619,13 @@
         <li>Make sure it's set to <strong>PowerShell</strong> (check dropdown in top-right of terminal panel)</li>
         <li>Run this command:</li>
       </ol>
-      <pre><code>npm install -g @anthropic-ai/claude-code</code></pre>
+      <pre><code>irm https://claude.ai/install.ps1 | iex</code></pre>
       <p>Wait for it to finish, then verify:</p>
       <pre><code>claude --version</code></pre>
       <p>You should see a version number like <code>1.x.x</code>.</p>
       <div class="warning">
-        <strong>If <code>npm</code> is not recognized:</strong> You need Node.js first. Go to <strong>nodejs.org</strong>, download the <strong>LTS</strong> version, install it, then <strong>close and reopen Cursor entirely</strong> before trying again.
-      </div>
-      <div class="warning">
-        <strong>If <code>claude</code> is not recognized after install:</strong> Close and reopen PowerShell. If still not working, run:
-        <pre><code>$env:PATH += ";$env:APPDATA\npm"</code></pre>
+        <strong>If <code>claude</code> is not recognized after install:</strong> Close and reopen PowerShell (or restart Cursor entirely). If still not working, run:
+        <pre><code>$env:PATH += ";C:\Users\$env:USERNAME\.local\bin"</code></pre>
       </div>
     </section>
 
@@ -674,7 +681,7 @@
       <h3>Firecrawl API Key</h3>
       <p>Firecrawl powers web search and page scraping for market research.</p>
       <ol>
-        <li>Go to <strong>firecrawl.dev</strong></li>
+        <li>Go to <a href="https://firecrawl.dev" target="_blank" style="color:var(--accent2)">firecrawl.dev</a></li>
         <li>Sign up for a free account</li>
         <li>Go to your dashboard and copy your <strong>API key</strong></li>
         <li>When the setup agent asks for it, paste it in</li>
