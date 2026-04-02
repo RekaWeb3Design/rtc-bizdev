@@ -6,6 +6,7 @@
 <title>RTC BizDev Portal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
 <style>
   :root {
     --bg: #080810;
@@ -29,6 +30,7 @@
     --radius: 12px;
     --radius-sm: 8px;
     --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
+    --preview-width: 380px;
   }
   [data-theme="light"] {
     --bg: #f5f5ff;
@@ -164,13 +166,16 @@
     background: var(--bg2);
   }
 
-  /* LAYOUT */
+  /* LAYOUT — 3 columns: sidebar | browser | preview */
   .layout {
     display: grid;
-    grid-template-columns: 260px 1fr;
+    grid-template-columns: 220px 1fr;
     min-height: calc(100vh - 60px);
     position: relative;
     z-index: 1;
+  }
+  .layout.preview-open {
+    grid-template-columns: 220px 1fr var(--preview-width);
   }
 
   /* SIDEBAR */
@@ -425,14 +430,13 @@
   .file-type-badge.pdf { color: var(--red); border-color: rgba(248,113,113,0.2); background: rgba(248,113,113,0.06); }
   .file-type-badge.md { color: var(--green); border-color: rgba(52,211,153,0.2); background: rgba(52,211,153,0.06); }
 
+  /* File actions — download always visible, open on hover */
   .file-actions {
     display: flex;
     gap: 6px;
-    opacity: 0;
-    transition: opacity var(--transition);
     flex-shrink: 0;
+    align-items: center;
   }
-  .file-card:hover .file-actions { opacity: 1; }
   .action-btn {
     background: var(--bg3);
     border: 1px solid var(--border2);
@@ -449,6 +453,17 @@
     border-color: var(--accent);
     color: white;
   }
+  .action-btn.download-btn {
+    opacity: 0.7;
+  }
+  .action-btn.download-btn:hover {
+    opacity: 1;
+  }
+  .action-btn.open-btn {
+    opacity: 0;
+    transition: all var(--transition);
+  }
+  .file-card:hover .action-btn.open-btn { opacity: 1; }
 
   /* LIST VIEW */
   .file-list .file-card {
@@ -532,8 +547,8 @@
   }
 
   /* SEARCH HIGHLIGHT */
-  .highlight { 
-    background: rgba(99,102,241,0.25); 
+  .highlight {
+    background: rgba(99,102,241,0.25);
     color: var(--accent2);
     border-radius: 2px;
     padding: 0 1px;
@@ -551,10 +566,192 @@
     margin: 12px 20px;
   }
 
+  /* ─── RESIZER HANDLE ──────────────────────────────────── */
+  .resizer {
+    width: 5px;
+    cursor: col-resize;
+    background: var(--border);
+    position: relative;
+    flex-shrink: 0;
+    transition: background 0.15s;
+    display: none;
+  }
+  .layout.preview-open .resizer { display: block; }
+  .resizer:hover,
+  .resizer.active {
+    background: var(--accent);
+  }
+  .resizer::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 3px;
+    height: 32px;
+    border-radius: 3px;
+    background: var(--text3);
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  .resizer:hover::after,
+  .resizer.active::after { opacity: 0.5; }
+
+  /* ─── PREVIEW PANEL ───────────────────────────────────── */
+  .preview-panel {
+    border-left: 1px solid var(--border);
+    background: var(--bg);
+    position: sticky;
+    top: 60px;
+    height: calc(100vh - 60px);
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    transition: background var(--transition);
+  }
+  .layout.preview-open .preview-panel { display: flex; }
+
+  .preview-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    background: var(--bg2);
+    min-height: 54px;
+  }
+  .preview-header .file-type-badge {
+    flex-shrink: 0;
+  }
+  .preview-filename {
+    flex: 1;
+    min-width: 0;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .preview-header .action-btn {
+    flex-shrink: 0;
+    opacity: 1;
+  }
+  .preview-close {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    color: var(--text2);
+    transition: all var(--transition);
+    flex-shrink: 0;
+  }
+  .preview-close:hover {
+    background: var(--red);
+    border-color: var(--red);
+    color: white;
+  }
+
+  .preview-body {
+    flex: 1;
+    overflow: auto;
+    min-height: 0;
+  }
+
+  /* Markdown rendering in preview */
+  .preview-body .md-content {
+    padding: 24px 20px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text);
+  }
+  .md-content h1 { font-family: 'Space Grotesk', sans-serif; font-size: 24px; font-weight: 700; margin: 0 0 16px; color: var(--text); letter-spacing: -0.02em; }
+  .md-content h2 { font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700; margin: 28px 0 12px; color: var(--text); letter-spacing: -0.02em; }
+  .md-content h3 { font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 600; margin: 24px 0 8px; color: var(--text); }
+  .md-content h4 { font-size: 14px; font-weight: 600; margin: 20px 0 6px; color: var(--text2); }
+  .md-content p { margin: 0 0 14px; }
+  .md-content ul, .md-content ol { margin: 0 0 14px; padding-left: 22px; }
+  .md-content li { margin-bottom: 4px; }
+  .md-content a { color: var(--accent2); text-decoration: underline; text-underline-offset: 2px; }
+  .md-content a:hover { color: var(--accent); }
+  .md-content code {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--accent2);
+  }
+  .md-content pre {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    overflow-x: auto;
+    margin: 0 0 14px;
+  }
+  .md-content pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--text);
+  }
+  .md-content blockquote {
+    border-left: 3px solid var(--accent);
+    padding-left: 14px;
+    margin: 0 0 14px;
+    color: var(--text2);
+    font-style: italic;
+  }
+  .md-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 0 14px;
+    font-size: 13px;
+  }
+  .md-content th, .md-content td {
+    border: 1px solid var(--border);
+    padding: 8px 10px;
+    text-align: left;
+  }
+  .md-content th {
+    background: var(--bg3);
+    font-weight: 500;
+    color: var(--text2);
+  }
+  .md-content hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 20px 0;
+  }
+  .md-content strong { color: var(--text); font-weight: 600; }
+  .md-content em { color: var(--text2); }
+  .md-content img { max-width: 100%; border-radius: var(--radius-sm); }
+
+  /* PDF iframe in preview */
+  .preview-body iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
   /* RESPONSIVE */
   @media (max-width: 768px) {
     .layout { grid-template-columns: 1fr; }
+    .layout.preview-open { grid-template-columns: 1fr; }
     aside { display: none; }
+    .resizer { display: none !important; }
+    .preview-panel {
+      position: fixed;
+      top: 60px;
+      right: 0;
+      width: 100% !important;
+      z-index: 50;
+    }
     .stats-bar { grid-template-columns: repeat(2,1fr); }
     main { padding: 20px; }
     #search { width: 180px; }
@@ -567,6 +764,14 @@
   }
   .file-card {
     animation: fadeIn 0.3s ease both;
+  }
+
+  @keyframes slideIn {
+    from { transform: translateX(40px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+  .layout.preview-open .preview-panel {
+    animation: slideIn 0.25s ease both;
   }
 </style>
 </head>
@@ -591,7 +796,7 @@
   </div>
 </header>
 
-<div class="layout">
+<div class="layout" id="layout">
   <aside>
     <div class="sidebar-section">
       <span class="sidebar-label">Overview</span>
@@ -683,6 +888,17 @@
   <main id="main-content">
     <!-- Dynamically rendered -->
   </main>
+
+  <div class="resizer" id="resizer"></div>
+
+  <div class="preview-panel" id="preview-panel">
+    <div class="preview-header" id="preview-header">
+      <!-- populated dynamically -->
+    </div>
+    <div class="preview-body" id="preview-body">
+      <!-- populated dynamically -->
+    </div>
+  </div>
 </div>
 
 <script>
@@ -718,6 +934,7 @@ let FILES = [
 let currentView = 'grid';
 let currentPath = 'all';
 let searchQuery = '';
+let previewFile = null;
 
 // ─── THEME ─────────────────────────────────────────────────────────
 function toggleTheme() {
@@ -788,12 +1005,65 @@ function updateBadges() {
 // ─── FILE ICON ─────────────────────────────────────────────────────
 function fileIcon(type) {
   const icons = {
-    html: '🌐',
-    pdf: '📄',
-    md: '📝',
-    folder: '📁'
+    html: '\u{1F310}',
+    pdf: '\u{1F4C4}',
+    md: '\u{1F4DD}',
+    folder: '\u{1F4C1}'
   };
-  return icons[type] || '📎';
+  return icons[type] || '\u{1F4CE}';
+}
+
+// ─── PREVIEW PANEL ─────────────────────────────────────────────────
+function openPreview(file) {
+  previewFile = file;
+  const layout = document.getElementById('layout');
+  const header = document.getElementById('preview-header');
+  const body = document.getElementById('preview-body');
+
+  header.innerHTML = `
+    <span class="file-type-badge ${file.type}">${file.type.toUpperCase()}</span>
+    <span class="preview-filename" title="${file.name}">${file.name}</span>
+    <a class="action-btn" href="${file.path}" download title="Download" onclick="event.stopPropagation()">
+      <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    </a>
+    <button class="preview-close" onclick="closePreview()" title="Close preview">
+      <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  `;
+
+  if (file.type === 'md') {
+    body.innerHTML = '<div class="md-content">Loading...</div>';
+    layout.classList.add('preview-open');
+    fetch(file.path)
+      .then(r => r.text())
+      .then(text => {
+        body.querySelector('.md-content').innerHTML = marked.parse(text);
+      })
+      .catch(() => {
+        body.querySelector('.md-content').innerHTML = '<p style="color:var(--red)">Failed to load file.</p>';
+      });
+  } else if (file.type === 'pdf') {
+    body.innerHTML = `<iframe src="${file.path}" title="${file.name}"></iframe>`;
+    layout.classList.add('preview-open');
+  }
+}
+
+function closePreview() {
+  previewFile = null;
+  document.getElementById('layout').classList.remove('preview-open');
+  document.getElementById('preview-body').innerHTML = '';
+  document.getElementById('preview-header').innerHTML = '';
+}
+
+// ─── FILE CLICK HANDLER ───────────────────────────────────────────
+function handleFileClick(e, file) {
+  if (file.type === 'html') {
+    // HTML opens in new tab — handled by the <a> tag href/target
+    return;
+  }
+  // MD and PDF open in preview panel
+  e.preventDefault();
+  openPreview(file);
 }
 
 // ─── RENDER ────────────────────────────────────────────────────────
@@ -846,7 +1116,7 @@ function render() {
     filesHtml = `
       <div class="no-results">
         <div class="empty">
-          <div class="empty-icon">${searchQuery ? '🔍' : '📂'}</div>
+          <div class="empty-icon">${searchQuery ? '\u{1F50D}' : '\u{1F4C2}'}</div>
           <h3>${searchQuery ? 'No files found' : 'This folder is empty'}</h3>
           <p>${searchQuery
             ? `No files match "${searchQuery}". Try a different search term.`
@@ -931,12 +1201,17 @@ function fileCardHtml(file, query = '') {
     ? file.description.replace(new RegExp(`(${query})`, 'gi'), '<span class="highlight">$1</span>')
     : (file.description || file.folder);
 
-  const openAction = file.type === 'html' || file.type === 'pdf'
-    ? `href="${file.path}" target="_blank"`
-    : `href="${file.path}" download`;
+  // HTML files: always open in new tab via <a> tag
+  // MD/PDF files: click handler opens preview panel
+  const isHtml = file.type === 'html';
+  const fileIdx = FILES.indexOf(file);
+
+  const cardTag = isHtml
+    ? `<a class="file-card" href="${file.path}" target="_blank">`
+    : `<a class="file-card" href="${file.path}" onclick="handleFileClick(event, FILES[${fileIdx}])">`;
 
   return `
-    <a class="file-card" ${openAction}>
+    ${cardTag}
       <div class="file-icon ${file.type}">${fileIcon(file.type)}</div>
       <div class="file-info">
         <div class="file-name">${displayName}</div>
@@ -947,10 +1222,10 @@ function fileCardHtml(file, query = '') {
         <div style="font-size:11px;color:var(--text3);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${desc}</div>
       </div>
       <div class="file-actions">
-        <a class="action-btn" href="${file.path}" target="_blank" title="Open" onclick="event.stopPropagation()">
+        <a class="action-btn open-btn" href="${file.path}" target="_blank" title="Open in new tab" onclick="event.stopPropagation()">
           <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
         </a>
-        <a class="action-btn" href="${file.path}" download title="Download" onclick="event.stopPropagation()">
+        <a class="action-btn download-btn" href="${file.path}" download title="Download" onclick="event.stopPropagation()">
           <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         </a>
       </div>
@@ -963,6 +1238,40 @@ function setView(v) {
   render();
 }
 
+// ─── RESIZER ──────────────────────────────────────────────────────
+(function initResizer() {
+  const resizer = document.getElementById('resizer');
+  const layout = document.getElementById('layout');
+  let isResizing = false;
+  let startX, startWidth;
+
+  resizer.addEventListener('mousedown', (e) => {
+    isResizing = true;
+    startX = e.clientX;
+    const panel = document.getElementById('preview-panel');
+    startWidth = panel.offsetWidth;
+    resizer.classList.add('active');
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+    e.preventDefault();
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (!isResizing) return;
+    const dx = startX - e.clientX;
+    const newWidth = Math.max(260, Math.min(700, startWidth + dx));
+    document.documentElement.style.setProperty('--preview-width', newWidth + 'px');
+  });
+
+  document.addEventListener('mouseup', () => {
+    if (!isResizing) return;
+    isResizing = false;
+    resizer.classList.remove('active');
+    document.body.style.cursor = '';
+    document.body.style.userSelect = '';
+  });
+})();
+
 // ─── KEYBOARD SHORTCUT ─────────────────────────────────────────────
 document.addEventListener('keydown', e => {
   if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
@@ -970,9 +1279,13 @@ document.addEventListener('keydown', e => {
     document.getElementById('search').focus();
   }
   if (e.key === 'Escape') {
-    document.getElementById('search').value = '';
-    handleSearch('');
-    document.getElementById('search').blur();
+    if (previewFile) {
+      closePreview();
+    } else {
+      document.getElementById('search').value = '';
+      handleSearch('');
+      document.getElementById('search').blur();
+    }
   }
 });
 

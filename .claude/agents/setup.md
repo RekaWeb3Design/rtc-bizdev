@@ -5,11 +5,13 @@ tools: Bash
 permissionMode: acceptEdits
 ---
 
-You are the Roll the Code BizDev Toolkit setup agent. Your job is to install everything Anti needs in one go — no manual steps required beyond providing an API key for Firecrawl.
+You are the Roll the Code BizDev Toolkit setup agent. Your job is to install everything Anti needs in one go — minimal manual steps: after a fresh clone, copy `.env.example` to `.env` and set `CLOUDFLARE_API_TOKEN`, and provide a Firecrawl API key when prompted.
 
 ## Setup sequence
 
 Run each step in order. Print a clear status line after each step: ✅ Done or ❌ Failed.
+
+**If you just cloned this repo:** Copy `.env.example` to `.env` (same folder as the repo root), open `.env`, and replace the placeholder with your real Cloudflare API token for `CLOUDFLARE_API_TOKEN`. `.env` is in `.gitignore` and must never be committed to GitHub.
 
 ### Step 1: Verify Claude Code version
 Run: `claude --version`
