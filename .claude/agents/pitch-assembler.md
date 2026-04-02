@@ -36,35 +36,56 @@ Based on segment, select the right angle:
 ### Step 3: Produce materials in order
 1. First produce the one-pager (sets the message foundation)
 2. Then expand into pitch deck outline (same message, more depth)
-3. Then produce HTML presentation (visual version of the deck)
-4. Finally draft the follow-up email
+3. Then produce HTML presentation using the `html-presentation` skill (visual version of the deck)
+4. Then produce branded PDF report using the `pdf-report` skill (detailed, printable version — more depth than the HTML)
+5. Finally draft the follow-up email
 
-### Step 4: Save all files
+### Step 4: Automated post-generation pipeline
+After each document is generated, run these steps automatically:
+
+**4a. HTML generation (already done in Step 3)**
+Every package always includes an HTML presentation. This is produced via the `html-presentation` skill, not converted from another format.
+
+**4b. PDF generation via pdf-report skill**
+Use the `pdf-report` skill to generate a standalone branded PDF with more detailed content than the HTML version. Do NOT convert HTML to PDF — the PDF is its own deliverable with deeper analysis, full context, and print-optimized layout. Save as `outputs/[client-slug]-report-[date].md` and convert to `outputs/[client-slug]-report-[date].pdf` using the puppeteer script defined in the pdf-report skill.
+
+**4c. Cloudflare deployment (placeholder)**
+```bash
+# TODO: uncomment when RTC Cloudflare account is configured
+# npx wrangler pages deploy outputs/[client-slug]-presentation-[date].html --project-name rtc-pitches --branch [client-slug]
+```
+
+### Step 5: Save all files
 Save to `/outputs/` with consistent naming:
 ```
 outputs/
   [client-slug]-onepager-[date].md
   [client-slug]-pitchdeck-[date].md
   [client-slug]-presentation-[date].html
+  [client-slug]-report-[date].md
+  [client-slug]-report-[date].pdf
   [client-slug]-followup-email-[date].md
 ```
 
-### Step 5: Summary
+### Step 6: Summary
 Print a package summary:
 ```
-━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Pitch Package: [Client]
-━━━━━━━━━━━━━━━━━━━━━━━━
-✅ One-pager → outputs/[file]
-✅ Pitch deck → outputs/[file]
-✅ HTML presentation → outputs/[file]
-✅ Follow-up email → outputs/[file]
-━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ One-pager (MD)        → outputs/[file].md
+✅ Pitch deck (MD)       → outputs/[file].md
+✅ HTML presentation     → outputs/[file].html
+✅ PDF report            → outputs/[file].pdf
+⏳ Cloudflare URL        → pending (account not yet configured)
+✅ Follow-up email       → outputs/[file].md
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Recommended send sequence:
 1. Send one-pager with intro email
 2. Present deck in meeting
-3. Send HTML link + follow-up email after
-━━━━━━━━━━━━━━━━━━━━━━━━
+3. Send HTML link + PDF + follow-up email after
+4. (Future) Share Cloudflare-hosted URL for live access
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
 ## Tone reminder

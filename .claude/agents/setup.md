@@ -36,7 +36,51 @@ Run these commands one by one using the Claude Code plugin system. Since you can
 
 Print: "Copy-paste these commands into Claude Code one by one. Come back when done."
 
-### Step 3: Install Firecrawl
+### Step 3: Install system dependencies
+
+Run each check and install in order:
+
+**3a. Node.js**
+```bash
+node --version
+```
+If missing or command not recognized, print:
+"⚠️ Node.js not found. Install from https://nodejs.org (LTS version), then re-run /setup"
+Stop here.
+
+> ⚠️ **Windows PATH note:** If the command is not recognized after install, close and reopen PowerShell.
+> If still not working, run: `$env:PATH += ";C:\Program Files\nodejs"`
+
+**3b. Puppeteer CLI**
+```bash
+npm install -g puppeteer-cli
+```
+Verify with:
+```bash
+puppeteer --version
+```
+
+> ⚠️ **Windows PATH note:** If the command is not recognized after install, close and reopen PowerShell.
+> If still not working, run: `$env:PATH += ";$env:APPDATA\npm"`
+
+**3c. uv (Python package installer)**
+Install via PowerShell:
+```powershell
+irm https://astral.sh/uv/install.ps1 | iex
+```
+After install, the user must either close and reopen the terminal, OR run:
+```powershell
+$env:PATH += ";C:\Users\$env:USERNAME\.local\bin"
+```
+Verify with:
+```bash
+uv --version
+```
+
+> ⚠️ **Windows PATH note:** If the command is not recognized after install, close and reopen PowerShell.
+> If still not working, run: `$env:PATH += ";C:\Users\[username]\.local\bin"`
+
+### Step 4: Install Firecrawl
 
 Run the following bash commands:
 
@@ -69,35 +113,66 @@ Verify with:
 firecrawl --version
 ```
 
-### Step 4: Verify skills are loaded
+### Step 5: Install MCP servers
+
+**5a. Reddit MCP**
+```bash
+claude mcp add reddit -- npx -y @modelcontextprotocol/server-reddit
+```
+
+> ⚠️ **Windows PATH note:** If `claude` command is not recognized, close and reopen PowerShell.
+> If still not working, run: `$env:PATH += ";$env:APPDATA\npm"`
+
+**5b. LinkedIn MCP — login step**
+This step must be run in a **separate PowerShell window** (not inside Claude Code), because it opens an interactive browser login:
+```powershell
+uvx linkedin-scraper-mcp --login
+```
+Print: "Open a separate PowerShell window and run the command above. Complete the LinkedIn login in the browser. Come back here when done."
+
+> ⚠️ **Windows PATH note:** If `uvx` is not recognized, close and reopen PowerShell.
+> If still not working, run: `$env:PATH += ";C:\Users\[username]\.local\bin"`
+
+**5c. LinkedIn MCP — register**
+After the user confirms login is complete:
+```bash
+claude mcp add linkedin -- uvx linkedin-scraper-mcp
+```
+
+### Step 6: Verify skills are loaded
 
 Check that the `.claude/skills/` directory contains the expected skills:
 ```bash
 ls .claude/skills/
 ```
 
-Expected: `pitch-deck`, `sales-onepager`, `investor-brief`, `html-presentation`, `collaborator-deck`, `business-planning`
+Expected: `pitch-deck`, `sales-onepager`, `investor-brief`, `html-presentation`, `collaborator-deck`, `business-planning`, `pdf-report`
 
 If any are missing, print which ones and say: "Contact Réka to restore missing skills from the repo."
 
-### Step 5: Final status report
+### Step 7: Final status report
 
 Print a clean summary:
 
 ```
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   Roll the Code BizDev Toolkit Setup
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-✅ Claude Code — verified
-✅ UI/UX Pro Max — installed
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ Claude Code      — verified
+✅ Node.js          — verified
+✅ Puppeteer CLI    — installed
+✅ uv               — installed
+✅ UI/UX Pro Max    — installed
 ✅ Marketing Skills — installed
-✅ C-Level Skills — installed  
-✅ Business Growth Skills — installed
-✅ Firecrawl — installed & authenticated
-✅ Project skills — all 6 present
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ C-Level Skills   — installed
+✅ Business Growth  — installed
+✅ Firecrawl        — installed & authenticated
+✅ Reddit MCP       — installed
+✅ LinkedIn MCP     — installed & authenticated
+✅ Project skills   — all 7 present
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 You're ready. Try: "Create a sales one-pager for Roll the Code targeting enterprise innovation hubs."
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
 If anything failed, list what needs to be fixed and offer to retry that step.
