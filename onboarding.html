@@ -170,7 +170,7 @@
 
   /* Hero */
   .hero {
-    margin-bottom: 56px;
+    margin-bottom: 0;
     padding-bottom: 40px;
     border-bottom: 1px solid var(--border);
   }
@@ -218,6 +218,57 @@
     color: var(--text2);
     font-weight: 500;
   }
+
+  /* ─── OS TABS ─── */
+  .os-tabs-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 0 20px;
+    margin-bottom: 36px;
+    border-bottom: 1px solid var(--border);
+  }
+  .os-tabs-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text3);
+    margin-right: 4px;
+  }
+  .os-tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 3px;
+  }
+  .os-tab {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 16px;
+    border-radius: 7px;
+    border: none;
+    background: transparent;
+    color: var(--text3);
+    cursor: pointer;
+    transition: all var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .os-tab:hover { color: var(--text2); background: var(--bg3); }
+  .os-tab.active {
+    color: var(--text);
+    background: var(--accent3);
+    box-shadow: 0 2px 8px rgba(99,102,241,0.25);
+  }
+  .os-tab svg { width: 14px; height: 14px; }
+
+  /* OS visibility */
+  [data-os] { display: none; }
 
   /* Sections */
   section {
@@ -542,12 +593,31 @@
     <div class="hero">
       <div class="hero-badge">Onboarding Guide</div>
       <h1>Setup the <span>BizDev Toolkit</span></h1>
-      <p>Your complete guide to getting the Roll the Code AI-powered business development system running on Windows. From zero to generating pitch decks in 30 minutes.</p>
+      <p>Your complete guide to getting the Roll the Code AI-powered business development system running. From zero to generating pitch decks in 30 minutes.</p>
       <div class="hero-meta">
         <span><strong>For:</strong> Anti (Antal Karolyi)</span>
-        <span><strong>Platform:</strong> Windows 11</span>
+        <span><strong>Platform:</strong> <span id="platform-label">Windows 11</span></span>
         <span><strong>Time:</strong> ~30 minutes</span>
         <span><strong>Updated:</strong> April 2026</span>
+      </div>
+    </div>
+
+    <!-- OS TABS -->
+    <div class="os-tabs-bar">
+      <span class="os-tabs-label">OS</span>
+      <div class="os-tabs">
+        <button class="os-tab active" data-target="windows">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 12V6.5l8-1.1V12H3zm9-6.8L22 3.5V12H12V5.2zM12 13h10v8.5l-10-1.3V13zM3 13h8v6.6l-8-1.1V13z"/></svg>
+          Windows
+        </button>
+        <button class="os-tab" data-target="mac">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+          macOS
+        </button>
+        <button class="os-tab" data-target="linux">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.504 0c-.155 0-.315.008-.48.021-4.226.333-3.105 4.807-3.17 6.298-.076 1.092-.3 1.953-1.05 3.02-.885 1.051-2.127 2.75-2.716 4.521-.278.832-.41 1.684-.287 2.489a.424.424 0 00-.11.135c-.26.268-.45.6-.663.839-.199.199-.485.267-.797.4-.313.136-.658.269-.864.68-.09.189-.136.394-.132.602 0 .199.027.4.055.536.058.399.116.728.04.97-.249.68-.28 1.145-.106 1.484.174.334.535.47.94.601.81.2 1.91.135 2.774.6.926.466 1.866.67 2.616.47.526-.116.97-.464 1.208-.946.587-.003 1.23-.269 2.26-.334.699-.058 1.574.267 2.577.2.025.134.063.198.114.333l.003.003c.391.778 1.113 1.368 1.884 1.43.868.065 1.555-.26 1.762-.695.434-.046.932-.37 1.398-.837.465-.472.798-.974.821-1.261a.49.49 0 00-.14-.349c-.445-.398-1.006-.468-1.516-.517a3.192 3.192 0 01-1.227-.397c-.346-.198-.596-.348-.872-.457-.154-.068-.237-.205-.27-.39-.006-.072-.009-.146-.009-.185-.002-.05-.002-.064.003-.08a5.413 5.413 0 00.312-2.127c0-.04.004-.06.013-.098.106-.486.264-1.075.399-1.578.135-.506.264-.975.29-1.202.066-.559.066-1.036-.002-1.725-.153-1.58-.754-2.96-1.504-4.074-.47-.696-1.017-1.266-1.5-1.805-.375-.417-.693-.782-.938-1.144-.245-.364-.42-.736-.542-1.2-.122-.435-.17-1.148-.05-1.827.12-.669.406-1.302.857-1.727.45-.425 1.052-.64 1.852-.661.445-.01.88.054 1.275.16.16.043.318.088.48.128.16.035.32.067.489.078a2.08 2.08 0 00.876-.15c.34-.138.655-.387.818-.728.17-.348.128-.698.05-1.016a3.593 3.593 0 00-.302-.78 4.158 4.158 0 00-.394-.627C15.093.397 14.233.012 13.33 0h-.006c-.286-.003-.57.003-.82.009z"/></svg>
+          Linux
+        </button>
       </div>
     </div>
 
@@ -601,7 +671,7 @@
       <p>Cursor is an AI-native code editor built on VS Code. It's where you'll work.</p>
       <ol>
         <li>Go to <a href="https://cursor.com" target="_blank" style="color:var(--accent2)">cursor.com</a></li>
-        <li>Click <strong>Download for Windows</strong></li>
+        <li>Click <strong>Download</strong> for your platform</li>
         <li>Run the installer — accept all defaults</li>
         <li>Open Cursor once to confirm it launches</li>
       </ol>
@@ -632,14 +702,21 @@
       <p><strong>Option A — Clone via Cursor UI:</strong></p>
       <ol>
         <li>Open <strong>Cursor</strong></li>
-        <li>Press <code>Ctrl + Shift + P</code> to open the Command Palette</li>
+        <li data-os="windows mac">Press <code>Ctrl + Shift + P</code> to open the Command Palette</li>
+        <li data-os="linux">Press <code>Ctrl + Shift + P</code> to open the Command Palette</li>
         <li>Type <strong>Git: Clone</strong> and press Enter</li>
         <li>Paste the repository URL: <a href="https://github.com/RekaWeb3Design/rtc-bizdev.git" target="_blank" style="color:var(--accent2)">https://github.com/RekaWeb3Design/rtc-bizdev.git</a></li>
-        <li>Choose a local folder — for example: <code>C:\Users\Anti\Documents\RTC</code></li>
+        <li data-os="windows">Choose a local folder — for example: <code>C:\Users\Anti\Documents\RTC</code></li>
+        <li data-os="mac linux">Choose a local folder — for example: <code>~/Documents/RTC</code></li>
         <li>When it asks <strong>"Open cloned repository?"</strong> — click <strong>Yes</strong></li>
       </ol>
       <p><strong>Option B — Clone via terminal:</strong></p>
-      <p>Open PowerShell and run:</p>
+      <div data-os="windows">
+        <p>Open PowerShell and run:</p>
+      </div>
+      <div data-os="mac linux">
+        <p>Open Terminal and run:</p>
+      </div>
       <pre><code>git clone https://github.com/RekaWeb3Design/rtc-bizdev.git</code></pre>
       <p>Then open the cloned folder in Cursor: <strong>File &rarr; Open Folder &rarr;</strong> select the <code>rtc-bizdev</code> folder.</p>
       <p>You should now see the project files in the left sidebar: <code>CLAUDE.md</code>, <code>brand/</code>, <code>.claude/</code>, <code>outputs/</code>, etc.</p>
@@ -651,19 +728,25 @@
     <!-- SECTION 4: INSTALL CLAUDE CODE -->
     <section id="install-claude">
       <h2><span class="section-num">04</span> Install Claude Code</h2>
-      <p>Open a terminal inside Cursor and install Claude Code globally.</p>
+      <p>Open a terminal inside Cursor and install Claude Code.</p>
       <ol>
         <li>In Cursor, press <code>Ctrl + `</code> (backtick) to open the integrated terminal</li>
-        <li>Make sure it's set to <strong>PowerShell</strong> (check dropdown in top-right of terminal panel)</li>
+        <li data-os="windows">Make sure it's set to <strong>PowerShell</strong> (check dropdown in top-right of terminal panel)</li>
+        <li data-os="mac linux">Make sure it's set to your default shell (<strong>zsh</strong> or <strong>bash</strong>)</li>
         <li>Run this command:</li>
       </ol>
-      <pre><code>irm https://claude.ai/install.ps1 | iex</code></pre>
+      <pre data-os="windows"><code>irm https://claude.ai/install.ps1 | iex</code></pre>
+      <pre data-os="mac linux"><code>curl -fsSL https://claude.ai/install.sh | bash</code></pre>
       <p>Wait for it to finish, then verify:</p>
       <pre><code>claude --version</code></pre>
       <p>You should see a version number like <code>1.x.x</code>.</p>
-      <div class="warning">
+      <div class="warning" data-os="windows">
         <strong>If <code>claude</code> is not recognized after install:</strong> Close and reopen PowerShell (or restart Cursor entirely). If still not working, run:
         <pre><code>$env:PATH += ";C:\Users\$env:USERNAME\.local\bin"</code></pre>
+      </div>
+      <div class="warning" data-os="mac linux">
+        <strong>If <code>claude</code> is not recognized after install:</strong> Close and reopen your terminal (or restart Cursor entirely). If still not working, run:
+        <pre><code>export PATH="$HOME/.local/bin:$PATH"</code></pre>
       </div>
     </section>
 
@@ -673,7 +756,8 @@
       <ol>
         <li>In the Cursor terminal, navigate to the project folder:</li>
       </ol>
-      <pre><code>cd "C:\Users\Anti\Documents\RTC\rtc-bizdev"</code></pre>
+      <pre data-os="windows"><code>cd "C:\Users\Anti\Documents\RTC\rtc-bizdev"</code></pre>
+      <pre data-os="mac linux"><code>cd ~/Documents/RTC/rtc-bizdev</code></pre>
       <p>(Adjust the path to wherever you cloned the repo.)</p>
       <ol start="2">
         <li>Start Claude Code:</li>
@@ -729,7 +813,9 @@
       <h3>LinkedIn MCP — Login</h3>
       <p>This step <strong>must run outside Claude Code</strong>. It opens an interactive browser login.</p>
       <ol>
-        <li>Open a <strong>separate PowerShell window</strong> — press <code>Win + X</code>, then click <strong>Terminal</strong></li>
+        <li data-os="windows">Open a <strong>separate PowerShell window</strong> — press <code>Win + X</code>, then click <strong>Terminal</strong></li>
+        <li data-os="mac">Open a <strong>separate Terminal window</strong> — press <code>Cmd + Space</code>, type <strong>Terminal</strong>, press Enter</li>
+        <li data-os="linux">Open a <strong>separate Terminal window</strong> from your app launcher</li>
         <li>Run:</li>
       </ol>
       <pre><code>uvx linkedin-scraper-mcp --login</code></pre>
@@ -737,9 +823,13 @@
         <li>A browser window opens — log into your LinkedIn account</li>
         <li>Once done, go back to Claude Code and tell the setup agent you're finished</li>
       </ol>
-      <div class="warning">
+      <div class="warning" data-os="windows">
         <strong>If <code>uvx</code> is not recognized:</strong> Close and reopen PowerShell. If still not working, run:
         <pre><code>$env:PATH += ";C:\Users\$env:USERNAME\.local\bin"</code></pre>
+      </div>
+      <div class="warning" data-os="mac linux">
+        <strong>If <code>uvx</code> is not recognized:</strong> Close and reopen your terminal. If still not working, run:
+        <pre><code>export PATH="$HOME/.local/bin:$PATH"</code></pre>
       </div>
 
       <h3>LinkedIn MCP — Register</h3>
@@ -773,41 +863,73 @@
 
     <!-- SECTION 8: TROUBLESHOOTING -->
     <section id="troubleshooting">
-      <h2><span class="section-num">08</span> Windows Troubleshooting</h2>
-      <p>Every issue below has the same root cause: <strong>Windows doesn't update PATH automatically after installing new tools.</strong></p>
+      <h2><span class="section-num">08</span> <span data-os="windows">Windows </span><span data-os="mac">macOS </span><span data-os="linux">Linux </span>Troubleshooting</h2>
 
-      <h3>"Command not recognized" after installing something</h3>
-      <p><strong>First try:</strong> Close and reopen PowerShell (or restart Cursor entirely).</p>
-      <p><strong>If that doesn't work</strong>, use the manual PATH fix:</p>
-      <table>
-        <thead>
-          <tr><th>Tool</th><th>Manual PATH fix</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><code>node</code> / <code>npm</code></td><td><code>$env:PATH += ";C:\Program Files\nodejs"</code></td></tr>
-          <tr><td><code>claude</code></td><td><code>$env:PATH += ";$env:APPDATA\npm"</code></td></tr>
-          <tr><td><code>puppeteer</code></td><td><code>$env:PATH += ";$env:APPDATA\npm"</code></td></tr>
-          <tr><td><code>firecrawl</code></td><td><code>$env:PATH += ";$env:APPDATA\npm"</code></td></tr>
-          <tr><td><code>uv</code> / <code>uvx</code></td><td><code>$env:PATH += ";C:\Users\$env:USERNAME\.local\bin"</code></td></tr>
-        </tbody>
-      </table>
+      <div data-os="windows">
+        <p>Every issue below has the same root cause: <strong>Windows doesn't update PATH automatically after installing new tools.</strong></p>
 
-      <h3>uv Not Installed</h3>
-      <p>If <code>/setup</code> can't find <code>uv</code>, install it manually:</p>
-      <pre><code>irm https://astral.sh/uv/install.ps1 | iex</code></pre>
-      <p>Then close and reopen PowerShell before continuing.</p>
+        <h3>"Command not recognized" after installing something</h3>
+        <p><strong>First try:</strong> Close and reopen PowerShell (or restart Cursor entirely).</p>
+        <p><strong>If that doesn't work</strong>, use the manual PATH fix:</p>
+        <table>
+          <thead>
+            <tr><th>Tool</th><th>Manual PATH fix</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>node</code> / <code>npm</code></td><td><code>$env:PATH += ";C:\Program Files\nodejs"</code></td></tr>
+            <tr><td><code>claude</code></td><td><code>$env:PATH += ";C:\Users\$env:USERNAME\.local\bin"</code></td></tr>
+            <tr><td><code>puppeteer</code></td><td><code>$env:PATH += ";$env:APPDATA\npm"</code></td></tr>
+            <tr><td><code>firecrawl</code></td><td><code>$env:PATH += ";$env:APPDATA\npm"</code></td></tr>
+            <tr><td><code>uv</code> / <code>uvx</code></td><td><code>$env:PATH += ";C:\Users\$env:USERNAME\.local\bin"</code></td></tr>
+          </tbody>
+        </table>
+
+        <h3>uv Not Installed</h3>
+        <p>If <code>/setup</code> can't find <code>uv</code>, install it manually:</p>
+        <pre><code>irm https://astral.sh/uv/install.ps1 | iex</code></pre>
+        <p>Then close and reopen PowerShell before continuing.</p>
+      </div>
+
+      <div data-os="mac linux">
+        <p>Most issues come from commands not being on your <strong>PATH</strong> after installation.</p>
+
+        <h3>"Command not found" after installing something</h3>
+        <p><strong>First try:</strong> Close and reopen your terminal (or restart Cursor entirely).</p>
+        <p><strong>If that doesn't work</strong>, add to your shell profile:</p>
+        <table>
+          <thead>
+            <tr><th>Tool</th><th>Manual PATH fix</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>claude</code></td><td><code>export PATH="$HOME/.local/bin:$PATH"</code></td></tr>
+            <tr><td><code>uv</code> / <code>uvx</code></td><td><code>export PATH="$HOME/.local/bin:$PATH"</code></td></tr>
+            <tr><td><code>node</code> / <code>npm</code></td><td><code>export PATH="/usr/local/bin:$PATH"</code></td></tr>
+            <tr><td><code>puppeteer</code></td><td><code>export PATH="$(npm config get prefix)/bin:$PATH"</code></td></tr>
+            <tr><td><code>firecrawl</code></td><td><code>export PATH="$(npm config get prefix)/bin:$PATH"</code></td></tr>
+          </tbody>
+        </table>
+        <div class="info">To make these permanent, add them to <code>~/.zshrc</code> (macOS) or <code>~/.bashrc</code> (Linux), then run <code>source ~/.zshrc</code> or <code>source ~/.bashrc</code>.</div>
+
+        <h3>uv Not Installed</h3>
+        <p>If <code>/setup</code> can't find <code>uv</code>, install it manually:</p>
+        <pre><code>curl -LsSf https://astral.sh/uv/install.sh | sh</code></pre>
+        <p>Then close and reopen your terminal before continuing.</p>
+      </div>
 
       <h3>wkhtmltopdf Mentioned Somewhere</h3>
       <p><strong>Ignore it.</strong> We use <strong>Puppeteer</strong> for PDF generation, not wkhtmltopdf. If any old documentation mentions it, it's outdated.</p>
 
       <h3>LinkedIn Login Doesn't Work Inside Claude Code</h3>
-      <p><strong>This is expected.</strong> The LinkedIn login opens an interactive browser — it must run in a standalone PowerShell window. See the Manual Steps section above.</p>
+      <p><strong>This is expected.</strong> The LinkedIn login opens an interactive browser — it must run in a standalone <span data-os="windows">PowerShell</span><span data-os="mac linux">Terminal</span> window. See the Manual Steps section above.</p>
 
       <h3>Plugin Commands Fail</h3>
-      <p>Make sure you're running them <strong>inside Claude Code</strong> (after typing <code>claude</code>), not in a regular PowerShell prompt. Commands like <code>/plugin marketplace add ...</code> are Claude Code commands, not shell commands.</p>
+      <p>Make sure you're running them <strong>inside Claude Code</strong> (after typing <code>claude</code>), not in a regular <span data-os="windows">PowerShell</span><span data-os="mac linux">terminal</span> prompt. Commands like <code>/plugin marketplace add ...</code> are Claude Code commands, not shell commands.</p>
 
-      <div class="warning">
+      <div class="warning" data-os="windows">
         <strong>General rule:</strong> After installing <em>anything</em> on Windows, close and reopen your terminal. This fixes 90% of "not recognized" errors.
+      </div>
+      <div class="warning" data-os="mac linux">
+        <strong>General rule:</strong> After installing <em>anything</em>, close and reopen your terminal — or run <code>source ~/.zshrc</code> / <code>source ~/.bashrc</code>.
       </div>
     </section>
 
@@ -896,8 +1018,39 @@
   </main>
 </div>
 
-<!-- Sidebar active state tracking + copy buttons -->
+<!-- OS switching, sidebar tracking, copy buttons -->
 <script>
+  // ─── OS TAB SWITCHING ───
+  const platformLabels = { windows: 'Windows 11', mac: 'macOS', linux: 'Linux' };
+  const savedOS = localStorage.getItem('rtc-onboarding-os') || 'windows';
+
+  function setOS(os) {
+    localStorage.setItem('rtc-onboarding-os', os);
+
+    // Update tab active state
+    document.querySelectorAll('.os-tab').forEach(t => {
+      t.classList.toggle('active', t.dataset.target === os);
+    });
+
+    // Update platform label in hero
+    const label = document.getElementById('platform-label');
+    if (label) label.textContent = platformLabels[os];
+
+    // Show/hide OS-specific elements
+    document.querySelectorAll('[data-os]').forEach(el => {
+      const osValues = el.getAttribute('data-os').split(/\s+/);
+      el.style.display = osValues.includes(os) ? '' : 'none';
+    });
+
+    // Re-attach copy buttons (some <pre> may have just become visible)
+    attachCopyButtons();
+  }
+
+  document.querySelectorAll('.os-tab').forEach(tab => {
+    tab.addEventListener('click', () => setOS(tab.dataset.target));
+  });
+
+  // ─── SIDEBAR ACTIVE STATE ───
   const sections = document.querySelectorAll('section');
   const navLinks = document.querySelectorAll('.sidebar nav a');
 
@@ -914,38 +1067,46 @@
   sections.forEach(section => observer.observe(section));
   if (navLinks.length) navLinks[0].classList.add('active');
 
-  // Copy-to-clipboard for all <pre> blocks
+  // ─── COPY TO CLIPBOARD ───
   const clipSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
   const checkSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
 
-  document.querySelectorAll('pre').forEach(pre => {
-    const btn = document.createElement('button');
-    btn.className = 'copy-btn';
-    btn.innerHTML = clipSvg;
-    btn.title = 'Copy to clipboard';
+  function attachCopyButtons() {
+    document.querySelectorAll('pre').forEach(pre => {
+      // Skip if already has a copy button
+      if (pre.querySelector('.copy-btn')) return;
 
-    const toast = document.createElement('span');
-    toast.className = 'copy-toast';
-    toast.textContent = 'Copied!';
+      const btn = document.createElement('button');
+      btn.className = 'copy-btn';
+      btn.innerHTML = clipSvg;
+      btn.title = 'Copy to clipboard';
 
-    btn.addEventListener('click', () => {
-      const code = pre.querySelector('code');
-      const text = (code || pre).textContent.trim();
-      navigator.clipboard.writeText(text).then(() => {
-        btn.innerHTML = checkSvg;
-        btn.classList.add('copied');
-        toast.classList.add('show');
-        setTimeout(() => {
-          btn.innerHTML = clipSvg;
-          btn.classList.remove('copied');
-          toast.classList.remove('show');
-        }, 2000);
+      const toast = document.createElement('span');
+      toast.className = 'copy-toast';
+      toast.textContent = 'Copied!';
+
+      btn.addEventListener('click', () => {
+        const code = pre.querySelector('code');
+        const text = (code || pre).textContent.trim();
+        navigator.clipboard.writeText(text).then(() => {
+          btn.innerHTML = checkSvg;
+          btn.classList.add('copied');
+          toast.classList.add('show');
+          setTimeout(() => {
+            btn.innerHTML = clipSvg;
+            btn.classList.remove('copied');
+            toast.classList.remove('show');
+          }, 2000);
+        });
       });
-    });
 
-    pre.appendChild(toast);
-    pre.appendChild(btn);
-  });
+      pre.appendChild(toast);
+      pre.appendChild(btn);
+    });
+  }
+
+  // ─── INIT ───
+  setOS(savedOS);
 </script>
 
 </body>
