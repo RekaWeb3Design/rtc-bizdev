@@ -621,9 +621,10 @@
       <a href="#skill-triggers"><span class="nav-num">02</span> Skill Triggers</a>
       <a href="#prompt-templates"><span class="nav-num">03</span> Prompt Templates</a>
       <a href="#shortcuts"><span class="nav-num">04</span> Keyboard Shortcuts</a>
-      <a href="#file-structure"><span class="nav-num">05</span> File Structure</a>
-      <a href="#brand-reference"><span class="nav-num">06</span> Brand Reference</a>
-      <a href="#maintenance"><span class="nav-num">07</span> Maintenance</a>
+      <a href="#parallel-tasks"><span class="nav-num">05</span> Parallel Tasks</a>
+      <a href="#file-structure"><span class="nav-num">06</span> File Structure</a>
+      <a href="#brand-reference"><span class="nav-num">07</span> Brand Reference</a>
+      <a href="#maintenance"><span class="nav-num">08</span> Maintenance</a>
     </nav>
   </aside>
 
@@ -737,9 +738,44 @@ Compare on: speed of delivery, AI depth, pricing, target market.</code></pre>
       </table>
     </section>
 
-    <!-- 05: FILE STRUCTURE REFERENCE -->
+    <!-- 05: PARALLEL TASKS -->
+    <section id="parallel-tasks">
+      <h2><span class="section-num">05</span> Running Tasks in Parallel</h2>
+      <p>Claude Code can run in multiple terminal windows simultaneously. Some tasks conflict and can cause data loss if run at the same time.</p>
+
+      <h3>Safe to run in parallel</h3>
+      <table>
+        <thead>
+          <tr><th>Task</th><th>Why it's safe</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Market research</td><td>Web search only — no file writes</td></tr>
+          <tr><td>Competitor analysis</td><td>Web search only — no file writes</td></tr>
+          <tr><td>LinkedIn / Reddit research</td><td>Web search only — no file writes</td></tr>
+          <tr><td>HTML / PDF generation</td><td>Unique filenames — no collisions</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Never run in parallel</h3>
+      <table>
+        <thead>
+          <tr><th>Task</th><th>Risk</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Anything updating <code>files-index.json</code></td><td>Data corruption — one write overwrites the other</td></tr>
+          <tr><td><code>git push</code> / Cloudflare deploy</td><td>Merge conflicts and failed deployments</td></tr>
+          <tr><td>Two tasks writing to the same folder</td><td>File overwrites and race conditions</td></tr>
+        </tbody>
+      </table>
+
+      <div class="info">
+        <strong>Simple rule:</strong> One generator at a time. Unlimited researchers at a time.
+      </div>
+    </section>
+
+    <!-- 06: FILE STRUCTURE REFERENCE -->
     <section id="file-structure">
-      <h2><span class="section-num">05</span> File Structure Reference</h2>
+      <h2><span class="section-num">06</span> File Structure Reference</h2>
       <p>Every generated file goes into the correct subfolder automatically.</p>
 <pre><code>outputs/
   reports/
@@ -759,9 +795,9 @@ Compare on: speed of delivery, AI depth, pricing, target market.</code></pre>
       </div>
     </section>
 
-    <!-- 06: BRAND QUICK REFERENCE -->
+    <!-- 07: BRAND QUICK REFERENCE -->
     <section id="brand-reference">
-      <h2><span class="section-num">06</span> Brand Quick Reference</h2>
+      <h2><span class="section-num">07</span> Brand Quick Reference</h2>
 
       <h3>Approved Taglines</h3>
       <p>Use at least one in every document:</p>
@@ -784,9 +820,9 @@ Compare on: speed of delivery, AI depth, pricing, target market.</code></pre>
       <p><code>antal@rollthecode.com</code> &middot; <code>rollthecode.com</code></p>
     </section>
 
-    <!-- 07: MAINTENANCE -->
+    <!-- 08: MAINTENANCE -->
     <section id="maintenance">
-      <h2><span class="section-num">07</span> Maintenance</h2>
+      <h2><span class="section-num">08</span> Maintenance</h2>
       <p>Three things to know about keeping the toolkit up to date.</p>
       <div class="maintenance-grid">
         <div class="maintenance-card">
