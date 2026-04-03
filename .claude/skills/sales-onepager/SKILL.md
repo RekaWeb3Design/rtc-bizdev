@@ -29,13 +29,14 @@ Before writing any one-pager, determine which Roll the Code offering fits the us
 
 ## Tagline Rule
 
-Every one-pager must include at least one of Roll the Code's approved taglines:
+Every one-pager must include at least one of Roll the Code's approved taglines, treated as a proper tagline — not embedded lowercase in a sentence.
 
-- *"Days NOT Months"* — primary, use everywhere
+- *"Days NOT Months"* — primary, use in the header tagline or as a standalone emphasis line in Section 1 or Section 2
 - *"We don't code anymore"* — provocative, good for tech-aware audiences
-- *"The Vapiano of Product Delivery"* — quality, affordable, scalable (explain briefly if the reader may not know Vapiano)
+- *"The Vapiano of Product Delivery"* — quality, affordable, scalable
 
-Work the tagline naturally into the header, situation section, or "What We Do" — not as a disconnected slogan.
+Correct usage: a dedicated line, bold or italic, visually distinct.
+Incorrect usage: 'we deliver in days, not months' buried in a sentence.
 
 ---
 
@@ -96,6 +97,7 @@ When creating, ask or infer:
 - Short paragraphs: 2-3 sentences max
 - Bullets over paragraphs in middle sections
 - One visual element suggestion: a simple 3-step process diagram or before/after table
+- The approved tagline must appear as a visually distinct element — its own line, bold or italic. Never inline within a sentence.
 
 ---
 
