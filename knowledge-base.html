@@ -781,7 +781,7 @@ Compare on: speed of delivery, AI depth, pricing, target market.</code></pre>
       </ul>
 
       <h3>Contact &amp; Domain</h3>
-      <p><code>antal@rollthecode.io</code> &middot; <code>rollthecode.io</code></p>
+      <p><code>antal@rollthecode.com</code> &middot; <code>rollthecode.com</code></p>
     </section>
 
     <!-- 07: MAINTENANCE -->
@@ -791,15 +791,17 @@ Compare on: speed of delivery, AI depth, pricing, target market.</code></pre>
       <div class="maintenance-grid">
         <div class="maintenance-card">
           <h4>After Editing CLAUDE.md</h4>
-          <p>Run: <code>Run skills-sync agent</code> to re-sync all skills with the updated configuration.</p>
+          <p>Run:</p>
+<pre><code>Run skills-sync agent</code></pre>
         </div>
         <div class="maintenance-card">
           <h4>After Generating Files</h4>
-          <p><code>files-index.json</code> updates automatically. New files appear in the portal on next load.</p>
+          <p><code>files-index.json</code> is updated automatically by Claude Code when generating files. If a file doesn't appear in the portal, trigger a manual update:</p>
+<pre><code>Update the files index</code></pre>
         </div>
         <div class="maintenance-card">
           <h4>After Brand Changes</h4>
-          <p>Edit <code>brand/brand.md</code> and all future outputs pick up the new branding — no re-prompting needed.</p>
+          <p>Edit <code>brand/brand.md</code> — all future outputs pick up the new branding automatically. Already-generated files are not affected.</p>
         </div>
       </div>
     </section>
