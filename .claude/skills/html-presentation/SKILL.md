@@ -92,6 +92,19 @@ Footer: links
 
 ---
 
+## Responsive Layout Rules (MANDATORY — apply to every HTML output)
+
+Every HTML presentation must follow these rules without exception:
+
+- All slide content must be horizontally centered: `max-width: 900px; margin: 0 auto;`
+- Never left-align content without a centering wrapper
+- Slides must be full-viewport-height: `min-height: 100vh; display: flex; align-items: center; justify-content: center;`
+- Content container inside each slide: `max-width: 900px; width: 100%; margin: 0 auto; padding: 0 40px;`
+- Never use fixed pixel widths on content blocks — use `max-width` + `width: 100%` instead
+- Navigation controls must be fixed to bottom-center: `position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%);`
+
+---
+
 ## Technical Requirements
 - **Single file** — all CSS and JS inline, no external dependencies except Google Fonts
 - Fonts: `https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap`
