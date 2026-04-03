@@ -1125,11 +1125,26 @@
       <h2><span class="section-num">10</span> Daily Usage</h2>
 
       <h3>Starting Claude Code</h3>
-      <p>Every time you start a new work session, open PowerShell inside the <code>rtc-bizdev</code> folder and type:</p>
+      <p data-os="windows">Every time you start a new work session, open PowerShell inside the <code>rtc-bizdev</code> folder and type:</p>
+      <p data-os="mac linux">Every time you start a new work session, open a terminal inside the <code>rtc-bizdev</code> folder and type:</p>
 <pre><code>kakukk</code></pre>
-      <p>That's it. Claude Code launches in autonomous mode — no permission prompts, no interruptions. It works within the project folder only.</p>
+      <p>That's it. Claude Code launches in autonomous mode — no permission prompts, no interruptions.</p>
+
+      <h3>kakukk alias setup</h3>
+      <div data-os="windows">
+        <p>The <code>kakukk</code> alias is added to your PowerShell profile during <code>/setup</code>. To set it manually:</p>
+        <pre><code>if (!(Test-Path $PROFILE)) { New-Item -Path $PROFILE -Force }
+Add-Content $PROFILE "`nSet-Alias kakukk 'claude --dangerously-skip-permissions'"</code></pre>
+        <p>Then restart PowerShell.</p>
+      </div>
+      <div data-os="mac linux">
+        <p>The <code>kakukk</code> alias is added to <code>~/.zshrc</code> during <code>/setup</code>. To set it manually:</p>
+        <pre><code>echo "alias kakukk='cd /path/to/rtc-bizdev &amp;&amp; claude --dangerously-skip-permissions'" &gt;&gt; ~/.zshrc
+source ~/.zshrc</code></pre>
+        <p>Replace <code>/path/to/rtc-bizdev</code> with the actual absolute path where you cloned the repo (e.g. <code>~/Documents/RTC/rtc-bizdev</code>). Then verify: <code>grep kakukk ~/.zshrc</code></p>
+      </div>
       <div class="info">
-        This alias was set up automatically during <code>/setup</code>. If it doesn't work, re-run <code>/setup</code>.
+        This alias is set up automatically during <code>/setup</code>. If it doesn't work, re-run <code>/setup</code>.
       </div>
 
       <h3>Generating Materials</h3>
