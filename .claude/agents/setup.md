@@ -117,29 +117,136 @@ firecrawl --version
 
 ### Step 5: Install MCP servers
 
-**5a. Reddit MCP**
-```bash
-claude mcp add reddit -- npx -y @modelcontextprotocol/server-reddit
-```
+⚠️ **IMPORTANT — Windows PATH issue:**
+After installing uv, the `uvx` command is NOT automatically available in Cursor's integrated terminal. You must always use the full path:
+`C:\Users\[username]\.local\bin\uvx.exe`
 
-> ⚠️ **Windows PATH note:** If `claude` command is not recognized, close and reopen PowerShell.
-> If still not working, run: `$env:PATH += ";$env:APPDATA\npm"`
+Replace `[username]` with your actual Windows username (e.g. "User", "Anti").
+To find your username, run: `$env:USERNAME`
 
-**5b. LinkedIn MCP — login step**
-This step must be run in a **separate PowerShell window** (not inside Claude Code), because it opens an interactive browser login:
+---
+
+**5a. Install uv (required for Reddit and LinkedIn MCPs)**
+
+Run in PowerShell:
 ```powershell
-uvx linkedin-scraper-mcp --login
+irm https://astral.sh/uv/install.ps1 | iex
 ```
-Print: "Open a separate PowerShell window and run the command above. Complete the LinkedIn login in the browser. Come back here when done."
 
-> ⚠️ **Windows PATH note:** If `uvx` is not recognized, close and reopen PowerShell.
-> If still not working, run: `$env:PATH += ";C:\Users\[username]\.local\bin"`
-
-**5c. LinkedIn MCP — register**
-After the user confirms login is complete:
-```bash
-claude mcp add linkedin -- uvx linkedin-scraper-mcp
+Close and reopen PowerShell after installation.
+Verify with full path:
+```powershell
+C:\Users\$env:USERNAME\.local\bin\uvx.exe --version
 ```
+
+If this works, uv is correctly installed.
+
+⚠️ Do NOT use just "uvx" in Cursor's terminal — it will not be found.
+Always use the full path: `C:\Users\[username]\.local\bin\uvx.exe`
+
+---
+
+**5b. Reddit MCP**
+
+Requirements:
+- You must be logged into Reddit in your browser before using this MCP
+- No API key needed — uses Reddit's public API
+
+Run in PowerShell (inside the rtc-bizdev folder):
+```powershell
+claude mcp remove reddit
+claude mcp add reddit -- C:\Users\$env:USERNAME\.local\bin\uvx.exe mcp-reddit
+```
+
+Verify in Claude Code (kakukk → /mcp):
+`reddit · ✔ connected`
+
+---
+
+**5c. LinkedIn MCP — Login (MUST run in separate Windows terminal)**
+
+⚠️ This step CANNOT be run inside Cursor's integrated terminal.
+It opens an interactive browser login that requires a standalone window.
+
+Open a separate Windows terminal:
+- Press Win+X → Terminal
+- OR press Win+R → type "powershell" → Enter
+
+Run:
+```powershell
+C:\Users\$env:USERNAME\.local\bin\uvx.exe linkedin-scraper-mcp --login
+```
+
+A browser window will open. Log into your LinkedIn account.
+Wait for: "Profile saved to C:\Users\[username]\.linkedin-mcp\profile"
+Then come back here.
+
+---
+
+**5d. LinkedIn MCP — Register**
+
+After login is confirmed, run in the rtc-bizdev folder:
+```powershell
+claude mcp remove linkedin
+claude mcp add linkedin -- C:\Users\$env:USERNAME\.local\bin\uvx.exe linkedin-scraper-mcp
+```
+
+Verify in Claude Code (kakukk → /mcp):
+`linkedin · ✔ connected`
+
+---
+
+**5e. Product Hunt MCP**
+
+Requirements:
+- The `PRODUCT_HUNT_TOKEN` is stored in your `.env` file
+- Contact Réka to get the real token value before this step
+
+Step 1: Copy `.env.example` to `.env`:
+```powershell
+Copy-Item .env.example .env
+```
+
+Step 2: Open `.env` and replace `REPLACE_WITH_YOUR_DEVELOPER_TOKEN` with the real token Réka provided.
+
+Step 3: Add the MCP to Claude Code by running kakukk, then paste this prompt:
+
+> Edit the file `C:\Users\[USERNAME]\.claude.json`
+> Find the "projects" section, then find the entry for this project:
+> `C:\Users\[USERNAME]\Documents\RTC - Roll The Code\RTC\RTC Hubs\RTC - BizDev\rtc-bizdev`
+> Inside that project's "mcpServers" object, add this new entry:
+> ```json
+> "producthunt": {
+>   "type": "stdio",
+>   "command": "C:\\Users\\[USERNAME]\\.local\\bin\\uvx.exe",
+>   "args": ["--from", "product-hunt-mcp", "product-hunt-mcp"],
+>   "env": {
+>     "PRODUCT_HUNT_TOKEN": "PASTE_YOUR_TOKEN_HERE"
+>   }
+> }
+> ```
+> Replace `[USERNAME]` with the actual Windows username.
+> Replace `PASTE_YOUR_TOKEN_HERE` with the token from the `.env` file.
+> Do not change anything else.
+
+Verify in Claude Code (kakukk → /mcp):
+`producthunt · ✔ connected`
+
+---
+
+**5f. Final verification**
+
+Run kakukk, then `/mcp`. You should see all three connected:
+```
+linkedin   · ✔ connected
+reddit     · ✔ connected
+producthunt · ✔ connected
+```
+
+If any show ✘ failed:
+- Check that you used the full uvx path, not just "uvx"
+- Close Cursor completely and reopen
+- Re-run the `claude mcp add` command for the failing server
 
 ### Step 6: Deploy to Cloudflare Pages
 
@@ -213,8 +320,9 @@ Print a clean summary:
 ✅ C-Level Skills   — installed
 ✅ Business Growth  — installed
 ✅ Firecrawl        — installed & authenticated
-✅ Reddit MCP       — installed
-✅ LinkedIn MCP     — installed & authenticated
+✅ Reddit MCP       — installed (uvx full path)
+✅ LinkedIn MCP     — installed & authenticated (separate terminal required)
+✅ Product Hunt MCP — installed (token from .env)
 ✅ Cloudflare Pages — deployed
 ✅ Project skills   — all 7 present
 ✅ kakukk alias     — added to PowerShell profile

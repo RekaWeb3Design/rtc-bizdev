@@ -921,7 +921,9 @@
           <tr><td>Install Puppeteer</td><td>PDF generation tool</td><td>Nothing — automatic</td></tr>
           <tr><td>Install uv</td><td>Python package runner</td><td>May reopen terminal</td></tr>
           <tr><td>Install Firecrawl</td><td>Web research tool</td><td>Paste API key</td></tr>
-          <tr><td>LinkedIn MCP</td><td>LinkedIn research</td><td>Login via browser</td></tr>
+          <tr><td>Reddit MCP</td><td>Reddit research</td><td>Uses uvx full path (automatic)</td></tr>
+          <tr><td>LinkedIn MCP</td><td>LinkedIn research</td><td>Requires separate terminal for login</td></tr>
+          <tr><td>Product Hunt MCP</td><td>Product Hunt research</td><td>Requires .env token from Réka</td></tr>
           <tr><td>Cloudflare deploy</td><td>Publishes the portal</td><td>Needs .env token</td></tr>
           <tr><td>Verify skills</td><td>Checks all 7 skills</td><td>Nothing — automatic</td></tr>
         </tbody>
@@ -944,7 +946,17 @@
       </ol>
       <div class="info">The free tier gives you 500 scrapes/month — plenty for normal use.</div>
 
+      <h3>uv PATH Issue on Windows</h3>
+      <div class="warning" data-os="windows">
+        <strong>After installing uv, the <code>uvx</code> command will not be recognized in Cursor's terminal.</strong> Always use the full path:<br>
+        <pre><code>C:\Users\[username]\.local\bin\uvx.exe</code></pre>
+        Replace <code>[username]</code> with your Windows username (<code>$env:USERNAME</code>).
+      </div>
+
       <h3>LinkedIn MCP — Login</h3>
+      <div class="warning" data-os="windows">
+        <strong>⚠️ This step must run in a SEPARATE Windows terminal window, NOT inside Cursor.</strong> Open <code>Win+X → Terminal</code> for this step only.
+      </div>
       <p>This step <strong>must run outside Claude Code</strong>. It opens an interactive browser login.</p>
       <ol>
         <li data-os="windows">Open a <strong>separate PowerShell window</strong> — press <code>Win + X</code>, then click <strong>Terminal</strong></li>
@@ -952,15 +964,12 @@
         <li data-os="linux">Open a <strong>separate Terminal window</strong> from your app launcher</li>
         <li>Run:</li>
       </ol>
-      <pre><code>uvx linkedin-scraper-mcp --login</code></pre>
+      <pre data-os="windows"><code>C:\Users\%USERNAME%\.local\bin\uvx.exe linkedin-scraper-mcp --login</code></pre>
+      <pre data-os="mac linux"><code>uvx linkedin-scraper-mcp --login</code></pre>
       <ol start="3">
         <li>A browser window opens — log into your LinkedIn account</li>
         <li>Once done, go back to Claude Code and tell the setup agent you're finished</li>
       </ol>
-      <div class="warning" data-os="windows">
-        <strong>If <code>uvx</code> is not recognized:</strong> Close and reopen PowerShell. If still not working, run:
-        <pre><code>$env:PATH += ";C:\Users\$env:USERNAME\.local\bin"</code></pre>
-      </div>
       <div class="warning" data-os="mac linux">
         <strong>If <code>uvx</code> is not recognized:</strong> Close and reopen your terminal. If still not working, run:
         <pre><code>export PATH="$HOME/.local/bin:$PATH"</code></pre>
@@ -968,7 +977,17 @@
 
       <h3>LinkedIn MCP — Register</h3>
       <p>After login, the setup agent runs this automatically. If you need to do it manually:</p>
-      <pre><code>claude mcp add linkedin -- uvx linkedin-scraper-mcp</code></pre>
+      <pre data-os="windows"><code>claude mcp add linkedin -- C:\Users\%USERNAME%\.local\bin\uvx.exe linkedin-scraper-mcp</code></pre>
+      <pre data-os="mac linux"><code>claude mcp add linkedin -- uvx linkedin-scraper-mcp</code></pre>
+
+      <h3>Product Hunt MCP</h3>
+      <p>Product Hunt research is powered by the <code>producthunt</code> MCP server.</p>
+      <ol>
+        <li>The <code>PRODUCT_HUNT_TOKEN</code> is pre-configured in <code>.env.example</code> — contact <strong>Réka</strong> for the real value</li>
+        <li>Copy <code>.env.example</code> to <code>.env</code> and replace the placeholder token</li>
+        <li>Follow the steps in <code>setup.md</code> Step 5e to add it via Claude Code</li>
+        <li>Verify: <code>producthunt · ✔ connected</code> in <code>/mcp</code></li>
+      </ol>
 
       <h3>Cloudflare Deployment</h3>
       <p>The BizDev portal is deployed to Cloudflare Pages under the Roll the Code account. Here's how to get your API token:</p>
