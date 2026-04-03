@@ -267,8 +267,11 @@
   }
   .os-tab svg { width: 14px; height: 14px; }
 
-  /* OS visibility */
-  [data-os] { display: none; }
+  /* OS visibility — hide by default, show when html has the matching class */
+  [data-os] { display: none !important; }
+  html.os-windows [data-os~="windows"],
+  html.os-mac [data-os~="mac"],
+  html.os-linux [data-os~="linux"] { display: revert !important; }
 
   /* Sections */
   section {
@@ -1036,11 +1039,9 @@
     const label = document.getElementById('platform-label');
     if (label) label.textContent = platformLabels[os];
 
-    // Show/hide OS-specific elements
-    document.querySelectorAll('[data-os]').forEach(el => {
-      const osValues = el.getAttribute('data-os').split(/\s+/);
-      el.style.display = osValues.includes(os) ? '' : 'none';
-    });
+    // Swap OS class on <html> — CSS handles show/hide via [data-os~="..."]
+    document.documentElement.classList.remove('os-windows', 'os-mac', 'os-linux');
+    document.documentElement.classList.add('os-' + os);
 
     // Re-attach copy buttons (some <pre> may have just become visible)
     attachCopyButtons();
