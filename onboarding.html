@@ -541,6 +541,31 @@
     color: var(--text3);
   }
 
+  /* Scroll to top */
+  .scroll-top {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text3);
+    cursor: pointer;
+    z-index: 50;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(8px);
+    transition: opacity 0.25s, transform 0.25s, color var(--transition), border-color var(--transition), background var(--transition);
+  }
+  .scroll-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+  .scroll-top:hover { color: var(--accent2); border-color: var(--accent); background: rgba(99,102,241,0.1); }
+  .scroll-top svg { width: 18px; height: 18px; }
+
   /* Scrollbar */
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
@@ -1021,6 +1046,10 @@
   </main>
 </div>
 
+<button class="scroll-top" id="scrollTop" title="Scroll to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+</button>
+
 <!-- OS switching, sidebar tracking, copy buttons -->
 <script>
   // ─── OS TAB SWITCHING ───
@@ -1105,6 +1134,15 @@
       pre.appendChild(btn);
     });
   }
+
+  // ─── SCROLL TO TOP ───
+  const scrollBtn = document.getElementById('scrollTop');
+  window.addEventListener('scroll', () => {
+    scrollBtn.classList.toggle('visible', window.scrollY > 400);
+  });
+  scrollBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
 
   // ─── INIT ───
   setOS(savedOS);
