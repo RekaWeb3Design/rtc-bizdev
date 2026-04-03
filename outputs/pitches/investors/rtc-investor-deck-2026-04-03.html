@@ -18,16 +18,9 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
   position:absolute;inset:0;display:flex;flex-direction:column;
   justify-content:center;padding:80px 100px;
   opacity:0;pointer-events:none;transition:opacity .45s ease;
-  overflow-y:auto;
+  overflow-y:auto;background:var(--bg);
 }
 .slide.active{opacity:1;pointer-events:auto}
-.slide.photo{background-size:cover;background-position:center}
-.slide.photo::before{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(8,10,24,.92) 0%,rgba(8,10,24,.78) 50%,rgba(8,10,24,.65) 100%);
-  z-index:0;
-}
-.slide.photo>*{position:relative;z-index:1}
 .photo-credit{
   position:absolute;bottom:8px;right:16px;font-size:9px;
   color:rgba(255,255,255,.18);z-index:2;
@@ -133,15 +126,6 @@ ul li::before{content:'';position:absolute;left:0;top:.55em;width:7px;height:7px
   margin-right:6px;margin-bottom:6px;
 }
 
-/* CTA */
-.cta-box{
-  background:linear-gradient(135deg,rgba(95,95,255,.2),rgba(129,140,248,.1));
-  border:1px solid var(--accent);border-radius:16px;padding:36px;
-  margin-top:1.5em;text-align:center;max-width:600px;
-}
-.cta-box h3{font-size:1.4rem;color:var(--text);margin-bottom:.5em}
-.cta-box p{color:var(--text2);font-size:.95rem}
-
 /* Navigation */
 .nav{
   position:fixed;bottom:28px;right:36px;display:flex;gap:10px;z-index:100;
@@ -166,13 +150,26 @@ ul li::before{content:'';position:absolute;left:0;top:.55em;width:7px;height:7px
 
 /* Scrollable content */
 .slide-scroll{overflow-y:auto;max-height:calc(100vh - 160px)}
+
+/* Print styles for PDF generation */
+@media print{
+  html,body{height:auto;overflow:visible}
+  .deck{position:static;height:auto}
+  .slide{
+    position:static !important;opacity:1 !important;pointer-events:auto !important;
+    page-break-after:always;width:100vw;height:100vh;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact;
+  }
+  .slide:last-child{page-break-after:auto}
+  .nav,.counter{display:none !important}
+}
 </style>
 </head>
 <body>
 <div class="deck" id="deck">
 
 <!-- ==================== SLIDE 1: TITLE ==================== -->
-<div class="slide photo active" style="background-image:url('https://images.pexels.com/photos/30412656/pexels-photo-30412656.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940')">
+<div class="slide active" style="background:linear-gradient(135deg,rgba(8,10,24,.88) 0%,rgba(8,10,24,.72) 50%,rgba(8,10,24,.6) 100%),url('https://images.pexels.com/photos/30412656/pexels-photo-30412656.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940');background-size:cover;background-position:center">
   <div class="label">Investor Presentation &mdash; April 2026</div>
   <h1>ROLL THE <span class="accent">CODE</span></h1>
   <div class="tagline">"Days NOT Months"</div>
@@ -186,7 +183,7 @@ ul li::before{content:'';position:absolute;left:0;top:.55em;width:7px;height:7px
 </div>
 
 <!-- ==================== SLIDE 2: THE PAIN ==================== -->
-<div class="slide photo" style="background-image:url('https://images.pexels.com/photos/7792840/pexels-photo-7792840.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940')">
+<div class="slide" style="background:linear-gradient(135deg,rgba(8,10,24,.88) 0%,rgba(8,10,24,.72) 50%,rgba(8,10,24,.6) 100%),url('https://images.pexels.com/photos/7792840/pexels-photo-7792840.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940');background-size:cover;background-position:center">
   <div class="label">The Problem</div>
   <h2>Enterprise Software Delivery Is Broken</h2>
   <div class="stat-row">
@@ -203,7 +200,7 @@ ul li::before{content:'';position:absolute;left:0;top:.55em;width:7px;height:7px
 </div>
 
 <!-- ==================== SLIDE 3: WHY NOW ==================== -->
-<div class="slide photo" style="background-image:url('https://images.pexels.com/photos/24866722/pexels-photo-24866722.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940')">
+<div class="slide" style="background:linear-gradient(135deg,rgba(8,10,24,.88) 0%,rgba(8,10,24,.72) 50%,rgba(8,10,24,.6) 100%),url('https://images.pexels.com/photos/24866722/pexels-photo-24866722.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940');background-size:cover;background-position:center">
   <div class="label">Why Now?</div>
   <h2>The Timing Is Right</h2>
   <div class="grid2">
@@ -312,7 +309,7 @@ ul li::before{content:'';position:absolute;left:0;top:.55em;width:7px;height:7px
 </div>
 
 <!-- ==================== SLIDE 6: TARGET MARKET ==================== -->
-<div class="slide photo" style="background-image:url('https://images.pexels.com/photos/19318457/pexels-photo-19318457.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940')">
+<div class="slide" style="background:linear-gradient(180deg,rgba(8,10,24,.9) 0%,rgba(8,10,24,.78) 100%),url('https://images.pexels.com/photos/19318457/pexels-photo-19318457.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940');background-size:cover;background-position:center">
   <div class="label">Target Market</div>
   <h2>Who We Serve</h2>
   <div class="grid2">
@@ -345,7 +342,7 @@ ul li::before{content:'';position:absolute;left:0;top:.55em;width:7px;height:7px
 </div>
 
 <!-- ==================== SLIDE 7: MARKET OPPORTUNITY ==================== -->
-<div class="slide photo" style="background-image:url('https://images.pexels.com/photos/17485657/pexels-photo-17485657.png?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940')">
+<div class="slide" style="background:linear-gradient(135deg,rgba(8,10,24,.88) 0%,rgba(8,10,24,.72) 50%,rgba(8,10,24,.6) 100%),url('https://images.pexels.com/photos/17485657/pexels-photo-17485657.png?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940');background-size:cover;background-position:center">
   <div class="label">Market Opportunity</div>
   <h2>TAM / SAM / SOM</h2>
   <div class="grid3" style="max-width:780px">
@@ -482,7 +479,7 @@ ul li::before{content:'';position:absolute;left:0;top:.55em;width:7px;height:7px
 </div>
 
 <!-- ==================== SLIDE 11: GO TO MARKET ==================== -->
-<div class="slide photo" style="background-image:url('https://images.pexels.com/photos/15560907/pexels-photo-15560907.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940')">
+<div class="slide" style="background:linear-gradient(135deg,rgba(8,10,24,.88) 0%,rgba(8,10,24,.72) 50%,rgba(8,10,24,.6) 100%),url('https://images.pexels.com/photos/15560907/pexels-photo-15560907.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940');background-size:cover;background-position:center">
   <div class="label">Go-To-Market</div>
   <h2>How We Win Clients</h2>
   <div class="grid3">
@@ -570,7 +567,7 @@ ul li::before{content:'';position:absolute;left:0;top:.55em;width:7px;height:7px
 </div>
 
 <!-- ==================== SLIDE 14: THE ASK ==================== -->
-<div class="slide photo" style="background-image:url('https://images.pexels.com/photos/33175650/pexels-photo-33175650.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940')">
+<div class="slide" style="background:linear-gradient(135deg,rgba(8,10,24,.88) 0%,rgba(8,10,24,.72) 50%,rgba(8,10,24,.6) 100%),url('https://images.pexels.com/photos/33175650/pexels-photo-33175650.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940');background-size:cover;background-position:center">
   <div class="label">The Ask</div>
   <h2>Investment Opportunity</h2>
 
@@ -608,7 +605,7 @@ ul li::before{content:'';position:absolute;left:0;top:.55em;width:7px;height:7px
 </div>
 
 <!-- ==================== SLIDE 15: DEEP DIVE TITLE ==================== -->
-<div class="slide photo divider" style="background-image:url('https://images.pexels.com/photos/4508751/pexels-photo-4508751.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940')">
+<div class="slide divider" style="background:linear-gradient(135deg,rgba(8,10,24,.88) 0%,rgba(8,10,24,.72) 50%,rgba(8,10,24,.6) 100%),url('https://images.pexels.com/photos/4508751/pexels-photo-4508751.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940');background-size:cover;background-position:center">
   <div class="label">Appendix</div>
   <h1>Deep Dive</h1>
   <p style="font-size:1.2rem;color:var(--text2);text-align:center">Legal framework &middot; Market research &middot; Detailed methodology</p>

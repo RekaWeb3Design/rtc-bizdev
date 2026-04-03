@@ -45,7 +45,7 @@
     "type": "html",
     "folder": "pitches/investors",
     "date": "2026-04-03",
-    "description": "Roll the Code — Full 17-slide investor deck (interactive HTML, arrow key navigation, fullscreen). Pexels imagery, investor brand colors. Covers: problem, timing, team, partners, market, solution, traction, competitors, GTM, business model, financials, the ask, legal framework, and market research appendix."
+    "description": "Roll the Code — Full 17-slide investor deck (interactive HTML, arrow key navigation, fullscreen). Pexels background photos on 8 slides with dark gradient veils. Investor brand colors (#080A18/#5F5FFF). Covers: problem, timing, team, partners, market, solution, traction, competitors, GTM, business model, financials, the ask, legal framework, and market research appendix."
   },
   {
     "path": "outputs/pitches/investors/rtc-investor-deck-2026-04-03.pdf",
@@ -53,6 +53,6 @@
     "type": "pdf",
     "folder": "pitches/investors",
     "date": "2026-04-03",
-    "description": "Roll the Code — Investor deck (branded PDF, A4 landscape). Full 17 pages with speaker notes on every slide, detailed financials, team bios, competitive matrix, and market sizing methodology."
+    "description": "Roll the Code — Investor deck (PDF, 1920x1080 slides). Generated from HTML deck via puppeteer — identical visual design, one slide per page, Pexels background photos preserved. 17 pages covering full investor narrative."
   }
 ]
