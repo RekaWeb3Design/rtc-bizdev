@@ -6,5 +6,37 @@
     "folder": "reports/html",
     "date": "2026-04-02",
     "description": "HTML presentation for Enterprise Innovation Hubs"
+  },
+  {
+    "path": "outputs/reports/html/uk-fintech-onepager-2026-04-03.html",
+    "name": "uk-fintech-onepager-2026-04-03.html",
+    "type": "html",
+    "folder": "reports/html",
+    "date": "2026-04-03",
+    "description": "UK Fintech CTO — Sales one-pager (scrollable HTML). Covers legacy core banking modernisation, the Orchestration System offering, 3-phase process, results, team, and CTA."
+  },
+  {
+    "path": "outputs/reports/pdf/uk-fintech-onepager-2026-04-03.pdf",
+    "name": "uk-fintech-onepager-2026-04-03.pdf",
+    "type": "pdf",
+    "folder": "reports/pdf",
+    "date": "2026-04-03",
+    "description": "UK Fintech CTO — Sales one-pager (branded PDF for email attachment). Detailed print-ready version with stats, use case table, process steps, team section, and key takeaways."
+  },
+  {
+    "path": "outputs/reports/html/uk-fintech-pitchdeck-2026-04-03.html",
+    "name": "uk-fintech-pitchdeck-2026-04-03.html",
+    "type": "html",
+    "folder": "reports/html",
+    "date": "2026-04-03",
+    "description": "UK Fintech CTO — 10-slide pitch deck (interactive HTML, arrow key navigation, fullscreen). Covers problem, solution, how it works, results, use cases, why now, team, offer, and contact."
+  },
+  {
+    "path": "outputs/reports/pdf/uk-fintech-pitchdeck-2026-04-03.pdf",
+    "name": "uk-fintech-pitchdeck-2026-04-03.pdf",
+    "type": "pdf",
+    "folder": "reports/pdf",
+    "date": "2026-04-03",
+    "description": "UK Fintech CTO — Pitch deck full version (branded PDF with speaker notes). 10 slides + detailed speaker notes for each, team credentials table, stat callout cards, and key message summary."
   }
 ]
