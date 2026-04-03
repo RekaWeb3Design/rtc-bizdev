@@ -1,51 +1,11 @@
 [
   {
-    "path": "outputs/reports/html/presentation-enterprise-innovation-hubs-2026-04-02.html",
-    "name": "presentation-enterprise-innovation-hubs-2026-04-02.html",
-    "type": "html",
-    "folder": "reports/html",
-    "date": "2026-04-02",
-    "description": "HTML presentation for Enterprise Innovation Hubs"
-  },
-  {
-    "path": "outputs/reports/html/uk-fintech-onepager-2026-04-03.html",
-    "name": "uk-fintech-onepager-2026-04-03.html",
-    "type": "html",
-    "folder": "reports/html",
-    "date": "2026-04-03",
-    "description": "UK Fintech CTO — Sales one-pager (scrollable HTML). Covers legacy core banking modernisation, the Orchestration System offering, 3-phase process, results, team, and CTA."
-  },
-  {
-    "path": "outputs/reports/pdf/uk-fintech-onepager-2026-04-03.pdf",
-    "name": "uk-fintech-onepager-2026-04-03.pdf",
-    "type": "pdf",
-    "folder": "reports/pdf",
-    "date": "2026-04-03",
-    "description": "UK Fintech CTO — Sales one-pager (branded PDF for email attachment). Detailed print-ready version with stats, use case table, process steps, team section, and key takeaways."
-  },
-  {
-    "path": "outputs/reports/html/uk-fintech-pitchdeck-2026-04-03.html",
-    "name": "uk-fintech-pitchdeck-2026-04-03.html",
-    "type": "html",
-    "folder": "reports/html",
-    "date": "2026-04-03",
-    "description": "UK Fintech CTO — 10-slide pitch deck (interactive HTML, arrow key navigation, fullscreen). Covers problem, solution, how it works, results, use cases, why now, team, offer, and contact."
-  },
-  {
-    "path": "outputs/reports/pdf/uk-fintech-pitchdeck-2026-04-03.pdf",
-    "name": "uk-fintech-pitchdeck-2026-04-03.pdf",
-    "type": "pdf",
-    "folder": "reports/pdf",
-    "date": "2026-04-03",
-    "description": "UK Fintech CTO — Pitch deck full version (branded PDF with speaker notes). 10 slides + detailed speaker notes for each, team credentials table, stat callout cards, and key message summary."
-  },
-  {
     "path": "outputs/pitches/investors/rtc-investor-deck-2026-04-03.html",
     "name": "rtc-investor-deck-2026-04-03.html",
     "type": "html",
     "folder": "pitches/investors",
     "date": "2026-04-03",
-    "description": "Roll the Code — Full 17-slide investor deck (interactive HTML, arrow key navigation, fullscreen). Pexels background photos on 8 slides with dark gradient veils. Investor brand colors (#080A18/#5F5FFF). Covers: problem, timing, team, partners, market, solution, traction, competitors, GTM, business model, financials, the ask, legal framework, and market research appendix."
+    "description": "Roll the Code — Full 17-slide investor deck (interactive HTML). Pexels background photos on 8 slides with dark gradient veils. Investor brand colors (#080A18/#5F5FFF). Arrow keys, fullscreen (F). Covers: problem, timing, team, partners, market (TAM/SAM/SOM), solution, traction, competitors, GTM, business model, 3-year financials, the ask (EUR 250K pre-seed), legal framework, and market research appendix."
   },
   {
     "path": "outputs/pitches/investors/rtc-investor-deck-2026-04-03.pdf",
