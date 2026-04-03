@@ -35,17 +35,25 @@ Agentic AI development training. Door-opener. Growing need as the whole IT indus
 
 ## The Founding Team (know these well)
 
-**Board of Directors:**
-- **Antal Károlyi, PhD** (me) — business development, business angel, social entrepreneur, SignCoders founder
-- **Réka Víg** — AI enthusiast, UX/UI designer, serial entrepreneur, AI-first approach
+**Board of Directors & Execution:**
+- **Antal Károlyi, PhD** — business development, investor relations, sales leadership, SignCoders founder
+- **Réka Víg** — AI-first product strategist, UX/UI designer, serial entrepreneur
 - **Zoltán Héczei** — AI workflow automation expert, n8n specialist, community builder, business analyst
 
 **Tech Lineup:**
-- **Ákos Karacs** — QA, business analyst, software architect
 - **Gábor Tatár** — AI orchestration product owner, software architect, seasoned entrepreneur
+- **Ákos Karacs** — QA, business analyst, software architect
 - **Roland Repka** — senior full-stack developer
 
-**Advisers:** Ágnes Szabó (branding/marketing), Steve Balogh (enterprise IT)
+**Advisers:**
+- **Ágnes Szabó** — branding and marketing
+- **Steve Balogh** — enterprise IT
+
+## Important rules for all documents:
+- Board + Execution always appears first and must always be listed in full
+- In technology-focused sections, list Tech Lineup separately after Board + Execution
+- Antal, Réka, and Zoli are both board members AND part of the execution team — never omit them from team sections
+- SignCoders is a cooperation partner, not a subcontractor
 
 ## SignCoders — Strategic Partner
 Founded March 2020. Social enterprise employing Deaf and hard-of-hearing professionals in mixed Deaf–hearing tech teams. Handles: agentic AI implementation, UX/UI design, social media. **Do not position as a subcontractor — position as a cooperation partner that adds both technical depth and a meaningful diversity story.**
