@@ -129,10 +129,25 @@ Always present 3 tiers:
 ---
 
 ## Output Instructions
+
+Every business planning document produces **two deliverables** — never raw MD to clients.
+
 1. Ask: which section(s) do you need?
 2. Ask: is this for internal use, investors, or clients?
-3. Produce as structured Markdown
-4. Save to `/outputs/bizplan-[section]-[date].md`
+3. Draft content in Markdown (internal only)
+
+### HTML version (for quick review / web sharing)
+4. Use the `html-presentation` skill to produce a visual HTML summary
+5. Save to `outputs/reports/html/[slug]-bizplan-[section]-[date].html`
+6. Format: key highlights, charts, executive view
+
+### PDF version (for detailed analysis / attachment)
+7. Use the `pdf-report` skill to produce a branded, detailed PDF
+8. Save to `outputs/reports/pdf/[slug]-bizplan-[section]-[date].pdf`
+9. Format: A4, full analysis, data tables, financial models
+
+### Update index
+10. Update `outputs/files-index.json` with both HTML and PDF entries (no MD entries)
 
 ---
 

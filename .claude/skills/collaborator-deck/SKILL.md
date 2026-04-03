@@ -81,10 +81,25 @@ Not clients, not investors — **potential co-builders and partners:**
 ---
 
 ## Output Instructions
+
+Every collaborator deck produces **two deliverables** — never raw MD to clients.
+
 1. Ask: partnership model? (referral / white-label / co-delivery / co-founder)
 2. Ask: partner profile? (agency, consultant, specialist, freelancer)
-3. Produce as Markdown deck outline with full content
-4. Save to `/outputs/collab-deck-[partner-type]-[date].md`
+3. Draft content in Markdown (internal only)
+
+### HTML version (for web sharing / intro link)
+4. Use the `html-presentation` skill to produce a visual HTML deck
+5. Save to `outputs/reports/html/[client-slug]-collab-deck-[date].html`
+6. Format: peer-to-peer tone, visual, shareable link
+
+### PDF version (for email attachment / formal proposal)
+7. Use the `pdf-report` skill to produce a branded PDF with full terms and economics
+8. Save to `outputs/reports/pdf/[client-slug]-collab-deck-[date].pdf`
+9. Format: A4, detailed partnership terms, revenue model, case studies
+
+### Update index
+10. Update `outputs/files-index.json` with both HTML and PDF entries (no MD entries)
 
 ---
 

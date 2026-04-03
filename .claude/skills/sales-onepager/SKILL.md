@@ -102,11 +102,24 @@ When creating, ask or infer:
 ---
 
 ## Output Instructions
-1. Produce the one-pager as a clean Markdown document
-2. Include a note at the top: `<!-- Designed for [channel] — [date] -->`
-3. Save to `outputs/sales/one-pagers/[client-slug]-onepager-[date].md`
-4. After saving, update `outputs/files-index.json` as required by CLAUDE.md (include `content` field for MD files)
-5. Offer to generate HTML version for web/email
+
+Every one-pager produces **two deliverables** — never raw MD to clients.
+
+### Step 1: Draft in Markdown (internal only)
+1. Write the one-pager content as Markdown (internal draft, not delivered)
+
+### Step 2: HTML version (for web sharing)
+2. Use the `html-presentation` skill to produce a visual, scrollable HTML one-pager
+3. Save to `outputs/reports/html/[client-slug]-onepager-[date].html`
+4. Format: scrollable landing page style — skimmable, mobile-friendly, one clear CTA
+
+### Step 3: PDF version (for email attachment)
+5. Use the `pdf-report` skill to produce a branded, print-ready PDF
+6. Save to `outputs/reports/pdf/[client-slug]-onepager-[date].pdf`
+7. Format: A4, full detail, designed for careful reading
+
+### Step 4: Update index
+8. Update `outputs/files-index.json` with both HTML and PDF entries (no MD entries in the index)
 
 ---
 

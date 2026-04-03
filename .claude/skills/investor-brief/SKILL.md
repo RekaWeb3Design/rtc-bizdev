@@ -114,10 +114,26 @@ What, for whom, why now
 ---
 
 ## Output Instructions
+
+Every investor document produces **two deliverables** — never raw MD to clients.
+
 1. Ask: document type? (exec summary / deck / memo)
 2. Ask: stage? (pre-revenue / early traction / scaling)
 3. Ask: raise amount + use of funds?
-4. Produce document, save to `/outputs/investor-[type]-[date].md`
+4. Draft content in Markdown (internal only)
+
+### HTML version (for web sharing / quick review)
+5. Use the `html-presentation` skill to produce a visual HTML version
+6. Save to `outputs/reports/html/[client-slug]-investor-[type]-[date].html`
+7. Format: executive-level, skimmable, key metrics as hero text
+
+### PDF version (for email attachment / deep-dive)
+8. Use the `pdf-report` skill to produce a branded, detailed PDF
+9. Save to `outputs/reports/pdf/[client-slug]-investor-[type]-[date].pdf`
+10. Format: full detail, financials, team bios, market data
+
+### Update index
+11. Update `outputs/files-index.json` with both HTML and PDF entries (no MD entries)
 
 ---
 

@@ -114,49 +114,42 @@ Every generated file goes into the correct subfolder automatically. Never save t
 
 ```
 outputs/
-  pitches/
-    investors/        ← investor briefs, executive summaries, fundraising decks
-    clients/          ← client-specific pitch decks and proposals
-    partners/         ← collaborator and white-label decks
+  reports/
+    html/             ← all HTML presentations and visual deliverables
+    pdf/              ← all PDF reports and print-ready deliverables
   sales/
-    one-pagers/       ← sales one-pagers by industry or client
-    proposals/        ← detailed proposals and scoping documents
     emails/           ← follow-up and cold email sequences
   research/
     market/           ← market sizing, TAM/SAM/SOM reports
     competitors/      ← competitor analysis
     leads/            ← potential client research
-  reports/
-    pdf/              ← all generated PDF files
-    html/             ← all HTML presentations
   brand/              ← brand-related outputs (not the source brand/ folder)
+  drafts/            ← internal MD drafts (never delivered to clients)
 ```
 
 ### Routing rules
 | Document type | Output folder |
 |---|---|
-| Investor brief, exec summary, fundraising deck | `outputs/pitches/investors/` |
-| Client pitch deck, client proposal | `outputs/pitches/clients/` |
-| Collaborator deck, partner pitch | `outputs/pitches/partners/` |
-| Sales one-pager | `outputs/sales/one-pagers/` |
-| Detailed proposal, scoping doc | `outputs/sales/proposals/` |
+| HTML presentation (any type) | `outputs/reports/html/` |
+| PDF report (any type) | `outputs/reports/pdf/` |
 | Follow-up email, cold email sequence | `outputs/sales/emails/` |
 | Market research, TAM/SAM/SOM | `outputs/research/market/` |
 | Competitor analysis | `outputs/research/competitors/` |
 | Lead/prospect research | `outputs/research/leads/` |
-| PDF report (any type) | `outputs/reports/pdf/` |
-| HTML presentation (any type) | `outputs/reports/html/` |
 | Brand-related output | `outputs/brand/` |
+
+> **Output format rule:** Never deliver raw Markdown files to clients. Every skill always produces **two deliverables**: an HTML version (for web sharing via link) and a PDF version (for email attachment / print). MD may be used internally as a draft or intermediate step, but the final outputs are always HTML + PDF.
 
 ### File naming convention
 All files follow: `[client-slug]-[type]-[date].[ext]`
 
 Examples:
-- `barclays-onepager-2026-04-03.md`
-- `barclays-pitchdeck-2026-04-03.md`
+- `barclays-onepager-2026-04-03.html` (HTML version for sharing)
+- `barclays-onepager-2026-04-03.pdf` (PDF version for attachment)
+- `barclays-pitchdeck-2026-04-03.html`
+- `barclays-pitchdeck-2026-04-03.pdf`
 - `barclays-presentation-2026-04-03.html`
 - `barclays-report-2026-04-03.pdf`
-- `uk-enterprise-it-market-research-2026-04-03.md`
 
 ### Auto-create client folders
 When generating materials for a specific client, create a subfolder inside `pitches/clients/` or `research/leads/` if one doesn't exist yet. Example: `outputs/pitches/clients/barclays/` or `outputs/research/leads/barclays/`.
@@ -165,22 +158,25 @@ When generating materials for a specific client, create a subfolder inside `pitc
 Every time you generate a new document, you **must** update `outputs/files-index.json`:
 1. Read the current `outputs/files-index.json`
 2. Add a new entry with: `path`, `name`, `type`, `folder`, `date`, `description`
-3. For **MD files**: also include a `content` field with the full markdown string (this is how the portal previews markdown — there is no per-file fetch)
-4. For **HTML/PDF files**: no `content` field needed (HTML opens in new tab, PDF uses iframe)
+3. For **HTML files**: no `content` field needed (HTML opens in new tab)
+4. For **PDF files**: no `content` field needed (PDF uses iframe)
 5. Write the updated JSON back
+
+Only HTML and PDF entries belong in the index. MD files are intermediate drafts and should not appear in the portal.
 
 The portal (`index.html`) fetches this file once on load and caches it in memory. If you skip this step, new files won't appear in the portal.
 
 ## Audience Guide by Document Type
 
-| Format | Primary Reader | What They Need to Feel |
-|---|---|---|
-| Sales one-pager | SME owner, Head of Ops | "This solves my exact problem" |
-| Pitch deck | CTO, CEO, innovation lead | "I trust this team can deliver" |
-| Investor brief | Angel, VC, business angel | "This is the right time, right team" |
-| Collaborator deck | Agency, consultant, partner | "We can win together" |
-| HTML presentation | Any of the above (web link) | "I get it in 60 seconds" |
-| Business plan section | Internal / investor deep-dive | "The numbers make sense" |
+Every document is delivered in **two formats** — HTML (for web sharing) and PDF (for email/print). Never deliver raw MD to clients.
+
+| Document | Primary Reader | HTML version | PDF version |
+|---|---|---|---|
+| Sales one-pager | SME owner, Head of Ops | Visual, skimmable, shareable link | Detailed, print-ready attachment |
+| Pitch deck | CTO, CEO, innovation lead | Slide-by-slide web presentation | Full deck with speaker notes |
+| Investor brief | Angel, VC, business angel | Executive summary web version | Deep-dive with financials |
+| Collaborator deck | Agency, consultant, partner | Visual partnership pitch | Detailed terms and economics |
+| Business plan | Internal / investor deep-dive | Key highlights presentation | Full analysis with data |
 
 ## Confidentiality
 - Do not name specific clients without confirmation

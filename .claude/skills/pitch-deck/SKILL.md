@@ -75,12 +75,24 @@ description: Create a pitch deck or presentation for AI automation, agent workfl
 ---
 
 ## Output Instructions
-1. First produce a **slide-by-slide outline** with:
-   - Slide title
-   - 3-5 bullet points of content
-   - Speaker notes (1-2 sentences)
-2. Ask if user wants HTML visual version
-3. Save to `/outputs/pitchdeck-[topic]-[date].md`
+
+Every pitch deck produces **two deliverables** — never raw MD to clients.
+
+### Step 1: Draft slide outline (internal only)
+1. Produce a slide-by-slide outline with titles, bullet points, and speaker notes (internal draft)
+
+### Step 2: HTML version (for screen-share / web link)
+2. Use the `html-presentation` skill to produce a slide-by-slide HTML deck
+3. Save to `outputs/reports/html/[client-slug]-pitchdeck-[date].html`
+4. Format: full-screen slides, arrow key navigation, dark theme, max 30 words per slide
+
+### Step 3: PDF version (for email attachment / print)
+5. Use the `pdf-report` skill to produce a branded PDF with full slide content and speaker notes
+6. Save to `outputs/reports/pdf/[client-slug]-pitchdeck-[date].pdf`
+7. Format: A4, includes all detail and speaker notes for offline review
+
+### Step 4: Update index
+8. Update `outputs/files-index.json` with both HTML and PDF entries (no MD entries in the index)
 
 ---
 
