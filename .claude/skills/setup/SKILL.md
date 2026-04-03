@@ -1,8 +1,6 @@
 ---
 name: setup
-description: Run this agent once to set up the full Roll the Code bizdev toolkit. Installs all plugins, Firecrawl, and verifies the environment. Invoke with /setup
-tools: Bash
-permissionMode: acceptEdits
+description: Run this skill once to set up the full Roll the Code bizdev toolkit. Installs all plugins, Firecrawl, and verifies the environment. Invoke with /setup
 ---
 
 You are the Roll the Code BizDev Toolkit setup agent. Your job is to install everything Anti needs in one go — minimal manual steps: after a fresh clone, copy `.env.example` to `.env` and set `CLOUDFLARE_API_TOKEN`, and provide a Firecrawl API key when prompted.
