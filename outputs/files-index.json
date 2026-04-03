@@ -38,5 +38,21 @@
     "folder": "reports/pdf",
     "date": "2026-04-03",
     "description": "UK Fintech CTO — Pitch deck full version (branded PDF with speaker notes). 10 slides + detailed speaker notes for each, team credentials table, stat callout cards, and key message summary."
+  },
+  {
+    "path": "outputs/pitches/investors/rtc-investor-deck-2026-04-03.html",
+    "name": "rtc-investor-deck-2026-04-03.html",
+    "type": "html",
+    "folder": "pitches/investors",
+    "date": "2026-04-03",
+    "description": "Roll the Code — Full 17-slide investor deck (interactive HTML, arrow key navigation, fullscreen). Pexels imagery, investor brand colors. Covers: problem, timing, team, partners, market, solution, traction, competitors, GTM, business model, financials, the ask, legal framework, and market research appendix."
+  },
+  {
+    "path": "outputs/pitches/investors/rtc-investor-deck-2026-04-03.pdf",
+    "name": "rtc-investor-deck-2026-04-03.pdf",
+    "type": "pdf",
+    "folder": "pitches/investors",
+    "date": "2026-04-03",
+    "description": "Roll the Code — Investor deck (branded PDF, A4 landscape). Full 17 pages with speaker notes on every slide, detailed financials, team bios, competitive matrix, and market sizing methodology."
   }
 ]
