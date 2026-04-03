@@ -43,7 +43,7 @@
       display: none;
       flex-direction: column;
       justify-content: center;
-      align-items: flex-start;
+      align-items: center;
       padding: clamp(40px, 6vw, 80px) clamp(40px, 8vw, 120px);
       opacity: 0;
       transition: opacity 0.35s ease;
@@ -52,9 +52,18 @@
       display: flex;
       opacity: 1;
     }
+    .slide-inner {
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+    }
     .slide-centered {
-      align-items: center;
       text-align: center;
+    }
+    .slide-centered .slide-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     /* SLIDE LABELS */
@@ -490,14 +499,17 @@
 
   <!-- SLIDE 1: TITLE -->
   <div class="slide slide-01 slide-centered active" id="slide-1">
+    <div class="slide-inner">
     <span class="slide-label">AI Agent Factory</span>
     <h1 class="slide-title">Modernise Your Core Banking System.<br><em>In Weeks, Not Years.</em></h1>
     <span class="tagline-badge">"Days NOT Months"</span>
     <p class="slide-body">A CTO presentation by Antal Károlyi, PhD &nbsp;·&nbsp; Roll the Code &nbsp;·&nbsp; April 2026</p>
+    </div>
   </div>
 
   <!-- SLIDE 2: PROBLEM -->
   <div class="slide" id="slide-2">
+    <div class="slide-inner">
     <span class="slide-label">The Problem</span>
     <div>
       <span class="hero-stat">18<span class="hero-stat-unit">mo</span></span>
@@ -508,10 +520,12 @@
       <li>Regulators demand faster change; <strong>every sprint against the monolith</strong> compounds the risk and costs more than the last</li>
       <li>The cost of inaction is not staying still — <strong>it's falling behind competitors who are moving now</strong></li>
     </ul>
+    </div>
   </div>
 
   <!-- SLIDE 3: SOLUTION -->
   <div class="slide" id="slide-3">
+    <div class="slide-inner">
     <span class="slide-label">The Solution</span>
     <h2 class="slide-title">We reverse-engineer, specify, and rebuild your legacy system — <em>deterministically</em>.</h2>
     <ul class="bullet-list">
@@ -521,10 +535,12 @@
       <li><strong>Deploy to your stack</strong> — tech-stack agnostic, deployment agnostic. Your infrastructure, your rules</li>
     </ul>
     <p style="margin-top:24px;font-size:0.85rem;color:var(--accent2);font-style:italic;font-weight:600;">Not vibe coding. Architect-supervised. Deterministic results.</p>
+    </div>
   </div>
 
   <!-- SLIDE 4: HOW IT WORKS -->
   <div class="slide" id="slide-4">
+    <div class="slide-inner">
     <span class="slide-label">How It Works</span>
     <h2 class="slide-title">Three phases. Fixed scope at every gate.</h2>
     <div class="process-grid">
@@ -549,10 +565,12 @@
         <span class="duration">Your Stack</span>
       </div>
     </div>
+    </div>
   </div>
 
   <!-- SLIDE 5: RESULTS -->
   <div class="slide" id="slide-5">
+    <div class="slide-inner">
     <span class="slide-label">Results</span>
     <h2 class="slide-title">What this looks like in practice.</h2>
     <div class="results-row">
@@ -570,10 +588,12 @@
       </div>
     </div>
     <p style="font-size:0.75rem;color:var(--muted);margin-top:20px;">Client names withheld. Available under NDA on request.</p>
+    </div>
   </div>
 
   <!-- SLIDE 6: USE CASES -->
   <div class="slide" id="slide-6">
+    <div class="slide-inner">
     <span class="slide-label">Use Cases for UK Fintech</span>
     <h2 class="slide-title">Start non-critical. Expand with confidence.</h2>
     <table class="use-case-table">
@@ -602,10 +622,12 @@
         </tr>
       </tbody>
     </table>
+    </div>
   </div>
 
   <!-- SLIDE 7: WHY NOW -->
   <div class="slide" id="slide-7">
+    <div class="slide-inner">
     <span class="slide-label">Why Now</span>
     <h2 class="slide-title">The window is <em>6–9 months</em>.</h2>
     <div class="why-now-block">
@@ -618,10 +640,12 @@
       <li>Regulatory pressure (FCA, Basel, DORA) is increasing the cost of stale systems</li>
       <li>The firms that act early will have architectural flexibility as the market evolves</li>
     </ul>
+    </div>
   </div>
 
   <!-- SLIDE 8: WHY US -->
   <div class="slide" id="slide-8">
+    <div class="slide-inner">
     <span class="slide-label">Why Roll the Code</span>
     <h2 class="slide-title">Architects who built a system. Not prompt engineers with a deck.</h2>
     <div class="team-row">
@@ -647,10 +671,12 @@
       </div>
     </div>
     <p style="margin-top:20px;font-size:0.82rem;color:var(--muted);max-width:760px;">We partner with <strong style="color:var(--accent2)">SignCoders</strong> — a social enterprise employing Deaf and hard-of-hearing professionals in mixed Deaf–hearing tech teams — for agentic AI implementation and UX. Genuine technical depth. A diversity story that matters to enterprise procurement.</p>
+    </div>
   </div>
 
   <!-- SLIDE 9: OFFER -->
   <div class="slide" id="slide-9">
+    <div class="slide-inner">
     <span class="slide-label">The Offer</span>
     <h2 class="slide-title">A low-risk entry. A high-impact outcome.</h2>
     <div class="offer-card">
@@ -665,10 +691,12 @@
         <li>Full handover — <strong>no lock-in</strong>, no ongoing dependency</li>
       </ul>
     </div>
+    </div>
   </div>
 
   <!-- SLIDE 10: CONTACT -->
-  <div class="slide" id="slide-10">
+  <div class="slide slide-centered" id="slide-10">
+    <div class="slide-inner">
     <span class="slide-label">Next Step</span>
     <h2 class="slide-title">Start with 45 minutes.<br>Not 18 months.</h2>
     <div class="contact-block">
@@ -680,6 +708,7 @@
         LinkedIn: /in/antalkarolyi
       </p>
       <span class="tagline-end">"Days NOT Months"</span>
+    </div>
     </div>
   </div>
 
