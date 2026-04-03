@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RTC BizDev Toolkit — Prompt Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080810;
+    --bg2: #0f0f1a;
+    --bg3: #16162a;
+    --border: #1e1e35;
+    --border2: #2a2a45;
+    --accent: #6366f1;
+    --accent2: #818cf8;
+    --accent3: #4f46e5;
+    --text: #f0f0ff;
+    --text2: #9494bb;
+    --text3: #5a5a80;
+    --green: #34d399;
+    --amber: #fbbf24;
+    --red: #f87171;
+    --blue: #60a5fa;
+    --purple: #a78bfa;
+    --card: #0d0d1e;
+    --shadow: 0 4px 24px rgba(99,102,241,0.08);
+    --radius: 12px;
+    --radius-sm: 8px;
+    --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* Noise overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* ─── TOP BAR ─── */
+  .top-bar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(8,8,16,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .top-bar-logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 17px;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: none;
+  }
+  .top-bar-logo:hover { border-bottom: none; }
+  .top-bar-logo span { color: var(--accent2); }
+  .top-bar-logo .dot {
+    width: 7px; height: 7px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2.5s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+  .top-bar-nav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  /* NAV LINKS */
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: all var(--transition);
+    white-space: nowrap;
+    border-bottom: none;
+  }
+  .nav-link:hover { border-bottom: none; }
+  .nav-link-green {
+    color: #34d399;
+    background: rgba(52,211,153,0.08);
+    border-color: rgba(52,211,153,0.15);
+  }
+  .nav-link-green:hover {
+    background: rgba(52,211,153,0.15);
+    border-color: rgba(52,211,153,0.3);
+  }
+  .nav-link-blue {
+    color: #60a5fa;
+    background: rgba(96,165,250,0.08);
+    border-color: rgba(96,165,250,0.15);
+  }
+  .nav-link-blue:hover {
+    background: rgba(96,165,250,0.15);
+    border-color: rgba(96,165,250,0.3);
+  }
+  .nav-link-purple {
+    color: #a78bfa;
+    background: rgba(167,139,250,0.08);
+    border-color: rgba(167,139,250,0.15);
+  }
+  .nav-link-purple:hover {
+    background: rgba(167,139,250,0.15);
+    border-color: rgba(167,139,250,0.3);
+  }
+  .nav-link-purple.active-page {
+    background: rgba(167,139,250,0.15);
+    border-color: rgba(167,139,250,0.35);
+  }
+  .nav-link-portal {
+    color: var(--text2);
+    background: rgba(148,148,187,0.06);
+    border-color: rgba(148,148,187,0.12);
+  }
+  .nav-link-portal:hover {
+    background: rgba(148,148,187,0.12);
+    border-color: rgba(148,148,187,0.25);
+  }
+
+  /* ─── LAYOUT ─── */
+  .layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    min-height: calc(100vh - 60px);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ─── SIDEBAR ─── */
+  .sidebar {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    width: 260px;
+    height: calc(100vh - 60px);
+    background: var(--bg);
+    border-right: 1px solid var(--border);
+    padding: 32px 0;
+    overflow-y: auto;
+    z-index: 10;
+  }
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-track { background: transparent; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+  .sidebar-logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 17px;
+    letter-spacing: -0.02em;
+    padding: 0 24px 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text);
+  }
+  .sidebar-logo span { color: var(--accent2); }
+  .sidebar-logo .dot {
+    width: 7px; height: 7px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2.5s infinite;
+  }
+
+  .sidebar-subtitle {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text3);
+    padding: 0 24px 24px;
+  }
+
+  .sidebar-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 0 24px 16px;
+  }
+
+  .sidebar-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text3);
+    padding: 0 24px 8px;
+  }
+
+  .sidebar nav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 0 12px;
+  }
+
+  .sidebar nav a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    color: var(--text2);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 400;
+    transition: all var(--transition);
+    border-bottom: none;
+  }
+  .sidebar nav a:hover {
+    color: var(--text);
+    background: var(--bg3);
+    border-bottom: none;
+  }
+  .sidebar nav a.active {
+    color: var(--purple);
+    background: rgba(167,139,250,0.08);
+  }
+  .sidebar nav a .nav-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text3);
+    min-width: 20px;
+  }
+
+  /* ─── MAIN CONTENT ─── */
+  .main {
+    grid-column: 2;
+    padding: 48px 64px 120px;
+    max-width: 900px;
+  }
+
+  /* Hero */
+  .hero {
+    margin-bottom: 0;
+    padding-bottom: 40px;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--purple);
+    background: rgba(167,139,250,0.08);
+    border: 1px solid rgba(167,139,250,0.15);
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 42px;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .hero h1 span { color: var(--purple); }
+  .hero p {
+    color: var(--text2);
+    font-size: 16px;
+    max-width: 560px;
+  }
+
+  /* Sections */
+  section {
+    margin-top: 56px;
+    scroll-margin-top: 80px;
+  }
+
+  section h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 26px;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  section h2 .section-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    color: var(--purple);
+    background: rgba(167,139,250,0.08);
+    border: 1px solid rgba(167,139,250,0.15);
+    padding: 3px 10px;
+    border-radius: 6px;
+  }
+
+  section h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    color: var(--text);
+    margin: 28px 0 12px;
+  }
+
+  p { margin-bottom: 14px; color: var(--text2); }
+  p strong { color: var(--text); font-weight: 500; }
+
+  a { color: var(--accent2); text-decoration: none; border-bottom: 1px solid rgba(129,140,248,0.3); transition: border-color var(--transition); }
+  a:hover { border-color: var(--accent2); }
+  .sidebar nav a { border-bottom: none; }
+  .sidebar nav a:hover { border-bottom: none; }
+
+  /* ─── PROMPT CARD ─── */
+  .prompt-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin: 16px 0 32px;
+    transition: all var(--transition);
+  }
+  .prompt-card:hover {
+    border-color: var(--border2);
+  }
+
+  .prompt-card h4 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--text);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .prompt-card h4 .card-icon {
+    width: 20px;
+    height: 20px;
+    color: var(--purple);
+  }
+
+  /* ─── FORM FIELDS ─── */
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .form-group.full-width {
+    grid-column: 1 / -1;
+  }
+  .form-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text3);
+  }
+  .form-input,
+  .form-select {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 9px 14px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    outline: none;
+    transition: all var(--transition);
+    width: 100%;
+  }
+  .form-input::placeholder { color: var(--text3); }
+  .form-input:focus,
+  .form-select:focus {
+    border-color: var(--purple);
+    background: var(--bg);
+    box-shadow: 0 0 0 3px rgba(167,139,250,0.1);
+  }
+  .form-select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%235a5a80' stroke-width='2' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+  }
+
+  /* Checkbox group */
+  .checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--text2);
+    cursor: pointer;
+    padding: 5px 12px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    transition: all var(--transition);
+    user-select: none;
+  }
+  .checkbox-label:hover {
+    border-color: var(--border2);
+    color: var(--text);
+  }
+  .checkbox-label input {
+    display: none;
+  }
+  .checkbox-label.checked {
+    color: var(--purple);
+    border-color: rgba(167,139,250,0.3);
+    background: rgba(167,139,250,0.06);
+  }
+  .checkbox-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    border: 1.5px solid var(--text3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition);
+    flex-shrink: 0;
+  }
+  .checkbox-label.checked .checkbox-dot {
+    border-color: var(--purple);
+    background: var(--purple);
+  }
+  .checkbox-label.checked .checkbox-dot::after {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--bg);
+    border-radius: 1px;
+  }
+
+  /* ─── PROMPT OUTPUT ─── */
+  .prompt-output {
+    position: relative;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px 20px;
+    margin-top: 16px;
+  }
+  .prompt-output code {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--purple);
+    background: none;
+    border: none;
+    padding: 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+    display: block;
+  }
+  .prompt-output .placeholder {
+    color: var(--text3);
+    font-style: italic;
+  }
+  .prompt-output-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text3);
+    margin-bottom: 10px;
+  }
+
+  /* ─── COPY BUTTON (large, for prompts) ─── */
+  .copy-prompt-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+    padding: 9px 18px;
+    border-radius: 8px;
+    border: 1px solid var(--border2);
+    background: var(--bg3);
+    color: var(--text3);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition);
+  }
+  .copy-prompt-btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+  .copy-prompt-btn:hover {
+    color: var(--text);
+    border-color: var(--purple);
+    background: rgba(167,139,250,0.08);
+  }
+  .copy-prompt-btn.ready {
+    color: var(--purple);
+    border-color: rgba(167,139,250,0.3);
+    background: rgba(167,139,250,0.06);
+  }
+  .copy-prompt-btn.copied {
+    color: var(--green);
+    border-color: var(--green);
+    background: rgba(52,211,153,0.06);
+  }
+
+  /* ─── SYSTEM CARDS (no form) ─── */
+  .system-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 16px 0 24px;
+  }
+  .system-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    transition: all var(--transition);
+  }
+  .system-card:hover {
+    border-color: var(--purple);
+    box-shadow: 0 0 20px rgba(167,139,250,0.06);
+  }
+  .system-card h4 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .system-card p {
+    font-size: 12px;
+    color: var(--text3);
+    margin-bottom: 12px;
+  }
+  .system-card .copy-prompt-btn {
+    margin-top: 0;
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* ─── SCROLL TO TOP ─── */
+  .scroll-top {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--text3);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all var(--transition);
+    z-index: 50;
+  }
+  .scroll-top.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .scroll-top:hover {
+    color: var(--purple);
+    border-color: var(--purple);
+    background: rgba(167,139,250,0.08);
+  }
+  .scroll-top svg { width: 18px; height: 18px; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .main { padding: 32px 20px 80px; }
+    .hero h1 { font-size: 30px; }
+    .form-grid { grid-template-columns: 1fr; }
+    .system-grid { grid-template-columns: 1fr; }
+    .top-bar-nav { gap: 6px; }
+    .nav-link { padding: 6px 10px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="./index.html" class="top-bar-logo">
+    <div class="dot"></div>
+    ROLL THE <span>CODE</span>
+  </a>
+  <div class="top-bar-nav">
+    <a href="./onboarding.html" class="nav-link nav-link-green">Onboarding</a>
+    <a href="./knowledge-base.html" class="nav-link nav-link-blue">Knowledge Base</a>
+    <a href="./prompt-portal.html" class="nav-link nav-link-purple active-page">Prompt Portal</a>
+    <a href="./index.html" class="nav-link nav-link-portal">&larr; Portal</a>
+  </div>
+</div>
+
+<div class="layout">
+
+<!-- ─── SIDEBAR ─── -->
+<aside class="sidebar">
+  <div class="sidebar-logo"><div class="dot"></div> ROLL THE <span>CODE</span></div>
+  <div class="sidebar-subtitle">Prompt Portal</div>
+  <div class="sidebar-divider"></div>
+  <div class="sidebar-label">Categories</div>
+  <nav>
+    <a href="#sales" class="active"><span class="nav-num">01</span> Sales & Outreach</a>
+    <a href="#research"><span class="nav-num">02</span> Research & Intelligence</a>
+    <a href="#pitch"><span class="nav-num">03</span> Pitch & Investor</a>
+    <a href="#strategy"><span class="nav-num">04</span> Strategy & Planning</a>
+    <a href="#system"><span class="nav-num">05</span> System & Maintenance</a>
+  </nav>
+</aside>
+
+<!-- ─── MAIN ─── -->
+<main class="main">
+
+<div class="hero">
+  <div class="hero-badge">Prompt Portal</div>
+  <h1>Prompt <span>Portal</span></h1>
+  <p>Select a template, fill in the details, copy and paste into Claude Code.</p>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 01 — Sales & Outreach              -->
+<!-- ════════════════════════════════════════════ -->
+<section id="sales">
+  <h2><span class="section-num">01</span> Sales & Outreach</h2>
+
+  <!-- Sales One-Pager -->
+  <h3>Sales One-Pager</h3>
+  <div class="prompt-card" data-prompt="sales-onepager">
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">Industry</label>
+        <input class="form-input" type="text" data-field="industry" placeholder="e.g. logistics, fintech, construction">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Pain Point</label>
+        <input class="form-input" type="text" data-field="pain" placeholder="e.g. manual invoice processing takes 3 days">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Audience</label>
+        <select class="form-select" data-field="audience">
+          <option value="">Select audience...</option>
+          <option>Head of Ops</option>
+          <option>CTO</option>
+          <option>CEO</option>
+          <option>CFO</option>
+          <option>Procurement</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Send Channel</label>
+        <select class="form-select" data-field="channel">
+          <option value="">Select channel...</option>
+          <option>email attachment</option>
+          <option>LinkedIn DM</option>
+          <option>printed</option>
+          <option>web link</option>
+        </select>
+      </div>
+    </div>
+    <div class="prompt-output">
+      <div class="prompt-output-label">Generated prompt</div>
+      <code id="prompt-sales-onepager"></code>
+    </div>
+    <button class="copy-prompt-btn" data-target="prompt-sales-onepager">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Copy to Claude Code
+    </button>
+  </div>
+
+  <!-- Cold Email Sequence -->
+  <h3>Cold Email Sequence</h3>
+  <div class="prompt-card" data-prompt="cold-email">
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">Target Company Type</label>
+        <input class="form-input" type="text" data-field="target" placeholder="e.g. mid-size UK IT agency">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Their Pain</label>
+        <input class="form-input" type="text" data-field="pain" placeholder="e.g. losing clients to AI-native competitors">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Number of Emails</label>
+        <select class="form-select" data-field="count">
+          <option value="">Select...</option>
+          <option>1 follow-up</option>
+          <option>3-email sequence</option>
+          <option>5-email sequence</option>
+        </select>
+      </div>
+    </div>
+    <div class="prompt-output">
+      <div class="prompt-output-label">Generated prompt</div>
+      <code id="prompt-cold-email"></code>
+    </div>
+    <button class="copy-prompt-btn" data-target="prompt-cold-email">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Copy to Claude Code
+    </button>
+  </div>
+
+  <!-- Collaborator Deck -->
+  <h3>Collaborator Deck</h3>
+  <div class="prompt-card" data-prompt="collab-deck">
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">Partner Type</label>
+        <input class="form-input" type="text" data-field="partner" placeholder="e.g. UK IT agency with 50 developers">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Partner Situation</label>
+        <input class="form-input" type="text" data-field="situation" placeholder="e.g. enterprise clients but no AI capability">
+      </div>
+      <div class="form-group full-width">
+        <label class="form-label">Goal</label>
+        <input class="form-input" type="text" data-field="goal" placeholder="e.g. offer AI-powered delivery without rebuilding their team">
+      </div>
+    </div>
+    <div class="prompt-output">
+      <div class="prompt-output-label">Generated prompt</div>
+      <code id="prompt-collab-deck"></code>
+    </div>
+    <button class="copy-prompt-btn" data-target="prompt-collab-deck">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Copy to Claude Code
+    </button>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 02 — Research & Intelligence       -->
+<!-- ════════════════════════════════════════════ -->
+<section id="research">
+  <h2><span class="section-num">02</span> Research & Intelligence</h2>
+
+  <!-- Market Research -->
+  <h3>Market Research</h3>
+  <div class="prompt-card" data-prompt="market-research">
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">Industry / Sector</label>
+        <input class="form-input" type="text" data-field="industry" placeholder="e.g. AI automation, fintech, logistics">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Geography</label>
+        <select class="form-select" data-field="geography">
+          <option value="">Select...</option>
+          <option>UK</option>
+          <option>Nordics</option>
+          <option>Hungary</option>
+          <option>UK + Nordics</option>
+          <option>Global</option>
+        </select>
+      </div>
+      <div class="form-group full-width">
+        <label class="form-label">Focus</label>
+        <div class="checkbox-group" data-field="focus">
+          <label class="checkbox-label"><input type="checkbox" value="TAM/SAM/SOM"><span class="checkbox-dot"></span> TAM/SAM/SOM</label>
+          <label class="checkbox-label"><input type="checkbox" value="Top competitors"><span class="checkbox-dot"></span> Top competitors</label>
+          <label class="checkbox-label"><input type="checkbox" value="Growth trends"><span class="checkbox-dot"></span> Growth trends</label>
+          <label class="checkbox-label"><input type="checkbox" value="Where RTC fits"><span class="checkbox-dot"></span> Where RTC fits</label>
+        </div>
+      </div>
+    </div>
+    <div class="prompt-output">
+      <div class="prompt-output-label">Generated prompt</div>
+      <code id="prompt-market-research"></code>
+    </div>
+    <button class="copy-prompt-btn" data-target="prompt-market-research">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Copy to Claude Code
+    </button>
+  </div>
+
+  <!-- Competitor Analysis -->
+  <h3>Competitor Analysis</h3>
+  <div class="prompt-card" data-prompt="competitor">
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">Space</label>
+        <input class="form-input" type="text" data-field="space" placeholder="e.g. AI-powered software delivery in the UK">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Number of Competitors</label>
+        <select class="form-select" data-field="count">
+          <option value="">Select...</option>
+          <option>Top 3</option>
+          <option>Top 5</option>
+        </select>
+      </div>
+      <div class="form-group full-width">
+        <label class="form-label">Compare On</label>
+        <div class="checkbox-group" data-field="compare">
+          <label class="checkbox-label"><input type="checkbox" value="speed of delivery"><span class="checkbox-dot"></span> Speed of delivery</label>
+          <label class="checkbox-label"><input type="checkbox" value="AI depth"><span class="checkbox-dot"></span> AI depth</label>
+          <label class="checkbox-label"><input type="checkbox" value="pricing"><span class="checkbox-dot"></span> Pricing</label>
+          <label class="checkbox-label"><input type="checkbox" value="target market"><span class="checkbox-dot"></span> Target market</label>
+          <label class="checkbox-label"><input type="checkbox" value="weaknesses"><span class="checkbox-dot"></span> Weaknesses</label>
+        </div>
+      </div>
+    </div>
+    <div class="prompt-output">
+      <div class="prompt-output-label">Generated prompt</div>
+      <code id="prompt-competitor"></code>
+    </div>
+    <button class="copy-prompt-btn" data-target="prompt-competitor">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Copy to Claude Code
+    </button>
+  </div>
+
+  <!-- Company Research -->
+  <h3>Company Research (Lead)</h3>
+  <div class="prompt-card" data-prompt="company-research">
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">Company Name</label>
+        <input class="form-input" type="text" data-field="company" placeholder="e.g. Barclays">
+      </div>
+      <div class="form-group full-width">
+        <label class="form-label">What to Find</label>
+        <div class="checkbox-group" data-field="find">
+          <label class="checkbox-label"><input type="checkbox" value="what they do"><span class="checkbox-dot"></span> What they do</label>
+          <label class="checkbox-label"><input type="checkbox" value="recent news"><span class="checkbox-dot"></span> Recent news</label>
+          <label class="checkbox-label"><input type="checkbox" value="tech stack"><span class="checkbox-dot"></span> Tech stack</label>
+          <label class="checkbox-label"><input type="checkbox" value="pain points"><span class="checkbox-dot"></span> Pain points</label>
+          <label class="checkbox-label"><input type="checkbox" value="decision makers"><span class="checkbox-dot"></span> Decision makers</label>
+        </div>
+      </div>
+    </div>
+    <div class="prompt-output">
+      <div class="prompt-output-label">Generated prompt</div>
+      <code id="prompt-company-research"></code>
+    </div>
+    <button class="copy-prompt-btn" data-target="prompt-company-research">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Copy to Claude Code
+    </button>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 03 — Pitch & Investor              -->
+<!-- ════════════════════════════════════════════ -->
+<section id="pitch">
+  <h2><span class="section-num">03</span> Pitch & Investor</h2>
+
+  <!-- Full Pitch Package -->
+  <h3>Full Pitch Package</h3>
+  <div class="prompt-card" data-prompt="pitch-package">
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">Client / Target Name</label>
+        <input class="form-input" type="text" data-field="client" placeholder="e.g. mid-size UK fintech">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Their Pain</label>
+        <input class="form-input" type="text" data-field="pain" placeholder="e.g. legacy core banking system, 18-month update cycles">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Audience Role</label>
+        <select class="form-select" data-field="role">
+          <option value="">Select role...</option>
+          <option>CTO</option>
+          <option>CEO</option>
+          <option>CFO</option>
+          <option>Head of Innovation</option>
+          <option>Investor</option>
+          <option>Partner</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Segment</label>
+        <select class="form-select" data-field="segment">
+          <option value="">Select segment...</option>
+          <option>Enterprise</option>
+          <option>Scaleup</option>
+          <option>IT Agency</option>
+          <option>Innovation Hub</option>
+          <option>Investor</option>
+        </select>
+      </div>
+    </div>
+    <div class="prompt-output">
+      <div class="prompt-output-label">Generated prompt</div>
+      <code id="prompt-pitch-package"></code>
+    </div>
+    <button class="copy-prompt-btn" data-target="prompt-pitch-package">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Copy to Claude Code
+    </button>
+  </div>
+
+  <!-- Investor Brief -->
+  <h3>Investor Brief</h3>
+  <div class="prompt-card" data-prompt="investor-brief">
+    <div class="form-grid">
+      <div class="form-group full-width">
+        <label class="form-label">Context</label>
+        <input class="form-input" type="text" data-field="context" placeholder="e.g. angel round, first VC meeting, accelerator application">
+      </div>
+      <div class="form-group full-width">
+        <label class="form-label">Focus</label>
+        <div class="checkbox-group" data-field="focus">
+          <label class="checkbox-label"><input type="checkbox" value="market timing"><span class="checkbox-dot"></span> Market timing</label>
+          <label class="checkbox-label"><input type="checkbox" value="team credibility"><span class="checkbox-dot"></span> Team credibility</label>
+          <label class="checkbox-label"><input type="checkbox" value="traction"><span class="checkbox-dot"></span> Traction</label>
+          <label class="checkbox-label"><input type="checkbox" value="financials"><span class="checkbox-dot"></span> Financials</label>
+          <label class="checkbox-label"><input type="checkbox" value="competitive position"><span class="checkbox-dot"></span> Competitive position</label>
+        </div>
+      </div>
+    </div>
+    <div class="prompt-output">
+      <div class="prompt-output-label">Generated prompt</div>
+      <code id="prompt-investor-brief"></code>
+    </div>
+    <button class="copy-prompt-btn" data-target="prompt-investor-brief">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Copy to Claude Code
+    </button>
+  </div>
+
+  <!-- HTML Presentation -->
+  <h3>HTML Presentation</h3>
+  <div class="prompt-card" data-prompt="html-pres">
+    <div class="form-grid">
+      <div class="form-group full-width">
+        <label class="form-label">Topic</label>
+        <input class="form-input" type="text" data-field="topic" placeholder="e.g. Roll the Code for enterprise CTOs">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Audience</label>
+        <select class="form-select" data-field="audience">
+          <option value="">Select audience...</option>
+          <option>CTO</option>
+          <option>CEO</option>
+          <option>Investor</option>
+          <option>Partner</option>
+          <option>Innovation Lead</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tone</label>
+        <select class="form-select" data-field="tone">
+          <option value="">Select tone...</option>
+          <option>technical</option>
+          <option>executive</option>
+          <option>investor</option>
+          <option>partner</option>
+        </select>
+      </div>
+    </div>
+    <div class="prompt-output">
+      <div class="prompt-output-label">Generated prompt</div>
+      <code id="prompt-html-pres"></code>
+    </div>
+    <button class="copy-prompt-btn" data-target="prompt-html-pres">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Copy to Claude Code
+    </button>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 04 — Strategy & Planning           -->
+<!-- ════════════════════════════════════════════ -->
+<section id="strategy">
+  <h2><span class="section-num">04</span> Strategy & Planning</h2>
+
+  <!-- GTM Strategy -->
+  <h3>GTM Strategy</h3>
+  <div class="prompt-card" data-prompt="gtm">
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">Market / Segment</label>
+        <input class="form-input" type="text" data-field="market" placeholder="e.g. UK enterprise IT agencies">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Timeframe</label>
+        <select class="form-select" data-field="timeframe">
+          <option value="">Select...</option>
+          <option>30 days</option>
+          <option>90 days</option>
+          <option>6 months</option>
+          <option>12 months</option>
+        </select>
+      </div>
+    </div>
+    <div class="prompt-output">
+      <div class="prompt-output-label">Generated prompt</div>
+      <code id="prompt-gtm"></code>
+    </div>
+    <button class="copy-prompt-btn" data-target="prompt-gtm">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Copy to Claude Code
+    </button>
+  </div>
+
+  <!-- Pricing Strategy -->
+  <h3>Pricing Strategy</h3>
+  <div class="prompt-card" data-prompt="pricing">
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">Offering</label>
+        <select class="form-select" data-field="offering">
+          <option value="">Select...</option>
+          <option>Orchestration System</option>
+          <option>Workflow Automation</option>
+          <option>AI Training</option>
+          <option>All three</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Context</label>
+        <input class="form-input" type="text" data-field="context" placeholder="e.g. positioning for UK enterprise vs. SME">
+      </div>
+    </div>
+    <div class="prompt-output">
+      <div class="prompt-output-label">Generated prompt</div>
+      <code id="prompt-pricing"></code>
+    </div>
+    <button class="copy-prompt-btn" data-target="prompt-pricing">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Copy to Claude Code
+    </button>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 05 — System & Maintenance          -->
+<!-- ════════════════════════════════════════════ -->
+<section id="system">
+  <h2><span class="section-num">05</span> System & Maintenance</h2>
+  <p>Fixed commands — no form fields, just copy and paste.</p>
+
+  <div class="system-grid">
+    <div class="system-card">
+      <h4>Sync Skills with CLAUDE.md</h4>
+      <p>Re-sync all skill files with current CLAUDE.md and brand guide.</p>
+      <button class="copy-prompt-btn ready" data-copy-text="Run skills-sync agent">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy to Claude Code
+      </button>
+    </div>
+
+    <div class="system-card">
+      <h4>Update File Index</h4>
+      <p>Rebuild the outputs/files-index.json for the portal.</p>
+      <button class="copy-prompt-btn ready" data-copy-text="Update the files index">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy to Claude Code
+      </button>
+    </div>
+
+    <div class="system-card">
+      <h4>Audit All Skills</h4>
+      <p>Check all skills against CLAUDE.md for drift or inconsistencies.</p>
+      <button class="copy-prompt-btn ready" data-copy-text="Read CLAUDE.md and audit all skills in .claude/skills/*/SKILL.md against the source of truth. Report any drift.">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy to Claude Code
+      </button>
+    </div>
+
+    <div class="system-card">
+      <h4>Generate Skills Report</h4>
+      <p>List all available skills with their trigger conditions.</p>
+      <button class="copy-prompt-btn ready" data-copy-text="What skills do you have? List them with their trigger conditions.">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy to Claude Code
+      </button>
+    </div>
+
+    <div class="system-card" style="grid-column: 1 / -1;">
+      <h4>Deploy to Cloudflare</h4>
+      <p>Deploy the portal and all pages to Cloudflare Pages.</p>
+      <button class="copy-prompt-btn ready" data-copy-text="Deploy the portal to Cloudflare">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy to Claude Code
+      </button>
+    </div>
+  </div>
+</section>
+
+</main>
+</div>
+
+<button class="scroll-top" id="scrollTop" title="Scroll to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+</button>
+
+<script>
+  // ─── PROMPT TEMPLATES ───
+  const templates = {
+    'sales-onepager': (f) => {
+      const lines = [];
+      lines.push(`Create a sales one-pager for a ${f.industry || '[industry]'} company.`);
+      lines.push(`Pain point: ${f.pain || '[pain point]'}.`);
+      lines.push(`Audience: ${f.audience || '[audience]'}.`);
+      lines.push(`Send channel: ${f.channel || '[send channel]'}.`);
+      return lines.join('\n');
+    },
+    'cold-email': (f) => {
+      const lines = [];
+      lines.push(`Write a ${f.count || '[number of emails]'} cold email sequence for ${f.target || '[target company type]'}.`);
+      lines.push(`Their pain: ${f.pain || '[their pain]'}.`);
+      lines.push(`Tone: confident, concrete, business-first.`);
+      lines.push(`Include subject lines for each email.`);
+      return lines.join('\n');
+    },
+    'collab-deck': (f) => {
+      const lines = [];
+      lines.push(`Create a collaborator deck for ${f.partner || '[partner type]'}.`);
+      lines.push(`Their situation: ${f.situation || '[partner situation]'}.`);
+      lines.push(`Goal: ${f.goal || '[goal]'}.`);
+      return lines.join('\n');
+    },
+    'market-research': (f) => {
+      const lines = [];
+      lines.push(`Research the ${f.industry || '[industry]'} market in ${f.geography || '[geography]'}.`);
+      lines.push(`I need: ${f.focus || '[selected focus areas]'}.`);
+      lines.push(`Output: HTML presentation and PDF report.`);
+      return lines.join('\n');
+    },
+    'competitor': (f) => {
+      const lines = [];
+      lines.push(`Find the ${f.count || '[number]'} competitors to Roll the Code in ${f.space || '[space]'}.`);
+      lines.push(`Compare on: ${f.compare || '[selected comparison points]'}.`);
+      lines.push(`Output: HTML presentation and PDF report.`);
+      return lines.join('\n');
+    },
+    'company-research': (f) => {
+      const lines = [];
+      lines.push(`Research ${f.company || '[company name]'}.`);
+      lines.push(`Find: ${f.find || '[selected items]'}.`);
+      lines.push(`Summarise in a format suitable for a sales approach.`);
+      return lines.join('\n');
+    },
+    'pitch-package': (f) => {
+      const lines = [];
+      lines.push(`Create a complete pitch package for ${f.client || '[client/target]'}.`);
+      lines.push(`Their pain: ${f.pain || '[their pain]'}.`);
+      lines.push(`Audience: ${f.role || '[audience role]'}.`);
+      lines.push(`Segment: ${f.segment || '[segment]'}.`);
+      return lines.join('\n');
+    },
+    'investor-brief': (f) => {
+      const lines = [];
+      lines.push(`Create an investor brief for ${f.context || '[context]'}.`);
+      lines.push(`Focus on: ${f.focus || '[selected focus areas]'}.`);
+      lines.push(`Include TAM/SAM/SOM and competitive positioning.`);
+      return lines.join('\n');
+    },
+    'html-pres': (f) => {
+      const lines = [];
+      lines.push(`Create an HTML presentation about ${f.topic || '[topic]'}.`);
+      lines.push(`Audience: ${f.audience || '[audience]'}.`);
+      lines.push(`Tone: ${f.tone || '[tone]'}.`);
+      lines.push(`Make it shareable via link.`);
+      return lines.join('\n');
+    },
+    'gtm': (f) => {
+      const lines = [];
+      lines.push(`Create a GTM plan for ${f.market || '[market/segment]'}.`);
+      lines.push(`Timeframe: ${f.timeframe || '[timeframe]'}.`);
+      lines.push(`Include: target segments, channels, messaging, milestones.`);
+      return lines.join('\n');
+    },
+    'pricing': (f) => {
+      const lines = [];
+      lines.push(`Help me think through pricing for ${f.offering || '[offering]'}.`);
+      lines.push(`Context: ${f.context || '[context]'}.`);
+      lines.push(`Consider: competitor pricing, value-based pricing, and fixed-scope contracts.`);
+      return lines.join('\n');
+    },
+  };
+
+  // ─── RENDER PROMPTS ───
+  function getFields(card) {
+    const fields = {};
+    card.querySelectorAll('.form-input, .form-select').forEach(el => {
+      fields[el.dataset.field] = el.value;
+    });
+    card.querySelectorAll('.checkbox-group').forEach(group => {
+      const checked = [];
+      group.querySelectorAll('input:checked').forEach(cb => checked.push(cb.value));
+      fields[group.dataset.field] = checked.join(', ');
+    });
+    return fields;
+  }
+
+  function renderPrompt(card) {
+    const name = card.dataset.prompt;
+    const fields = getFields(card);
+    const output = document.getElementById('prompt-' + name);
+    if (!output || !templates[name]) return;
+
+    const text = templates[name](fields);
+    // Highlight placeholders
+    output.innerHTML = text.replace(/\[([^\]]+)\]/g, '<span class="placeholder">[$1]</span>');
+
+    // Update copy button state
+    const btn = card.querySelector('.copy-prompt-btn');
+    const hasEmpty = Object.values(fields).some(v => !v);
+    btn.classList.toggle('ready', !hasEmpty);
+  }
+
+  function initCards() {
+    document.querySelectorAll('.prompt-card[data-prompt]').forEach(card => {
+      // Initial render
+      renderPrompt(card);
+
+      // Live update on input
+      card.querySelectorAll('.form-input, .form-select').forEach(el => {
+        el.addEventListener('input', () => renderPrompt(card));
+        el.addEventListener('change', () => renderPrompt(card));
+      });
+
+      // Checkbox handling
+      card.querySelectorAll('.checkbox-label').forEach(label => {
+        const cb = label.querySelector('input');
+        cb.addEventListener('change', () => {
+          label.classList.toggle('checked', cb.checked);
+          renderPrompt(card);
+        });
+      });
+    });
+  }
+
+  // ─── COPY BUTTONS ───
+  const clipSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+  const checkSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+
+  function initCopyButtons() {
+    document.querySelectorAll('.copy-prompt-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        let text;
+        // System cards have data-copy-text
+        if (btn.dataset.copyText) {
+          text = btn.dataset.copyText;
+        } else {
+          // Form-based cards — get from code element
+          const target = document.getElementById(btn.dataset.target);
+          text = target ? target.textContent.trim() : '';
+        }
+        if (!text) return;
+
+        navigator.clipboard.writeText(text).then(() => {
+          const origHTML = btn.innerHTML;
+          btn.innerHTML = checkSvg + ' Copied!';
+          btn.classList.add('copied');
+          btn.classList.remove('ready');
+          setTimeout(() => {
+            btn.innerHTML = origHTML;
+            btn.classList.remove('copied');
+            // Re-check ready state for form cards
+            const card = btn.closest('.prompt-card');
+            if (card) {
+              const fields = getFields(card);
+              const hasEmpty = Object.values(fields).some(v => !v);
+              btn.classList.toggle('ready', !hasEmpty);
+            } else {
+              btn.classList.add('ready'); // system cards are always ready
+            }
+          }, 2000);
+        });
+      });
+    });
+  }
+
+  // ─── SIDEBAR ACTIVE STATE ───
+  const sections = document.querySelectorAll('section');
+  const navLinks = document.querySelectorAll('.sidebar nav a');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(link => link.classList.remove('active'));
+        const activeLink = document.querySelector(`.sidebar nav a[href="#${entry.target.id}"]`);
+        if (activeLink) activeLink.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+
+  // ─── SCROLL TO TOP ───
+  const scrollBtn = document.getElementById('scrollTop');
+  window.addEventListener('scroll', () => {
+    scrollBtn.classList.toggle('visible', window.scrollY > 400);
+  });
+  scrollBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // ─── INIT ───
+  initCards();
+  initCopyButtons();
+</script>
+
+</body>
+</html>
