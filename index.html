@@ -875,6 +875,39 @@
     animation: fadeIn 0.3s ease both;
   }
 
+  /* NAV LINKS */
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: all var(--transition);
+    white-space: nowrap;
+  }
+  .nav-link-green {
+    color: #34d399;
+    background: rgba(52,211,153,0.08);
+    border-color: rgba(52,211,153,0.15);
+  }
+  .nav-link-green:hover {
+    background: rgba(52,211,153,0.15);
+    border-color: rgba(52,211,153,0.3);
+  }
+  .nav-link-blue {
+    color: #60a5fa;
+    background: rgba(96,165,250,0.08);
+    border-color: rgba(96,165,250,0.15);
+  }
+  .nav-link-blue:hover {
+    background: rgba(96,165,250,0.15);
+    border-color: rgba(96,165,250,0.3);
+  }
+
   @keyframes slideIn {
     from { transform: translateX(40px); opacity: 0; }
     to { transform: translateX(0); opacity: 1; }
@@ -893,6 +926,14 @@
     <span style="font-size:11px;font-family:'DM Mono',monospace;font-weight:400;color:var(--text3);margin-left:6px;">/ bizdev</span>
   </a>
   <div class="header-right">
+    <a href="./onboarding.html" class="nav-link nav-link-green">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.66 2.69 3 6 3s6-1.34 6-3v-5"/></svg>
+      Onboarding
+    </a>
+    <a href="./knowledge-base.html" class="nav-link nav-link-blue">
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      Knowledge Base
+    </a>
     <div class="search-wrap">
       <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
       <input type="text" id="search" placeholder="Search files..." autocomplete="off" oninput="handleSearch(this.value)">

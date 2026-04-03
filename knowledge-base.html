@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RTC BizDev Toolkit — Knowledge Base</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080810;
+    --bg2: #0f0f1a;
+    --bg3: #16162a;
+    --border: #1e1e35;
+    --border2: #2a2a45;
+    --accent: #6366f1;
+    --accent2: #818cf8;
+    --accent3: #4f46e5;
+    --text: #f0f0ff;
+    --text2: #9494bb;
+    --text3: #5a5a80;
+    --green: #34d399;
+    --amber: #fbbf24;
+    --red: #f87171;
+    --blue: #60a5fa;
+    --card: #0d0d1e;
+    --shadow: 0 4px 24px rgba(99,102,241,0.08);
+    --radius: 12px;
+    --radius-sm: 8px;
+    --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* Noise overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* ─── TOP BAR ─── */
+  .top-bar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(8,8,16,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .top-bar-logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 17px;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: none;
+  }
+  .top-bar-logo:hover { border-bottom: none; }
+  .top-bar-logo span { color: var(--accent2); }
+  .top-bar-logo .dot {
+    width: 7px; height: 7px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2.5s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+  .top-bar-nav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  /* NAV LINKS */
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: all var(--transition);
+    white-space: nowrap;
+    border-bottom: none;
+  }
+  .nav-link:hover { border-bottom: none; }
+  .nav-link-green {
+    color: #34d399;
+    background: rgba(52,211,153,0.08);
+    border-color: rgba(52,211,153,0.15);
+  }
+  .nav-link-green:hover {
+    background: rgba(52,211,153,0.15);
+    border-color: rgba(52,211,153,0.3);
+  }
+  .nav-link-blue {
+    color: #60a5fa;
+    background: rgba(96,165,250,0.08);
+    border-color: rgba(96,165,250,0.15);
+  }
+  .nav-link-blue:hover {
+    background: rgba(96,165,250,0.15);
+    border-color: rgba(96,165,250,0.3);
+  }
+  .nav-link-portal {
+    color: var(--text2);
+    background: rgba(148,148,187,0.06);
+    border-color: rgba(148,148,187,0.12);
+  }
+  .nav-link-portal:hover {
+    background: rgba(148,148,187,0.12);
+    border-color: rgba(148,148,187,0.25);
+  }
+  .nav-link.active-page {
+    background: rgba(52,211,153,0.15);
+    border-color: rgba(52,211,153,0.35);
+  }
+  .nav-link-blue.active-page {
+    background: rgba(96,165,250,0.15);
+    border-color: rgba(96,165,250,0.35);
+  }
+
+  /* ─── LAYOUT ─── */
+  .layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    min-height: calc(100vh - 60px);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ─── SIDEBAR ─── */
+  .sidebar {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    width: 260px;
+    height: calc(100vh - 60px);
+    background: var(--bg);
+    border-right: 1px solid var(--border);
+    padding: 32px 0;
+    overflow-y: auto;
+    z-index: 10;
+  }
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-track { background: transparent; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+  .sidebar-logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 17px;
+    letter-spacing: -0.02em;
+    padding: 0 24px 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text);
+  }
+  .sidebar-logo span { color: var(--accent2); }
+  .sidebar-logo .dot {
+    width: 7px; height: 7px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2.5s infinite;
+  }
+
+  .sidebar-subtitle {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text3);
+    padding: 0 24px 24px;
+  }
+
+  .sidebar-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 0 24px 16px;
+  }
+
+  .sidebar-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text3);
+    padding: 0 24px 8px;
+  }
+
+  .sidebar nav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 0 12px;
+  }
+
+  .sidebar nav a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    color: var(--text2);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 400;
+    transition: all var(--transition);
+    border-bottom: none;
+  }
+  .sidebar nav a:hover {
+    color: var(--text);
+    background: var(--bg3);
+    border-bottom: none;
+  }
+  .sidebar nav a.active {
+    color: var(--accent2);
+    background: rgba(99,102,241,0.08);
+  }
+  .sidebar nav a .nav-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text3);
+    min-width: 20px;
+  }
+
+  /* ─── MAIN CONTENT ─── */
+  .main {
+    grid-column: 2;
+    padding: 48px 64px 120px;
+    max-width: 840px;
+  }
+
+  /* Hero */
+  .hero {
+    margin-bottom: 0;
+    padding-bottom: 40px;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent2);
+    background: rgba(99,102,241,0.08);
+    border: 1px solid rgba(99,102,241,0.15);
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 42px;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+  .hero h1 span { color: var(--accent2); }
+  .hero p {
+    color: var(--text2);
+    font-size: 16px;
+    max-width: 560px;
+  }
+
+  /* Sections */
+  section {
+    margin-top: 56px;
+    scroll-margin-top: 80px;
+  }
+
+  section h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 26px;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  section h2 .section-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    color: var(--accent);
+    background: rgba(99,102,241,0.08);
+    border: 1px solid rgba(99,102,241,0.15);
+    padding: 3px 10px;
+    border-radius: 6px;
+  }
+
+  section h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    color: var(--text);
+    margin: 28px 0 12px;
+  }
+
+  p { margin-bottom: 14px; color: var(--text2); }
+  p strong { color: var(--text); font-weight: 500; }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0 24px;
+    font-size: 13px;
+  }
+  th {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text3);
+    text-align: left;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg2);
+  }
+  th:first-child { border-radius: var(--radius-sm) 0 0 0; }
+  th:last-child { border-radius: 0 var(--radius-sm) 0 0; }
+  td {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text2);
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(99,102,241,0.03); }
+
+  /* Code blocks */
+  pre {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px 20px;
+    overflow-x: auto;
+    margin: 12px 0 20px;
+    position: relative;
+  }
+  pre code {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--accent2);
+  }
+
+  code {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    background: rgba(99,102,241,0.08);
+    border: 1px solid rgba(99,102,241,0.12);
+    padding: 2px 7px;
+    border-radius: 4px;
+    color: var(--accent2);
+  }
+  pre code {
+    background: none;
+    border: none;
+    padding: 0;
+  }
+
+  /* Copy button */
+  .copy-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--text3);
+    transition: all var(--transition);
+    opacity: 0;
+    padding: 0;
+  }
+  pre:hover .copy-btn { opacity: 1; }
+  .copy-btn:hover { color: var(--accent2); border-color: var(--accent); background: rgba(99,102,241,0.1); }
+  .copy-btn.copied { color: var(--green); border-color: var(--green); background: rgba(52,211,153,0.08); opacity: 1; }
+  .copy-btn svg { width: 14px; height: 14px; }
+
+  .copy-toast {
+    position: absolute;
+    top: 8px;
+    right: 42px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--green);
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+    line-height: 28px;
+  }
+  .copy-toast.show { opacity: 1; }
+
+  a { color: var(--accent2); text-decoration: none; border-bottom: 1px solid rgba(129,140,248,0.3); transition: border-color var(--transition); }
+  a:hover { border-color: var(--accent2); }
+  .sidebar nav a { border-bottom: none; }
+  .sidebar nav a:hover { border-bottom: none; }
+
+  /* Info boxes */
+  .info {
+    background: rgba(99,102,241,0.04);
+    border: 1px solid rgba(99,102,241,0.12);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    margin: 12px 0 20px;
+    font-size: 13px;
+    color: var(--text2);
+  }
+
+  /* Warning boxes */
+  .warning {
+    background: rgba(251,191,36,0.05);
+    border: 1px solid rgba(251,191,36,0.15);
+    border-left: 3px solid var(--amber);
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    margin: 12px 0 20px;
+    font-size: 13px;
+    color: var(--text2);
+  }
+  .warning strong {
+    color: var(--amber);
+    font-weight: 600;
+  }
+
+  /* Maintenance cards */
+  .maintenance-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin: 16px 0 24px;
+  }
+  .maintenance-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    transition: all var(--transition);
+  }
+  .maintenance-card:hover {
+    border-color: var(--accent);
+    box-shadow: 0 0 20px rgba(99,102,241,0.08);
+  }
+  .maintenance-card h4 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .maintenance-card p {
+    font-size: 12px;
+    color: var(--text3);
+    margin: 0;
+    line-height: 1.5;
+  }
+  .maintenance-card code {
+    font-size: 11px;
+  }
+
+  /* Brand list */
+  .tagline-list {
+    list-style: none;
+    padding: 0;
+    margin: 12px 0 20px;
+  }
+  .tagline-list li {
+    position: relative;
+    padding: 6px 0 6px 24px;
+    color: var(--text2);
+  }
+  .tagline-list li::before {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 14px;
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    background: var(--accent);
+    opacity: 0.5;
+  }
+  .tagline-list li strong { color: var(--text); }
+
+  .never-list li::before {
+    background: var(--red);
+  }
+
+  /* Footer */
+  .footer {
+    margin-top: 80px;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+  }
+  .footer p {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--text3);
+  }
+
+  /* Scroll to top */
+  .scroll-top {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text3);
+    cursor: pointer;
+    z-index: 50;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(8px);
+    transition: opacity 0.25s, transform 0.25s, color var(--transition), border-color var(--transition), background var(--transition);
+  }
+  .scroll-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+  .scroll-top:hover { color: var(--accent2); border-color: var(--accent); background: rgba(99,102,241,0.1); }
+  .scroll-top svg { width: 18px; height: 18px; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar {
+      position: relative;
+      width: 100%;
+      height: auto;
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+      padding: 24px 0;
+      top: auto;
+    }
+    .main { padding: 32px 24px 80px; }
+    .hero h1 { font-size: 30px; }
+    .maintenance-grid { grid-template-columns: 1fr; }
+    .top-bar-nav { gap: 6px; }
+    .nav-link { padding: 6px 10px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="./index.html" class="top-bar-logo">
+    <div class="dot"></div>
+    ROLL THE <span>CODE</span>
+  </a>
+  <div class="top-bar-nav">
+    <a href="./onboarding.html" class="nav-link nav-link-green">Onboarding</a>
+    <a href="./knowledge-base.html" class="nav-link nav-link-blue active-page">Knowledge Base</a>
+    <a href="./index.html" class="nav-link nav-link-portal">&larr; Portal</a>
+  </div>
+</div>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="dot"></div>
+      ROLL THE <span>CODE</span>
+    </div>
+    <div class="sidebar-subtitle">Knowledge Base</div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-label">Reference</div>
+    <nav>
+      <a href="#agent-commands"><span class="nav-num">01</span> Agent Commands</a>
+      <a href="#skill-triggers"><span class="nav-num">02</span> Skill Triggers</a>
+      <a href="#prompt-templates"><span class="nav-num">03</span> Prompt Templates</a>
+      <a href="#shortcuts"><span class="nav-num">04</span> Keyboard Shortcuts</a>
+      <a href="#file-structure"><span class="nav-num">05</span> File Structure</a>
+      <a href="#brand-reference"><span class="nav-num">06</span> Brand Reference</a>
+      <a href="#maintenance"><span class="nav-num">07</span> Maintenance</a>
+    </nav>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-badge">Knowledge Base</div>
+      <h1>BizDev Toolkit <span>Reference</span></h1>
+      <p>Quick reference for agents, skills, prompt templates, shortcuts, and maintenance. Everything you need to get the most out of the toolkit.</p>
+    </div>
+
+    <!-- 01: AGENT COMMANDS -->
+    <section id="agent-commands">
+      <h2><span class="section-num">01</span> Agent Commands</h2>
+      <p>Sub-agents handle complex, multi-step tasks autonomously. Invoke them by name in Claude Code.</p>
+      <table>
+        <thead>
+          <tr><th>Agent</th><th>What it does</th><th>How to invoke</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>skills-sync</code></td>
+            <td>Syncs all skills with CLAUDE.md after any update</td>
+            <td><code>Run skills-sync agent</code></td>
+          </tr>
+          <tr>
+            <td><code>market-researcher</code></td>
+            <td>TAM/SAM/SOM, competitor analysis, industry trends</td>
+            <td><code>Use the market-researcher agent to...</code></td>
+          </tr>
+          <tr>
+            <td><code>pitch-assembler</code></td>
+            <td>End-to-end pitch package across all formats</td>
+            <td><code>Use the pitch-assembler agent to assemble a full pitch package for [client]</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 02: SKILL TRIGGER REFERENCE -->
+    <section id="skill-triggers">
+      <h2><span class="section-num">02</span> Skill Trigger Reference</h2>
+      <p>Skills auto-trigger based on keywords in your prompt. You don't need to call them explicitly.</p>
+      <table>
+        <thead>
+          <tr><th>Skill</th><th>Auto-triggers when you say...</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>pitch-deck</code></td><td>presentation, deck, slides, pitch</td></tr>
+          <tr><td><code>sales-onepager</code></td><td>one-pager, send-out doc, email attachment</td></tr>
+          <tr><td><code>investor-brief</code></td><td>investors, funding, raise, executive summary</td></tr>
+          <tr><td><code>html-presentation</code></td><td>web link, HTML version, browser-based deck</td></tr>
+          <tr><td><code>collaborator-deck</code></td><td>partner pitch, white-label, co-delivery proposal</td></tr>
+          <tr><td><code>business-planning</code></td><td>GTM, pricing, financial projections, market analysis</td></tr>
+          <tr><td><code>pdf-report</code></td><td>PDF, detailed report, printable version</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 03: PROMPT TEMPLATES -->
+    <section id="prompt-templates">
+      <h2><span class="section-num">03</span> Prompt Templates</h2>
+      <p>Copy-paste these into Claude Code. Replace the bracketed placeholders with your specifics.</p>
+
+      <h3>One-Pager</h3>
+<pre><code>Create a sales one-pager for a [industry] company.
+Pain point: [specific manual task or workflow problem].
+Audience: [Head of Ops / CTO / CEO].
+Send channel: email attachment.</code></pre>
+
+      <h3>Pitch Deck</h3>
+<pre><code>Create a pitch deck for [company name or audience type].
+Context: [what you know about them — size, sector, pain].
+Tone: [technical / executive / investor].</code></pre>
+
+      <h3>Investor Brief</h3>
+<pre><code>Create an investor brief for [context — angel round, VC meeting, etc.].
+Focus: [team credibility / market timing / traction].</code></pre>
+
+      <h3>Market Research</h3>
+<pre><code>Research the [industry] market in [geography].
+I need: TAM/SAM/SOM estimates, key players, growth trends,
+and where Roll the Code fits.</code></pre>
+
+      <h3>Competitor Analysis</h3>
+<pre><code>Find the top 3 competitors to Roll the Code in [space/geography].
+Compare on: speed of delivery, AI depth, pricing, target market.</code></pre>
+
+      <h3>Skills Sync</h3>
+<pre><code>Run skills-sync agent</code></pre>
+    </section>
+
+    <!-- 04: KEYBOARD SHORTCUTS -->
+    <section id="shortcuts">
+      <h2><span class="section-num">04</span> Keyboard Shortcuts</h2>
+      <p>Useful shortcuts for working with the BizDev portal and Claude Code.</p>
+      <table>
+        <thead>
+          <tr><th>Shortcut</th><th>What it does</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>Ctrl+K</code> / <code>Cmd+K</code></td><td>Focus search bar in portal</td></tr>
+          <tr><td><code>Escape</code></td><td>Close preview panel / clear search</td></tr>
+          <tr><td><code>Alt+V</code></td><td>Paste screenshot into Claude Code terminal (Windows)</td></tr>
+          <tr><td><code>Cmd+V</code></td><td>Paste screenshot into Claude Code terminal (Mac)</td></tr>
+          <tr><td><code>Space</code> (hold)</td><td>Push-to-talk voice input (/voice must be enabled)</td></tr>
+          <tr><td><code>Ctrl+C</code></td><td>Cancel current Claude Code operation</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 05: FILE STRUCTURE REFERENCE -->
+    <section id="file-structure">
+      <h2><span class="section-num">05</span> File Structure Reference</h2>
+      <p>Every generated file goes into the correct subfolder automatically.</p>
+<pre><code>outputs/
+  reports/
+    html/             &larr; all HTML presentations and visual deliverables
+    pdf/              &larr; all PDF reports and print-ready deliverables
+  sales/
+    one-pagers/       &larr; sales one-pagers (HTML + PDF)
+    emails/           &larr; follow-up and cold email sequences
+    proposals/        &larr; sales proposals
+  research/
+    market/           &larr; market sizing, TAM/SAM/SOM reports
+    competitors/      &larr; competitor analysis
+    leads/            &larr; potential client research
+  brand/              &larr; brand-related outputs (not the source brand/ folder)
+  drafts/             &larr; internal MD drafts (never delivered to clients)</code></pre>
+      <div class="info">
+        Files only appear in the portal if <code>files-index.json</code> has been updated. Claude Code does this automatically when generating new files.
+      </div>
+    </section>
+
+    <!-- 06: BRAND QUICK REFERENCE -->
+    <section id="brand-reference">
+      <h2><span class="section-num">06</span> Brand Quick Reference</h2>
+
+      <h3>Approved Taglines</h3>
+      <p>Use at least one in every document:</p>
+      <ul class="tagline-list">
+        <li><strong>"Days NOT Months"</strong> — primary, use everywhere</li>
+        <li><strong>"We don't code anymore"</strong> — for tech-aware audiences</li>
+        <li><strong>"The Vapiano of Product Delivery"</strong> — quality, affordable, scalable</li>
+        <li><strong>"I have built an agent called Akos"</strong> — for presentations</li>
+      </ul>
+
+      <h3>Never Say</h3>
+      <ul class="tagline-list never-list">
+        <li><strong>"vibe coding"</strong> — we are architect-supervised</li>
+        <li><strong>"AI-powered"</strong> without specifics</li>
+        <li><strong>"passionate team"</strong> — too vague</li>
+        <li><strong>"Sign Coders"</strong> as the company name — it's <strong>SignCoders</strong> (one word)</li>
+      </ul>
+
+      <h3>Contact &amp; Domain</h3>
+      <p><code>antal@rollthecode.io</code> &middot; <code>rollthecode.io</code></p>
+    </section>
+
+    <!-- 07: MAINTENANCE -->
+    <section id="maintenance">
+      <h2><span class="section-num">07</span> Maintenance</h2>
+      <p>Three things to know about keeping the toolkit up to date.</p>
+      <div class="maintenance-grid">
+        <div class="maintenance-card">
+          <h4>After Editing CLAUDE.md</h4>
+          <p>Run: <code>Run skills-sync agent</code> to re-sync all skills with the updated configuration.</p>
+        </div>
+        <div class="maintenance-card">
+          <h4>After Generating Files</h4>
+          <p><code>files-index.json</code> updates automatically. New files appear in the portal on next load.</p>
+        </div>
+        <div class="maintenance-card">
+          <h4>After Brand Changes</h4>
+          <p>Edit <code>brand/brand.md</code> and all future outputs pick up the new branding — no re-prompting needed.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <p>Roll the Code &middot; BizDev Toolkit &middot; Knowledge Base &middot; April 2026</p>
+    </div>
+
+  </main>
+</div>
+
+<button class="scroll-top" id="scrollTop" title="Scroll to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+</button>
+
+<!-- Sidebar tracking, copy buttons -->
+<script>
+  // ─── SIDEBAR ACTIVE STATE ───
+  const sections = document.querySelectorAll('section');
+  const navLinks = document.querySelectorAll('.sidebar nav a');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(link => link.classList.remove('active'));
+        const activeLink = document.querySelector(`.sidebar nav a[href="#${entry.target.id}"]`);
+        if (activeLink) activeLink.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+
+  sections.forEach(section => observer.observe(section));
+  if (navLinks.length) navLinks[0].classList.add('active');
+
+  // ─── COPY TO CLIPBOARD ───
+  const clipSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+  const checkSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+
+  function attachCopyButtons() {
+    document.querySelectorAll('pre').forEach(pre => {
+      if (pre.querySelector('.copy-btn')) return;
+
+      const btn = document.createElement('button');
+      btn.className = 'copy-btn';
+      btn.innerHTML = clipSvg;
+      btn.title = 'Copy to clipboard';
+
+      const toast = document.createElement('span');
+      toast.className = 'copy-toast';
+      toast.textContent = 'Copied!';
+
+      btn.addEventListener('click', () => {
+        const code = pre.querySelector('code');
+        const text = (code || pre).textContent.trim();
+        navigator.clipboard.writeText(text).then(() => {
+          btn.innerHTML = checkSvg;
+          btn.classList.add('copied');
+          toast.classList.add('show');
+          setTimeout(() => {
+            btn.innerHTML = clipSvg;
+            btn.classList.remove('copied');
+            toast.classList.remove('show');
+          }, 2000);
+        });
+      });
+
+      pre.appendChild(toast);
+      pre.appendChild(btn);
+    });
+  }
+
+  // ─── SCROLL TO TOP ───
+  const scrollBtn = document.getElementById('scrollTop');
+  window.addEventListener('scroll', () => {
+    scrollBtn.classList.toggle('visible', window.scrollY > 400);
+  });
+  scrollBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // ─── INIT ───
+  attachCopyButtons();
+</script>
+
+</body>
+</html>

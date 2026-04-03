@@ -58,7 +58,7 @@
   .layout {
     display: grid;
     grid-template-columns: 260px 1fr;
-    min-height: 100vh;
+    min-height: calc(100vh - 60px);
     position: relative;
     z-index: 1;
   }
@@ -66,10 +66,10 @@
   /* ─── SIDEBAR ─── */
   .sidebar {
     position: fixed;
-    top: 0;
+    top: 60px;
     left: 0;
     width: 260px;
-    height: 100vh;
+    height: calc(100vh - 60px);
     background: var(--bg);
     border-right: 1px solid var(--border);
     padding: 32px 0;
@@ -571,6 +571,98 @@
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
 
+  /* ─── TOP BAR ─── */
+  .top-bar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(8,8,16,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .top-bar-logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 800;
+    font-size: 17px;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: none;
+  }
+  .top-bar-logo:hover { border-bottom: none; }
+  .top-bar-logo span { color: var(--accent2); }
+  .top-bar-logo .dot {
+    width: 7px; height: 7px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2.5s infinite;
+  }
+  .top-bar-nav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  /* NAV LINKS */
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: all var(--transition);
+    white-space: nowrap;
+    border-bottom: none;
+  }
+  .nav-link:hover { border-bottom: none; }
+  .nav-link-green {
+    color: #34d399;
+    background: rgba(52,211,153,0.08);
+    border-color: rgba(52,211,153,0.15);
+  }
+  .nav-link-green:hover {
+    background: rgba(52,211,153,0.15);
+    border-color: rgba(52,211,153,0.3);
+  }
+  .nav-link-blue {
+    color: #60a5fa;
+    background: rgba(96,165,250,0.08);
+    border-color: rgba(96,165,250,0.15);
+  }
+  .nav-link-blue:hover {
+    background: rgba(96,165,250,0.15);
+    border-color: rgba(96,165,250,0.3);
+  }
+  .nav-link-portal {
+    color: var(--text2);
+    background: rgba(148,148,187,0.06);
+    border-color: rgba(148,148,187,0.12);
+  }
+  .nav-link-portal:hover {
+    background: rgba(148,148,187,0.12);
+    border-color: rgba(148,148,187,0.25);
+  }
+  .nav-link.active-page {
+    background: rgba(52,211,153,0.15);
+    border-color: rgba(52,211,153,0.35);
+  }
+  .nav-link-blue.active-page {
+    background: rgba(96,165,250,0.15);
+    border-color: rgba(96,165,250,0.35);
+  }
+
   /* ─── RESPONSIVE ─── */
   @media (max-width: 900px) {
     .layout { grid-template-columns: 1fr; }
@@ -581,14 +673,29 @@
       border-right: none;
       border-bottom: 1px solid var(--border);
       padding: 24px 0;
+      top: auto;
     }
     .main { padding: 32px 24px 80px; }
     .hero h1 { font-size: 30px; }
     .feature-grid { grid-template-columns: 1fr; }
+    .top-bar-nav { gap: 6px; }
+    .nav-link { padding: 6px 10px; font-size: 12px; }
   }
 </style>
 </head>
 <body>
+
+<div class="top-bar">
+  <a href="./index.html" class="top-bar-logo">
+    <div class="dot"></div>
+    ROLL THE <span>CODE</span>
+  </a>
+  <div class="top-bar-nav">
+    <a href="./onboarding.html" class="nav-link nav-link-green active-page">Onboarding</a>
+    <a href="./knowledge-base.html" class="nav-link nav-link-blue">Knowledge Base</a>
+    <a href="./index.html" class="nav-link nav-link-portal">&larr; Portal</a>
+  </div>
+</div>
 
 <div class="layout">
   <!-- SIDEBAR -->
