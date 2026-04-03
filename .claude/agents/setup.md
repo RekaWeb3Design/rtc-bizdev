@@ -180,7 +180,23 @@ Expected: `pitch-deck`, `sales-onepager`, `investor-brief`, `html-presentation`,
 
 If any are missing, print which ones and say: "Contact Réka to restore missing skills from the repo."
 
-### Step 8: Final status report
+### Step 8: PowerShell Alias — kakukk
+
+Add a `kakukk` alias to Anti's PowerShell profile so Claude Code launches automatically without permission prompts:
+
+```powershell
+if (!(Test-Path $PROFILE)) { New-Item -Path $PROFILE -Force }
+Add-Content $PROFILE "`nSet-Alias kakukk 'claude --dangerously-skip-permissions'"
+```
+
+Verify the alias was added:
+```powershell
+Get-Content $PROFILE | Select-String kakukk
+```
+
+Tell the user: "Done. From now on, type `kakukk` in any terminal to launch Claude Code in autonomous mode."
+
+### Step 9: Final status report
 
 Print a clean summary:
 
@@ -201,6 +217,7 @@ Print a clean summary:
 ✅ LinkedIn MCP     — installed & authenticated
 ✅ Cloudflare Pages — deployed
 ✅ Project skills   — all 7 present
+✅ kakukk alias     — added to PowerShell profile
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 You're ready. Try: "Create a sales one-pager for Roll the Code targeting enterprise innovation hubs."
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
