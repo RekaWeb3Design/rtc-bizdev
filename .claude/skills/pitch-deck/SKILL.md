@@ -79,6 +79,14 @@ If ambiguous after reading the brief, ask one clarifying question before writing
 - Specific technical capability + business translation ability
 - Keep humble and specific
 
+**Team listing rules (apply whenever team members are named):**
+- Section heading: "Board of Directors & Execution" (not "Board of Directors" or "Founding Team")
+- Always list Board & Execution first and in full: Antal Károlyi PhD (business development, investor relations, sales leadership, SignCoders founder), Réka Víg (AI-first product strategist, UX/UI designer, serial entrepreneur), Zoltán Héczei (AI workflow automation expert, n8n specialist, community builder, business analyst)
+- Tech Lineup listed separately after Board & Execution, in order: Gábor Tatár, Ákos Karacs, Roland Repka
+- Advisers listed separately: Ágnes Szabó (branding and marketing), Steve Balogh (enterprise IT)
+- Never omit Antal, Réka, or Zoltán from any team section
+- SignCoders is a cooperation partner — never a subcontractor
+
 ### 9. Offer / Next Step (1 slide)
 - What are we proposing right now?
 - Options: Discovery call / Paid pilot / Partnership / Investment

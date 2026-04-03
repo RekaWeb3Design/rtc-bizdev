@@ -3,6 +3,8 @@ name: sales-onepager
 description: Create a sales one-pager or send-out document for Roll the Code's AI automation and product delivery services. Use when the user wants a kiküldős (sendable) document, one-pager, PDF-ready summary, email attachment, or short proposal. Auto-invoke for any single-page sales document. If the use case is ambiguous, ask one clarifying question before writing.
 ---
 
+> **Before generating any output, read `brand/brand.md` in full. Apply colors, typography, and tone rules automatically. Updated `brand/brand.md` always takes precedence.**
+
 # Sales One-Pager Skill
 
 ## What It Is
