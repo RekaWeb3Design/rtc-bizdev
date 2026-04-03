@@ -3,6 +3,30 @@ name: investor-brief
 description: Create investor materials, funding pitch documents, executive summaries for investors, or business planning documents with financial framing. Auto-invoke when user mentions investors, funding, raise, valuation, business plan, financial projections, or executive summary.
 ---
 
+> **Before generating any output, read `brand/brand.md` in full. Apply colors, typography, and tone rules automatically. Updated `brand/brand.md` always takes precedence.**
+
+## Tagline Rule
+
+Every output must include at least one approved RTC tagline as a visually distinct element — its own line, bold or italic, never buried in a sentence:
+
+- *"Days NOT Months"* — primary, use in header or opening section
+- *"We don't code anymore"* — for tech-aware audiences
+- *"The Vapiano of Product Delivery"* — quality, affordable, scalable
+
+Place the tagline on the title slide (decks) or executive summary header (memos).
+
+## Offering Overview
+
+Investor materials cover the full company. When presenting the product, frame it around Roll the Code's three offerings and indicate which is the primary revenue driver:
+
+| Offering | Description | Revenue role |
+|---|---|---|
+| **The Orchestration System** | Flagship. Agentic AI orchestration for PoC/MVP builds (€10K–€25K) and enterprise custom development (€50K–€200K). Architect-supervised, deterministic, deployment-agnostic. | Primary revenue driver |
+| **Workflow Automation Framework** | n8n-based automation for ERP/CRM/workflow pain. Lighter-touch, faster to sell. | Fast entry point, recurring revenue potential |
+| **AI Training** | Agentic AI development training. Door-opener, standalone or bundled. | Pipeline builder, brand positioning |
+
+---
+
 # Investor Brief Skill
 
 ## Document Types This Covers
@@ -23,7 +47,7 @@ description: Create investor materials, funding pitch documents, executive summa
 5. Team (why you)
 6. Ask (how much, for what)
 
-**Anti's context to weave in:**
+**Founder context to weave in:**
 - B2B AI automation services → productizing into SaaS
 - Revenue from custom builds → transition to recurring
 - Technical founder with commercial experience
@@ -139,7 +163,7 @@ Every investor document produces **two deliverables** — never raw MD to client
 
 ## Prompt Examples
 ```
-Write a 2-page executive summary for Sign Coders.
+Write a 2-page executive summary for Roll the Code.
 We're raising €[amount]. Current ARR: €[amount].
 Main pitch: AI automation services transitioning to SaaS.
 ```

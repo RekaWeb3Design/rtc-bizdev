@@ -3,6 +3,32 @@ name: pitch-deck
 description: Create a pitch deck or presentation for AI automation, agent workflow, or technology services. Use when the user asks for a presentation, deck, slides, or pitching materials. Auto-invoke for any slide-based deliverable. Produces a structured outline with speaker notes and optionally an HTML version.
 ---
 
+> **Before generating any output, read `brand/brand.md` in full. Apply colors, typography, and tone rules automatically. Updated `brand/brand.md` always takes precedence.**
+
+## Tagline Rule
+
+Every output must include at least one approved RTC tagline as a visually distinct element — its own line, bold or italic, never buried in a sentence:
+
+- *"Days NOT Months"* — primary, use in header or opening section
+- *"We don't code anymore"* — for tech-aware audiences
+- *"The Vapiano of Product Delivery"* — quality, affordable, scalable
+
+Place the tagline on the title slide (Slide 1).
+
+## Offering Selector
+
+Before generating output, confirm which offering applies:
+
+| Signal | Offering |
+|---|---|
+| Invoice/workflow/ERP/CRM/Monday.com pain | **Workflow Automation Framework** |
+| PoC, MVP, greenfield, legacy refactoring, custom build | **Orchestration System** |
+| Training, upskilling, agentic AI learning | **AI Training** |
+
+If ambiguous after reading the brief, ask one clarifying question before writing.
+
+---
+
 # Pitch Deck Creation Skill
 
 ## When to Use
@@ -48,7 +74,8 @@ description: Create a pitch deck or presentation for AI automation, agent workfl
 - Urgency without fear-mongering
 
 ### 8. Why Us (1 slide)
-- Sign Coders' credentials
+- Roll the Code's credentials: senior software architects who built an agentic AI orchestration system
+- Our cooperation partner SignCoders — a social enterprise employing Deaf and hard-of-hearing professionals in mixed Deaf-hearing tech teams — adds both technical depth and a meaningful diversity story
 - Specific technical capability + business translation ability
 - Keep humble and specific
 

@@ -3,11 +3,37 @@ name: collaborator-deck
 description: Create a partnership pitch, collaborator deck, or co-builder proposal. Auto-invoke when user mentions finding partners, collaborators, agencies, co-founders, joint ventures, white-label partnerships, or revenue-sharing arrangements.
 ---
 
+> **Before generating any output, read `brand/brand.md` in full. Apply colors, typography, and tone rules automatically. Updated `brand/brand.md` always takes precedence.**
+
+## Tagline Rule
+
+Every output must include at least one approved RTC tagline as a visually distinct element — its own line, bold or italic, never buried in a sentence:
+
+- *"Days NOT Months"* — primary, use in header or opening section
+- *"We don't code anymore"* — for tech-aware audiences
+- *"The Vapiano of Product Delivery"* — quality, affordable, scalable
+
+Place the tagline in the Opportunity section (Section 1) or title.
+
+## Offering Selector
+
+Before generating output, confirm which offering applies:
+
+| Signal | Offering |
+|---|---|
+| Invoice/workflow/ERP/CRM/Monday.com pain | **Workflow Automation Framework** |
+| PoC, MVP, greenfield, legacy refactoring, custom build | **Orchestration System** |
+| Training, upskilling, agentic AI learning | **AI Training** |
+
+If ambiguous after reading the brief, ask one clarifying question before writing.
+
+---
+
 # Collaborator / Partner Deck Skill
 
 ## Who This Is For
 Not clients, not investors — **potential co-builders and partners:**
-- Development agencies who could white-label Sign Coders' AI stack
+- Development agencies who could white-label Roll the Code's AI stack
 - Consultants who need an AI implementation partner
 - Industry specialists (logistics, finance, legal) who bring domain + we bring AI
 - Freelancers or boutique studios for project collaboration
@@ -32,8 +58,9 @@ Not clients, not investors — **potential co-builders and partners:**
 - The gap: "Most businesses need it but don't know how to buy it"
 - Our position in it
 
-### 2. What Sign Coders Brings
-- Technical capabilities (AI agents, workflow automation, rapid prototyping)
+### 2. What Roll the Code Brings
+- Technical capabilities across three offerings: The Orchestration System (flagship agentic AI for custom builds), Workflow Automation Framework (n8n-based), and AI Training
+- Our cooperation partner SignCoders — a social enterprise employing Deaf and hard-of-hearing professionals in mixed Deaf-hearing tech teams — adds both technical depth and a meaningful diversity story
 - Existing clients / pipeline
 - Track record: delivery speed, tech stack
 
@@ -67,7 +94,7 @@ Not clients, not investors — **potential co-builders and partners:**
 - Or: "30-min call to see if there's a fit"
 - No pressure framing
 
-### 8. About Sign Coders
+### 8. About Roll the Code
 - 3-4 sentences. Specific. Real.
 
 ---

@@ -3,6 +3,30 @@ name: business-planning
 description: Create business plan sections, financial models, go-to-market strategies, pricing frameworks, or strategic planning documents. Auto-invoke when user mentions business plan, GTM strategy, pricing model, unit economics, market analysis, competitive analysis, or strategic roadmap.
 ---
 
+> **Before generating any output, read `brand/brand.md` in full. Apply colors, typography, and tone rules automatically. Updated `brand/brand.md` always takes precedence.**
+
+## Tagline Rule
+
+Every output must include at least one approved RTC tagline as a visually distinct element — its own line, bold or italic, never buried in a sentence:
+
+- *"Days NOT Months"* — primary, use in header or opening section
+- *"We don't code anymore"* — for tech-aware audiences
+- *"The Vapiano of Product Delivery"* — quality, affordable, scalable
+
+Place the tagline in the Executive Summary or Company Overview section.
+
+## Offering Overview
+
+Business planning documents cover the full company. When describing the product/service, frame it around Roll the Code's three offerings:
+
+| Offering | Description | Revenue role |
+|---|---|---|
+| **The Orchestration System** | Flagship. Agentic AI orchestration for PoC/MVP builds (€10K–€25K) and enterprise custom development (€50K–€200K). Architect-supervised, deterministic, deployment-agnostic. | Primary revenue driver |
+| **Workflow Automation Framework** | n8n-based automation for ERP/CRM/workflow pain. Lighter-touch, faster to sell. | Fast entry point, recurring revenue potential |
+| **AI Training** | Agentic AI development training. Door-opener, standalone or bundled. | Pipeline builder, brand positioning |
+
+---
+
 # Business Planning Skill
 
 ## Documents This Covers
@@ -23,7 +47,7 @@ description: Create business plan sections, financial models, go-to-market strat
 → Use this skill for internal / operational planning version
 
 ### 2. Company Overview
-- What Sign Coders does, for whom, since when
+- What Roll the Code does, for whom, since when
 - Mission: one sentence
 - Current stage: services → productizing
 
@@ -56,7 +80,7 @@ description: Create business plan sections, financial models, go-to-market strat
 ### 6. Go-to-Market Strategy
 
 **GTM Channels (rank by priority):**
-1. Outbound (cold email + LinkedIn) — Anti's core channel
+1. Outbound (cold email + LinkedIn) — Antal's core channel
 2. Referrals from existing clients
 3. Partner network (agencies referring AI work)
 4. Content (LinkedIn posts, case studies)
@@ -73,7 +97,7 @@ description: Create business plan sections, financial models, go-to-market strat
 **Framework: 2x2 Matrix**
 - X axis: Technical depth (low → high)
 - Y axis: Business focus (tool-centric → outcome-centric)
-- Sign Coders positioning: high technical depth + high business focus
+- Roll the Code positioning: high technical depth + high business focus
 
 **Competitor types:**
 - Big consultancies (Accenture AI) → expensive, slow, enterprise-only
@@ -81,7 +105,7 @@ description: Create business plan sections, financial models, go-to-market strat
 - Offshore dev shops → cheap but no AI expertise
 - Local freelancers → limited scope, no strategic layer
 
-**Sign Coders differentiator:** Senior AI expertise + business translation + local presence + speed
+**Roll the Code differentiator:** Senior AI expertise + business translation + local presence + speed
 
 ### 8. Financial Model
 
@@ -153,7 +177,7 @@ Every business planning document produces **two deliverables** — never raw MD 
 
 ## Prompt Examples
 ```
-Write a GTM strategy for Sign Coders targeting SMEs in [industry].
+Write a GTM strategy for Roll the Code targeting SMEs in [industry].
 Main channel: outbound. Budget: low. Timeline: 6 months.
 ```
 

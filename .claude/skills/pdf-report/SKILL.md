@@ -3,6 +3,10 @@ name: pdf-report
 description: Generate branded PDF reports and documents for Roll the Code. Use when the user asks for a PDF, report, detailed document, printable version, or any deliverable that should be a multi-page branded PDF. Produces a puppeteer-optimized Markdown file and converts it to PDF.
 ---
 
+> **Before generating any output, read `brand/brand.md` in full. Apply colors, typography, and tone rules automatically. Updated `brand/brand.md` always takes precedence.**
+
+> **Use an approved RTC tagline in the `[Subtitle or tagline]` header field when the document is client-facing. Options: "Days NOT Months", "We don't code anymore", "The Vapiano of Product Delivery".**
+
 # PDF Report Skill
 
 ## What It Is
@@ -372,9 +376,10 @@ npm install puppeteer marked
 
 1. **Read `brand/brand.md`** before generating — apply current brand tokens
 2. **Generate the Markdown file** with embedded styles, following the template above
-3. **Save to:** `outputs/report-[topic]-[date].md`
-4. **Convert to PDF:** `outputs/report-[topic]-[date].pdf` using the puppeteer script above
-5. **Confirm to user:** file paths for both `.md` and `.pdf`
+3. **Save the Markdown draft to:** `outputs/drafts/[client-slug]-report-[date].md` (internal build artifact — do not include in `files-index.json`)
+4. **Convert to PDF:** `outputs/reports/pdf/[client-slug]-report-[date].pdf` using the puppeteer script above
+5. **Update `outputs/files-index.json`** with the PDF entry (no MD entries in the index)
+6. **Confirm to user:** PDF file path
 
 ---
 

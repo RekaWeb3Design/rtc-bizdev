@@ -3,6 +3,32 @@ name: html-presentation
 description: Create a mini web presentation, HTML deck, visual landing page, or browser-based pitch. Auto-invoke when user asks for a web presentation, HTML version, visual link to share, browser-based deck, or anything that should open in a browser instead of a document.
 ---
 
+> **Before generating any output, read `brand/brand.md` in full. Apply colors, typography, and tone rules automatically. Updated `brand/brand.md` always takes precedence.**
+
+## Tagline Rule
+
+Every output must include at least one approved RTC tagline as a visually distinct element — its own line, bold or italic, never buried in a sentence:
+
+- *"Days NOT Months"* — primary, use in header or opening section
+- *"We don't code anymore"* — for tech-aware audiences
+- *"The Vapiano of Product Delivery"* — quality, affordable, scalable
+
+Place the tagline on the title slide (Format B) or hero section (Format A).
+
+## Offering Selector
+
+Before generating output, confirm which offering applies:
+
+| Signal | Offering |
+|---|---|
+| Invoice/workflow/ERP/CRM/Monday.com pain | **Workflow Automation Framework** |
+| PoC, MVP, greenfield, legacy refactoring, custom build | **Orchestration System** |
+| Training, upskilling, agentic AI learning | **AI Training** |
+
+If ambiguous after reading the brief, ask one clarifying question before writing.
+
+---
+
 # HTML Presentation Skill
 
 ## What It Is
@@ -33,7 +59,7 @@ A single HTML file that works as a visual, shareable presentation. Open in any b
 ## HTML Template Variables
 When building, confirm:
 - `[primary_color]` — default: `#6366f1` (indigo)
-- `[company_name]` — Sign Coders or client-specific
+- `[company_name]` — Roll the Code (default) or client-specific
 - `[font_style]` — default: Inter (loaded from Google Fonts)
 - `[format]` — scrollable or slide-deck
 
@@ -78,9 +104,10 @@ Footer: links
 
 ## Output Instructions
 1. Generate complete, ready-to-open HTML file
-2. Save to `/outputs/presentation-[topic]-[date].html`
-3. Include comment at top: `<!-- Anti Pitch Toolkit | [date] | [format] -->`
-4. Confirm: "Open this file in any browser. Works offline."
+2. Save to `outputs/reports/html/[client-slug]-[type]-[date].html` per CLAUDE.md routing rules
+3. Include comment at top: `<!-- Roll the Code | [date] | [format] -->`
+4. Update `outputs/files-index.json` with the new HTML entry
+5. Confirm: "Open this file in any browser. Works offline."
 
 ---
 
